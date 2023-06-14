@@ -30,7 +30,7 @@
   <img src="https://img.shields.io/github/release-date/VladWhiteK/ecko-backend?label=Release%20Date&style=popout" alt="Release Date">
 </p>
 
-## Table of Contents
+### Table of Contents
 
 <details open="open">
   <summary>Contents</summary>
@@ -49,7 +49,7 @@
   </ol>
 </details>
 <!-- ABOUT THE PROJECT -->
-## About the Project
+### About the Project
 
 The Ecko Backend is a powerful and scalable backend application that serves as the foundation for the Ecko social media platform. It provides a robust set of features and functionalities to handle user authentication, data storage, and API management, supporting both SQL and NoSQL databases. The backend supports seamless database replication and synchronization, ensuring data consistency across multiple nodes. To enhance security, AES encryption is implemented for API keys and other sensitive user data, safeguarding user privacy.
 
