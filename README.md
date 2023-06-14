@@ -9,7 +9,7 @@
   <p align="center">
     A powerful and scalable backend application for the Ecko social media platform
     <br />
-    <a href="https://github.com/VladWhiteK/ecko-backend"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/VladWhiteK/ecko-backend/wiki"><strong>Explore the wiki »</strong></a>
     <br />
     <br />
     <a href="https://github.com/VladWhiteK/ecko-backend">View Demo</a>
