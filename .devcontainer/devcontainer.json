@@ -1,0 +1,58 @@
+{
+    "name": "Ecko Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
+    "workspaceFolder": "/workspaces/ecko-backend",
+    "forwardPorts": [8080],
+    "postCreateCommand": "npm install",
+    "customizations": {
+        "extensions": [
+            "dbaeumer.vscode-eslint",
+            "ms-vscode.vscode-typescript-next",
+            "esbenp.prettier-vscode",
+            "github.vscode-pull-request-github",
+            "orta.vscode-jest",
+            "ms-vsliveshare.vsliveshare",
+            "christian-kohler.npm-intellisense",
+            "yoavbls.pretty-ts-errors",
+            "alefragnani.project-manager",
+            "vscode-icons-team.vscode-icons",
+            "visualstudioexptteam.vscodeintellicode",
+            "seyyedkhandon.epack",
+            "tal7aouy.rainbow-bracket",
+            "streetsidesoftware.code-spell-checker",
+            "ms-vscode-remote.remote-containers"
+        ],
+        "settings": {
+            "terminal.integrated.shell.linux": "/bin/bash",
+            "terminal.integrated.defaultProfile.linux": "zsh",
+            "terminal.integrated.profiles.linux": {
+                "zsh": {
+                    "path": "zsh",
+                    "args": []
+                }
+            }
+        },
+        "commands": [
+            {
+                "title": "Start Server",
+                "command": "bash",
+                "args": ["-c", "cd ecko-backend && npm start"]
+            },
+            {
+                "title": "Start Server as Dev",
+                "command": "bash",
+                "args": ["-c", "cd ecko-backend && npm run dev"]
+            },
+            {
+                "title": "Reinstall Dependencies",
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "cd ecko-backend && rm -rf node_modules && npm install"
+                ]
+            }
+        ]
+    },
+
+    "remoteUser": "root"
+}

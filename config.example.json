@@ -1,0 +1,29 @@
+{
+    "dns": "localhost",
+    "port": 8080,
+    "protocol": "http",
+    "ssl": {
+        "key": "/certificates/ssl/key.pem",
+        "cert": "/certificates/ssl/cert.pem"
+    },
+    "allowRoot": false,
+    "logs": true,
+    "debug": false,
+    "replication": true,
+    "databases": {
+        "SQLite": {
+            "type": "sqlite",
+            "database": "database.sqlite",
+            "charset": "utf8mb4",
+            "role": "master",
+            "enabled": true,
+            "synchronize": true,
+            "logging": false,
+            "entities": ["src/database/entities/*.entity.ts"],
+            "migrations": ["src/database/migrations/*.ts"]
+        }
+    },
+    "jwt": {
+        "expiresIn": "1min"
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "cSpell.words": [
+        "alefragnani",
+        "aouy",
+        "APIKEY",
+        "ciphertext",
+        "cockroachdb",
+        "dbaeumer",
+        "devcontainers",
+        "ecko",
+        "epack",
+        "esbenp",
+        "kohler",
+        "Lenght",
+        "linebreak",
+        "logform",
+        "middlewares",
+        "newsecret",
+        "orta",
+        "osuptime",
+        "parens",
+        "SECRETPHRASE",
+        "seyyedkhandon",
+        "sublicensable",
+        "typeorm",
+        "visualstudioexptteam",
+        "vscodeintellicode",
+        "yoavbls"
+    ],
+    "jest.autoRevealOutput": "off",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
+}

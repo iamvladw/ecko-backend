@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "CommonJS",
+        "lib": ["ES2018"],
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "rootDir": "./src",
+        "typeRoots": ["./node_modules/@types"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false,
+        "strict": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true
+    },
+    "ts-node": {
+        "compilerOptions": {
+            "esModuleInterop": true,
+            "allowSyntheticDefaultImports": true
+        }
+    },
+    "include": ["src"],
+    "exclude": ["certificates", "coverage", "node_modules"]
+}

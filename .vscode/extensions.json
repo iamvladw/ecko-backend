@@ -1,0 +1,19 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "github.vscode-pull-request-github",
+        "orta.vscode-jest",
+        "ms-vsliveshare.vsliveshare",
+        "christian-kohler.npm-intellisense",
+        "yoavbls.pretty-ts-errors",
+        "alefragnani.project-manager",
+        "vscode-icons-team.vscode-icons",
+        "visualstudioexptteam.vscodeintellicode",
+        "seyyedkhandon.epack",
+        "tal7aouy.rainbow-bracket",
+        "streetsidesoftware.code-spell-checker",
+        "ms-vscode-remote.remote-containers"
+    ]
+}

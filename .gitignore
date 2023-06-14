@@ -1,0 +1,7 @@
+cache
+coverage
+node_modules
+database.sqlite
+latest.log
+config.json
+package-lock.json
