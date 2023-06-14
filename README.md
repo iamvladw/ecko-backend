@@ -21,8 +21,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/workflow/status/VladWhiteK/ecko-backend/CI?label=CI&logo=github&style=popout" alt="CI">
-  <img src="https://img.shields.io/github/license/VladWhiteK/ecko-backend?label=License&style=popout" alt="License">
+  <img src="https://img.shields.io/github/actions/workflow/status/VladWhiteK/ecko-backend/jest.yml?label=Tests&style=popout&branch=development" alt="CI">
   <img src="https://img.shields.io/github/package-json/v/VladWhiteK/ecko-backend?label=Version&style=popout" alt="Version">
   <img src="https://img.shields.io/github/last-commit/VladWhiteK/ecko-backend?label=Last%20Commit&style=popout" alt="Last Commit">
   <img src="https://img.shields.io/github/downloads/VladWhiteK/ecko-backend/total?label=Downloads&style=popout" alt="Downloads">
