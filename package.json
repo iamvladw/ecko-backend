@@ -8,7 +8,7 @@
         "dev": "nodemon src/server.ts",
         "test": "jest --detectOpenHandles --passWithNoTests",
         "test:debug": "node --inspect-brk -r ts-node/register ./node_modules/.bin/jest --runInBand",
-        "coverage": "jest --coverage",
+        "coverage": "jest --coverage --passWithNoTests",
         "format": "prettier --write . && eslint --fix ."
     },
     "keywords": [
