@@ -3,7 +3,9 @@ import logger from '../helpers/winston.helper';
 
 export default class helperGithub {
     public static getBranch() {
-        return `${execSync('git rev-parse --abbrev-ref HEAD').toString()}`;
+        return `${execSync('git rev-parse --abbrev-ref HEAD')
+            .toString()
+            .trim()}`;
     }
 
     public static getCommit() {

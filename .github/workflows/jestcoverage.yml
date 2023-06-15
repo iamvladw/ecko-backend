@@ -1,29 +1,35 @@
 name: Jest Coverage
 
 on:
-  push:
-    branches:
-      - development
-  pull_request:
-    branches:
-      - development
+    push:
+        branches:
+            - development
+    pull_request:
+        branches:
+            - development
 
 jobs:
-  test-and-generate-coverage:
-    runs-on: ubuntu-latest
+    test-and-generate-coverage:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Run tests and generate coverage report
-        run: npm run coverage
+            - name: Install sqlite3
+              run: npm install sqlite3
 
-      - name: Upload code coverage artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage
-          path: coverage
+            - name: Rename config
+              run: mv config.example.json config.json
+
+            - name: Run tests and generate coverage report
+              run: npm run coverage
+
+            - name: Upload code coverage artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: coverage
+                  path: coverage

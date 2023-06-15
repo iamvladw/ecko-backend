@@ -54,84 +54,99 @@ The Ecko Backend is a powerful and scalable backend application that serves as t
 The Ecko Backend incorporates JSON Web Tokens (JWT) for secure user authentication and authorization. It includes a root privileges checker to ensure proper access control and prevent unauthorized actions. The backend operates in both HTTP and HTTPS modes, supporting encrypted communication over secure connections. Request compression minimizes bandwidth usage and improves overall performance.
 
 To handle high traffic and prevent abuse, the backend includes a request limiter that applies rate limiting policies. The project comes with recommended extensions and is Docker dev container-ready, facilitating seamless development and deployment workflows. The extensible architecture enables developers to extend and customize the backend to meet specific requirements.
+
 ### Built With
 
-- Node.js
-- Express.js
-- TypeScript
-- TypeORM
-- JSONWebToken
-- Crypto-js
-- Winston
+-   Node.js
+-   Express.js
+-   TypeScript
+-   TypeORM
+-   JSONWebToken
+-   Crypto-js
+-   Winston
+
 ## Getting Started
 
 To get started with the Ecko Backend, follow these steps:
 
 ### Prerequisites
 
-- Node.js 20 (using NVM)
-- `config.json` file
+-   Node.js 20 (using NVM)
+-   `config.json` file
 
 ### Installation
 
 1. Install NVM (Node Version Manager) by following the instructions for your operating system:
-   - **Windows**: Visit the NVM for Windows repository at [https://github.com/coreybutler/nvm-windows](https://github.com/coreybutler/nvm-windows) and follow the installation guide.
-   - **Linux/macOS**: Open your terminal and run the following command:
-     ```bash
-     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-     ```
+
+    - **Windows**: Visit the NVM for Windows repository at [https://github.com/coreybutler/nvm-windows](https://github.com/coreybutler/nvm-windows) and follow the installation guide.
+    - **Linux/macOS**: Open your terminal and run the following command:
+        ```bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+        ```
 
 2. Close and reopen your terminal to start using NVM.
 
 3. Install Node.js 20 by running the following command:
-   ```bash
-   nvm install 20
-   ```
+    ```bash
+    nvm install 20
+    ```
 4. Verify that Node.js 20 is installed:
-   ```bash
-   node --version
-   ```
+    ```bash
+    node --version
+    ```
+
 ### Clone the Repository
+
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/VladWhiteK/ecko-backend.git
-   ```
+    ```bash
+    git clone https://github.com/VladWhiteK/ecko-backend.git
+    ```
 2. Navigate to the project directory:
-   ```bash
-   cd ecko-backend
-   ```
+    ```bash
+    cd ecko-backend
+    ```
+
 ### Install Dependencies
+
 1. Install NPM packages:
-   ```bash
-   npm install
+    ```bash
+    npm install
+    ```
+
 ### Configuration
+
 1. Rename the config.example.json file to config.json and update the necessary configurations according to your environment.
+
 ### Usage
+
 1. Start the server as dev:
-   ```bash
-   npm run dev
-**Note:** Running the server in with debug mode is recommended for the development branch. You can enable it from the config.json
+    ```bash
+    npm run dev
+    **Note:** Running the server in with debug mode is recommended for the development branch. You can enable it from the config.json
+    ```
+
 ```bash
 ...
 "debug": true,
 ...
 ```
+
 3. Complete the first-time setup by providing the following data:
 
-   ```bash
-   Server Name: <Enter the name of your server>
-   Server Location: <Enter the location of your server>
-   Secret Length: <Enter the desired secret length for verifying the apiKey result (at least 64 characters and less than 256 characters)>
-   Secret Phrase: <Enter a secret phrase for verifying the apiKey result (at least 16 characters)>
-   ```
-   ![Example GIF](./.media/setup-example.gif)
-3. Access the backend API at [http://localhost:8080](http://localhost:8080).
+    ```bash
+    Server Name: <Enter the name of your server>
+    Server Location: <Enter the location of your server>
+    Secret Length: <Enter the desired secret length for verifying the apiKey result (at least 64 characters and less than 256 characters)>
+    Secret Phrase: <Enter a secret phrase for verifying the apiKey result (at least 16 characters)>
+    ```
 
+    ![Example GIF](./.media/setup-example.gif)
+
+4. Access the backend API at [http://localhost:8080](http://localhost:8080).
 
 Please note that the instructions assume you have NVM already installed. If you don't have NVM, you can follow the provided instructions to install it before proceeding with the Node.js 20 installation.
 
 Additionally, make sure to have the `config.json` file in your project directory and rename the provided `config.example.json` file to `config.json` for proper configuration.
-
 
 ## API Reference
 
@@ -144,5 +159,3 @@ This project is licensed under the [CC-BY-NC-ND-4.0](https://creativecommons.org
 ## Contact
 
 Project Link: [https://github.com/VladWhiteK/ecko-backend](https://github.com/VladWhiteK/ecko-backend)
-
-

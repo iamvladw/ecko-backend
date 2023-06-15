@@ -1071,7 +1071,9 @@ export class helperDatabase {
         } catch (err) {
             logger.error(
                 `Error during updating the interest group {"uuid":${JSON.stringify(
-                    { uuid: uuid }
+                    {
+                        uuid: uuid
+                    }
                 )}}: ${err as string}`
             );
         }
@@ -1155,7 +1157,9 @@ export class helperDatabase {
         } catch (err) {
             logger.error(
                 `Error during removing the interest group with ID ${JSON.stringify(
-                    { uuid: uuid }
+                    {
+                        uuid: uuid
+                    }
                 )}: ${err as string}`
             );
         }
@@ -1453,7 +1457,9 @@ export class helperDatabase {
 
                 interest = await databaseInstance.manager.findOneBy(
                     MySQLInterest,
-                    { uuid: uuid }
+                    {
+                        uuid: uuid
+                    }
                 );
 
                 if (interest) {
@@ -1488,7 +1494,9 @@ export class helperDatabase {
 
                 interest = await databaseInstance.manager.findOneBy(
                     MongoDBInterest,
-                    { uuid: uuid }
+                    {
+                        uuid: uuid
+                    }
                 );
 
                 if (interest) {
@@ -1525,7 +1533,9 @@ export class helperDatabase {
         } catch (err) {
             logger.error(
                 `Error during removal of the interest based on ${JSON.stringify(
-                    { uuid: uuid }
+                    {
+                        uuid: uuid
+                    }
                 )}: ${err as string}`
             );
         }
@@ -2146,7 +2156,9 @@ export class helperDatabase {
                 } else {
                     logger.error(
                         `Failed to add follower to the user based on: ${JSON.stringify(
-                            { uuid: uuid }
+                            {
+                                uuid: uuid
+                            }
                         )}`
                     );
 
@@ -2192,7 +2204,9 @@ export class helperDatabase {
                 } else {
                     logger.error(
                         `Failed to add follower to the user based on: ${JSON.stringify(
-                            { uuid: uuid }
+                            {
+                                uuid: uuid
+                            }
                         )}`
                     );
 

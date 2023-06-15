@@ -4,9 +4,9 @@
 
 I am committed to providing security updates for the following version of my backend application:
 
-| Version   | Supported          |
-| --------- | ------------------ |
-| 1.0.0     | :white_check_mark: |
+| Version | Supported          |
+| ------- | ------------------ |
+| 1.0.0   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 

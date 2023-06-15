@@ -95,8 +95,8 @@ router.put('/edit/user/:uuid', authKey, async (req: Request, res: Response) => {
 
     // Return an error if the user is not found
     if (!user) {
-        logger.error('User not found');
-        return res.status(404).json({ error: 'User not found' });
+        logger.error('Invalid user');
+        return res.status(401).json({ error: 'Invalid user' });
     }
 
     // Update the user object with the data from req.body
@@ -160,8 +160,8 @@ router.get(
 
         // Return an error if the user is not found
         if (!user) {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
         }
 
         try {
@@ -179,7 +179,7 @@ router.get('/fetch/users', authKey, async (req: Request, res: Response) => {
     // Return an error if the user is not found
     if (!users) {
         logger.error('Users not found');
-        return res.status(404).json({ error: 'Users not found' });
+        return res.status(401).json({ error: 'Users not found' });
     }
 
     try {
@@ -214,13 +214,13 @@ router.post(
 
         // Return an error if the user is not found
         if (!user) {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
         }
 
         if (!target) {
-            logger.error('Target not found');
-            return res.status(404).json({ error: 'Target not found' });
+            logger.error('Invalid target');
+            return res.status(401).json({ error: 'Invalid target' });
         }
 
         try {
@@ -266,13 +266,13 @@ router.delete(
 
         // Return an error if the user is not found
         if (!user) {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
         }
 
         if (!target) {
-            logger.error('Target not found');
-            return res.status(404).json({ error: 'Target not found' });
+            logger.error('Invalid target');
+            return res.status(401).json({ error: 'Invalid target' });
         }
 
         try {
@@ -311,8 +311,8 @@ router.get(
 
         // Return an error if the user is not found
         if (!user) {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
         }
 
         try {
@@ -344,8 +344,8 @@ router.get(
 
         // Return an error if the user is not found
         if (!user) {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
         }
 
         try {
