@@ -9,18 +9,18 @@ const authKey = (
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
-) => {            
+) => {
     try {
         // Check if the request is from the local machine
         const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
-    
+
         // Skip API key check for local requests
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (ip?.includes('127.0.0.1' || '::ffff:127.0.0.1' || '::1')) {
             next();
             return logger.info('Local request, skipping API key check...');
         }
-    
+
         // Get the API key from the Authorization header
         const apiKey: string = req.header('x-api-key') as string;
 
