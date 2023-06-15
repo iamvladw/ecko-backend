@@ -8,7 +8,7 @@ import helperAES from './aes.helper';
 import helperFunctions from './functions.helper';
 
 class helperSetup {
-    private static questions: QuestionCollection<any>[] = [
+    private static questions: QuestionCollection[] = [
         {
             type: 'input',
             name: 'serverName',
@@ -71,8 +71,7 @@ class helperSetup {
 
     public static async initializeServerSetup(): Promise<void> {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            if (!helperCache.instance.server) {
+            if (!helperCache.instance.server.apiKey) {
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
                 logger.log('setup', '------------------------------------');
                 logger.log(

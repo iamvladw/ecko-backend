@@ -38,7 +38,6 @@ export class helperDatabase {
             return this.initializeBackupDatabases();
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!databaseConfig) {
             logger.error('The server wan\'t able to fetch the master database.');
             return this.initializeBackupDatabases();

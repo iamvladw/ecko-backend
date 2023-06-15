@@ -20,8 +20,7 @@ const requestLoggerMiddleware = (
 
     // Log the outgoing response
     const originalSend: Send = res.send;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    res.send = function (body?: any): any {
+    res.send = function (body: Send) {
         logger.log(
             'request',
             `Outgoing response to ${String(ip)} with code: ${res.statusCode}`

@@ -37,6 +37,8 @@
         "@typescript-eslint/no-extraneous-class": "off",
         "@typescript-eslint/non-nullable-type-assertion-style": "off",
         "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unnecessary-condition": "off",
         "no-case-declarations": "off",
         "max-len": [
             "error",

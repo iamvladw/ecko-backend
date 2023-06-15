@@ -901,12 +901,10 @@ export class helperReplication {
         let userFields;
         switch (masterUser.constructor) {
         case MySQLUser:
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
             const { id, ...userFields_sql } = masterUser as MySQLUser;
             userFields = userFields_sql;
             break;
         default:
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
             const { _id, ...userFields_mongo } = masterUser as MongoDBUser;
             userFields = userFields_mongo;
         }
@@ -919,13 +917,11 @@ export class helperReplication {
         let userFields;
         switch (masterInterestGroup.constructor) {
         case MySQLInterestGroup:
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
             const { id, ...userFields_sql } =
                     masterInterestGroup as MySQLInterestGroup;
             userFields = userFields_sql;
             break;
         default:
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
             const { _id, ...userFields_mongo } =
                     masterInterestGroup as MongoDBInterestGroup;
             userFields = userFields_mongo;
