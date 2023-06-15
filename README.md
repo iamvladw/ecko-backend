@@ -135,7 +135,7 @@ Additionally, make sure to have the `config.json` file in your project directory
 
 ## API Reference
 
-For detailed information about the API endpoints and request/response examples, please refer to the API Reference documentation.
+For detailed information about the API endpoints and request/response examples, please refer to the [API Reference documentation](https://github.com/VladWhiteK/ecko-backend/wiki/API-Reference).
 
 ## License
 
