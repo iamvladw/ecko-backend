@@ -3,7 +3,10 @@ name: Jest Coverage
 on:
   push:
     branches:
-      - main
+      - development
+  pull_request:
+    branches:
+      - development
 
 jobs:
   test-and-generate-coverage:
