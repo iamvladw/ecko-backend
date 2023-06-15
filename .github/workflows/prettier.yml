@@ -2,8 +2,11 @@ name: Prettier
 
 on:
   push:
-    branches:
-      - development
+      branches: ['development']
+  pull_request:
+      branches: ['development']
+  schedule:
+      - cron: '18 11 * * 5'
 
 jobs:
   prettier:
