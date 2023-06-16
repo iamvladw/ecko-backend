@@ -14,6 +14,9 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Setup NVM & Node 20
+              run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && source ~/.bashrc && nvm install 20 && node --version
+
             - name: Install dependencies
               run: npm install
 
