@@ -5,10 +5,12 @@ on:
         branches: ['development']
     pull_request:
         branches: ['development']
+    schedule:
+        - cron: '18 11 * * 5'
 
 jobs:
     test-and-generate-coverage:
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
 
         steps:
             - name: Checkout code
