@@ -84,7 +84,12 @@ To get started with the Ecko Backend, follow these steps:
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
         ```
 
-2. Close and reopen your terminal to start using NVM.
+2. Reload the shell configuration
+   
+   - **Linux/macOS**: Run the following command:
+        ```bash
+        source ~/.bashrc
+        ```
 
 3. Install Node.js 20 by running the following command:
     ```bash
