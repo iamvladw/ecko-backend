@@ -56,10 +56,12 @@ interface Config {
         key: string;
         cert: string;
     };
+    apiAuthMethod: 'key' | 'ip' | 'bypass';
     allowRoot: boolean;
     logs: boolean;
     debug: boolean;
     replication: boolean;
+    whitelist: string[];
     databases: Record<string, DatabaseConfig>;
     jwt: {
         expiresIn: string | number | undefined;
