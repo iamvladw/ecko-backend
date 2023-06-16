@@ -127,8 +127,8 @@ To get started with the Ecko Backend, follow these steps:
 1. Start the server as dev:
     ```bash
     npm run dev
-    **Note:** Running the server in with debug mode is recommended for the development branch. You can enable it from the config.json
     ```
+    **Note:** Running the server in with debug mode is recommended for the development branch. You can enable it from the config.json
 
 ```bash
 ...
