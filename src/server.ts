@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -66,6 +65,9 @@ try {
 
         // Checking the privileges of the process
         helperFunctions.rootPrivileges();
+
+        // Checks the API auth method
+        helperEcko.validateApiAuthMethod();
 
         // Connecting to the database
         await helperDatabase.initializeDatabaseConnection();

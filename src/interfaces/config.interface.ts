@@ -56,7 +56,7 @@ interface Config {
         key: string;
         cert: string;
     };
-    apiAuthMethod: 'key' | 'ip' | 'bypass';
+    apiAuthMethod: 'key' | 'ip' | 'both';
     allowRoot: boolean;
     logs: boolean;
     debug: boolean;

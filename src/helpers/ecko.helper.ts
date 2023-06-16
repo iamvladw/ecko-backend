@@ -3,6 +3,7 @@ import https from 'https';
 import fs from 'fs';
 import config from './config.helper';
 import { server } from '../server';
+import logger from './winston.helper';
 
 export default class helperEcko {
     public static generateEkoTag(): string {
@@ -12,6 +13,12 @@ export default class helperEcko {
         const ekoTag = `EK${randomNumber}`;
 
         return ekoTag;
+    }
+
+    public static validateApiAuthMethod() {
+        if (config.apiAuthMethod) {
+            logger.info(`API auth method loaded as ${config.apiAuthMethod}`);
+        }
     }
 
     public static initializeEckoServer() {
