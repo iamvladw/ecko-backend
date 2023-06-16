@@ -1,6 +1,6 @@
 <br />
 <p align="center">
-  <a href="https://github.com/VladWhiteK/ecko-backend">
+  <a href="https://github.com/iamvladw/ecko-backend">
     <img src="./.media/ecko-logo-white.png" alt="Logo" width="30%" height="10%">
   </a>
 
@@ -9,24 +9,24 @@
   <p align="center">
     A powerful and scalable backend application for the Ecko social media platform
     <br />
-    <a href="https://github.com/VladWhiteK/ecko-backend/wiki"><strong>Explore the wiki »</strong></a>
+    <a href="https://github.com/iamvladw/ecko-backend/wiki"><strong>Explore the wiki »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/VladWhiteK/ecko-backend">View Demo</a>
+    <a href="https://github.com/iamvladw/ecko-backend">View Demo</a>
     ·
-    <a href="https://github.com/VladWhiteK/ecko-backend/issues">Report Bug</a>
+    <a href="https://github.com/iamvladw/ecko-backend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/VladWhiteK/ecko-backend/issues">Request Feature</a>
+    <a href="https://github.com/iamvladw/ecko-backend/issues">Request Feature</a>
   </p>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/actions/workflow/status/VladWhiteK/ecko-backend/jest.yml?label=Tests&style=popout&branch=development" alt="CI">
-  <img src="https://img.shields.io/github/package-json/v/VladWhiteK/ecko-backend?label=Version&style=popout" alt="Version">
-  <img src="https://img.shields.io/github/last-commit/VladWhiteK/ecko-backend?label=Last%20Commit&style=popout" alt="Last Commit">
-  <img src="https://img.shields.io/github/downloads/VladWhiteK/ecko-backend/total?label=Downloads&style=popout" alt="Downloads">
-  <img src="https://img.shields.io/github/contributors/VladWhiteK/ecko-backend?label=Contributors&style=popout" alt="Contributors">
-  <img src="https://img.shields.io/github/release-date/VladWhiteK/ecko-backend?label=Release%20Date&style=popout" alt="Release Date">
+  <img src="https://img.shields.io/github/actions/workflow/status/iamvladw/ecko-backend/jest.yml?label=Tests&style=popout&branch=development" alt="CI">
+  <img src="https://img.shields.io/github/package-json/v/iamvladw/ecko-backend?label=Version&style=popout" alt="Version">
+  <img src="https://img.shields.io/github/last-commit/iamvladw/ecko-backend?label=Last%20Commit&style=popout" alt="Last Commit">
+  <img src="https://img.shields.io/github/downloads/iamvladw/ecko-backend/total?label=Downloads&style=popout" alt="Downloads">
+  <img src="https://img.shields.io/github/contributors/iamvladw/ecko-backend?label=Contributors&style=popout" alt="Contributors">
+  <img src="https://img.shields.io/github/release-date/iamvladw/ecko-backend?label=Release%20Date&style=popout" alt="Release Date">
 </p>
 
 ### Table of Contents
@@ -104,7 +104,7 @@ To get started with the Ecko Backend, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/VladWhiteK/ecko-backend.git
+    git clone https://github.com/iamvladw/ecko-backend.git
     ```
 2. Navigate to the project directory:
     ```bash
@@ -155,7 +155,7 @@ Additionally, make sure to have the `config.json` file in your project directory
 
 ## API Reference
 
-For detailed information about the API endpoints and request/response examples, please refer to the [API Reference documentation](https://github.com/VladWhiteK/ecko-backend/wiki/API-Reference).
+For detailed information about the API endpoints and request/response examples, please refer to the [API Reference documentation](https://github.com/iamvladw/ecko-backend/wiki/API-Reference).
 
 ## License
 
@@ -163,4 +163,4 @@ This project is licensed under the [CC-BY-NC-ND-4.0](https://creativecommons.org
 
 ## Contact
 
-Project Link: [https://github.com/VladWhiteK/ecko-backend](https://github.com/VladWhiteK/ecko-backend)
+Project Link: [https://github.com/iamvladw/ecko-backend](https://github.com/iamvladw/ecko-backend)
