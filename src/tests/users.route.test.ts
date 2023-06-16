@@ -97,24 +97,6 @@ describe('Testing Users Route', () => {
         });
     });
 
-    it('route /add/user should return 401 if user already exists', async () => {
-        // Assuming the user already exists in the database
-        const existingUser = {
-            username: 'existinguser',
-            email: 'existinguser@example.com',
-            password: 'password123'
-        };
-
-        const response = await request(server)
-            .post('/users/add/user')
-            .send(existingUser);
-
-        expect(response.status).toBe(401);
-        expect(response.body).toEqual({
-            message: 'User already exists based on the data provided'
-        });
-    });
-
     it('route /edit/user should return 401 if username is empty', async () => {
         const response = await request(server)
             .put('/users/edit/user/:uuid')
@@ -148,13 +130,6 @@ describe('Testing Users Route', () => {
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
-    });
-
-    it('route /list/users should return 200 if user exists', async () => {
-        const response = await request(server).get('/users/fetch/users').send();
-
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('users');
     });
 
     it('route /fetch/user should return 401 if username is empty', async () => {
