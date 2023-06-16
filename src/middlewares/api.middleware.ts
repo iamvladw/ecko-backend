@@ -60,6 +60,7 @@ const authKey = (
 
             if (matchedIP) {
                 next();
+                return logger.info('Accessing with an whitelisted IP, access granted...');
             } else {
                 return res.status(403).json({ message: 'Unauthorized' });
             }
@@ -69,8 +70,7 @@ const authKey = (
 
             if (matchedIP) {
                 next();
-            } else {
-                return res.status(403).json({ message: 'Unauthorized' });
+                return logger.info('Accessing with an whitelisted IP, access granted...');
             }
             
             // Get the API key from the Authorization header
