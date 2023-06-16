@@ -26,6 +26,11 @@ const authKey = (
             next();
             return logger.info('Local request, skipping API key check...');
         }
+
+        // Override the apiAuthMethod if the whitelist is empty
+        if (config.whitelist.length === 0) {
+            config.apiAuthMethod = 'key';
+        }
         
         // Checks the api auth method
         if (config.apiAuthMethod === 'key') {
