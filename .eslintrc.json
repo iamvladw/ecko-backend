@@ -20,7 +20,14 @@
         "certificates",
         "coverage",
         "latest.log",
-        "jest.config.js"
+        "jest.config.js",
+        "dashboard.html",
+        "config.example.json",
+        "package.json",
+        "README.md",
+        "FUNDING.yml",
+        "settings.json",
+        "dashboard.js"
     ],
     "rules": {
         "indent": ["error", 4],
@@ -43,7 +50,7 @@
         "max-len": [
             "error",
             {
-                "code": 150
+                "code": 250
             }
         ],
         "object-curly-newline": [

@@ -3,8 +3,9 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import logger from './helpers/winston.helper';
-import userRouter from './routes/users.route';
+import dashboardRouter from './routes/dashboard.route';
 import authRouter from './routes/auth.route';
+import userRouter from './routes/users.route';
 import interestRouter from './routes/interests.route';
 import config from './helpers/config.helper';
 import helperFunctions from './helpers/functions.helper';
@@ -43,6 +44,7 @@ server.use(requestLoggerMiddleware);
 server.enable('trust proxy');
 
 // Define api routes
+server.use('/', dashboardRouter);
 server.use('/auth', authRouter);
 server.use('/users', userRouter);
 server.use('/interests', interestRouter);

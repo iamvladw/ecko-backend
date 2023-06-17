@@ -18,7 +18,7 @@ const authKey = (
         // Check if the ip is valid
         if (!ip) {
             logger.warn('Invalid IP');
-            ip = req.ip;    
+            ip = req.ip;
         }
 
         // Skip API key check for local requests
@@ -31,7 +31,7 @@ const authKey = (
         if (config.whitelist.length === 0) {
             config.apiAuthMethod = 'key';
         }
-        
+
         // Checks the api auth method
         if (config.apiAuthMethod === 'key') {
             // Get the API key from the Authorization header
@@ -61,23 +61,31 @@ const authKey = (
             next();
         } else if (config.apiAuthMethod === 'ip') {
             const ip_pool = config.whitelist;
-            const matchedIP = ip_pool.find((poolIP) => {return ip?.includes(`::ffff:${poolIP}`);});
+            const matchedIP = ip_pool.find((poolIP) => {
+                return ip?.includes(`::ffff:${poolIP}`);
+            });
 
             if (matchedIP) {
                 next();
-                return logger.info('Accessing with an whitelisted IP, access granted...');
+                return logger.info(
+                    'Accessing with an whitelisted IP, access granted...'
+                );
             } else {
                 return res.status(403).json({ message: 'Unauthorized' });
             }
         } else if (config.apiAuthMethod === 'both') {
             const ip_pool = config.whitelist;
-            const matchedIP = ip_pool.find((poolIP) => {return ip?.includes(`::ffff:${poolIP}`);});
+            const matchedIP = ip_pool.find((poolIP) => {
+                return ip?.includes(`::ffff:${poolIP}`);
+            });
 
             if (matchedIP) {
                 next();
-                return logger.info('Accessing with an whitelisted IP, access granted...');
+                return logger.info(
+                    'Accessing with an whitelisted IP, access granted...'
+                );
             }
-            
+
             // Get the API key from the Authorization header
             const apiKey: string = req.header('x-api-key') as string;
 
