@@ -45,6 +45,7 @@
         "winston": "^3.8.2"
     },
     "devDependencies": {
+        "@npmcli/fs": "^3.1.0",
         "@types/compression": "^1.7.2",
         "@types/cookie-parser": "^1.4.3",
         "@types/crypto-js": "^4.1.1",
