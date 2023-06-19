@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0" />
+        <title>Ecko - Backend Server Info</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+            rel="stylesheet" />
+        <script src="main.js"></script>
+    </head>
+
+    <body class="bg-gray-900">
+        <header class="text-gray-400 bg-gray-900 body-font">
+            <div
+                class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+                <nav
+                    class="flex lg:w-2/5 flex-wrap items-center text-base md:ml-auto">
+                    <a
+                        class="mr-5 hover:text-white"
+                        href="https://github.com/iamvladw/ecko-backend "
+                        >Repository</a
+                    >
+                    <a
+                        class="mr-5 hover:text-white"
+                        href="https://github.com/iamvladw/ecko-backend/issues"
+                        >Issues</a
+                    >
+                    <a
+                        class="mr-5 hover:text-white"
+                        href="https://github.com/iamvladw/ecko-backend/pulls"
+                        >Pull Requests</a
+                    >
+                    <a
+                        class="mr-5 hover:text-white"
+                        href="https://github.com/iamvladw/ecko-backend/discussions"
+                        >Discussions</a
+                    >
+                </nav>
+                <a
+                    class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-white lg:items-center lg:justify-center mb-4 md:mb-0">
+                    <img
+                        src="https://i.imgur.com/CxZAMEc.png"
+                        alt="Logo"
+                        width="50%" />
+                </a>
+                <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
+                    <button
+                        id="_wikiButton"
+                        class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">
+                        Wiki
+                        <svg
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            class="w-4 h-4 ml-1"
+                            viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <section class="text-gray-400 bg-gray-900 body-font">
+            <div class="container px-5 py-4 mx-auto flex flex-wrap">
+                <div class="flex flex-col text-center w-full mb-20">
+                    <a
+                        id="updateNotify"
+                        class="text-xl text-blue-400 tracking-widest font-medium title-font mb-1"
+                        target="_blank"
+                        >Server Status</a
+                    >
+                    <h1
+                        id="server-status"
+                        class="sm:text-3xl text-2xl font-medium title-font text-red-500">
+                        OFFLINE
+                    </h1>
+                </div>
+            </div>
+        </section>
+        <section class="text-gray-400 bg-gray-900 body-font">
+            <div class="container px-5 py-4 mx-auto">
+                <div class="flex flex-wrap -m-4 text-center">
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M176 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64c-35.3 0-64 28.7-64 64H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H64v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H64v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H64c0 35.3 28.7 64 64 64v40c0 13.3 10.7 24 24 24s24-10.7 24-24V448h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24V448h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24V448c35.3 0 64-28.7 64-64h40c13.3 0 24-10.7 24-24s-10.7-24-24-24H448V280h40c13.3 0 24-10.7 24-24s-10.7-24-24-24H448V176h40c13.3 0 24-10.7 24-24s-10.7-24-24-24H448c0-35.3-28.7-64-64-64V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H280V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H176V24zM160 128H352c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32zm192 32H160V352H352V160z" />
+                            </svg>
+                            <h2
+                                id="cpu-usage"
+                                class="title-font font-medium text-3xl text-white">
+                                0.00%
+                            </h2>
+                            <p class="leading-relaxed">CPU Usage</p>
+                        </div>
+                    </div>
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 576 512">
+                                <path
+                                    d="M64 64C28.7 64 0 92.7 0 128v7.4c0 6.8 4.4 12.6 10.1 16.3C23.3 160.3 32 175.1 32 192s-8.7 31.7-21.9 40.3C4.4 236 0 241.8 0 248.6V320H576V248.6c0-6.8-4.4-12.6-10.1-16.3C552.7 223.7 544 208.9 544 192s8.7-31.7 21.9-40.3c5.7-3.7 10.1-9.5 10.1-16.3V128c0-35.3-28.7-64-64-64H64zM576 352H0v64c0 17.7 14.3 32 32 32H80V416c0-8.8 7.2-16 16-16s16 7.2 16 16v32h96V416c0-8.8 7.2-16 16-16s16 7.2 16 16v32h96V416c0-8.8 7.2-16 16-16s16 7.2 16 16v32h96V416c0-8.8 7.2-16 16-16s16 7.2 16 16v32h48c17.7 0 32-14.3 32-32V352zM192 160v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm128 0v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm128 0v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32z" />
+                            </svg>
+                            <h2
+                                id="mem-usage"
+                                class="title-font font-medium text-3xl text-white">
+                                0.00 GB
+                            </h2>
+                            <p class="leading-relaxed">MEM Usage</p>
+                        </div>
+                    </div>
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6L269.8 394.5c-3.8 3.5-8.7 5.5-13.8 5.5s-10.1-2-13.8-5.5L135.1 294.6c-4.5-4.2-7.1-10.1-7.1-16.3c0-12.3 10-22.3 22.3-22.3l57.7 0 0-96c0-17.7 14.3-32 32-32l32 0c17.7 0 32 14.3 32 32l0 96 57.7 0c12.3 0 22.3 10 22.3 22.3c0 6.2-2.6 12.1-7.1 16.3z" />
+                            </svg>
+                            <h2
+                                id="requests"
+                                class="title-font font-medium text-3xl text-white">
+                                0
+                            </h2>
+                            <p class="leading-relaxed">Requests</p>
+                        </div>
+                    </div>
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4l107.1-99.9c3.8-3.5 8.7-5.5 13.8-5.5s10.1 2 13.8 5.5l107.1 99.9c4.5 4.2 7.1 10.1 7.1 16.3c0 12.3-10 22.3-22.3 22.3H304v96c0 17.7-14.3 32-32 32H240c-17.7 0-32-14.3-32-32V256H150.3C138 256 128 246 128 233.7c0-6.2 2.6-12.1 7.1-16.3z" />
+                            </svg>
+                            <h2
+                                id="responses"
+                                class="title-font font-medium text-3xl text-white">
+                                0
+                            </h2>
+                            <p class="leading-relaxed">Responses</p>
+                        </div>
+                    </div>
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M80 104a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm80-24c0 32.8-19.7 61-48 73.3v87.8c18.8-10.9 40.7-17.1 64-17.1h96c35.3 0 64-28.7 64-64v-6.7C307.7 141 288 112.8 288 80c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V160c0 70.7-57.3 128-128 128H176c-35.3 0-64 28.7-64 64v6.7c28.3 12.3 48 40.5 48 73.3c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-32.8 19.7-61 48-73.3V352 153.3C19.7 141 0 112.8 0 80C0 35.8 35.8 0 80 0s80 35.8 80 80zm232 0a24 24 0 1 0 -48 0 24 24 0 1 0 48 0zM80 456a24 24 0 1 0 0-48 24 24 0 1 0 0 48z" />
+                            </svg>
+                            <h2
+                                id="branch-github"
+                                class="title-font font-medium text-3xl text-white">
+                                Undefined
+                            </h2>
+                            <p class="leading-relaxed">Branch</p>
+                        </div>
+                    </div>
+                    <div class="p-4 md:w-1/8 sm:w-1/6 w-full">
+                        <div
+                            class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                            <svg
+                                fill="#60a5fa"
+                                class="text-blue-400 w-12 h-12 mb-3 inline-block"
+                                viewBox="0 0 640 512">
+                                <path
+                                    d="M320 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm156.8-48C462 361 397.4 416 320 416s-142-55-156.8-128H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H163.2C178 151 242.6 96 320 96s142 55 156.8 128H608c17.7 0 32 14.3 32 32s-14.3 32-32 32H476.8z" />
+                            </svg>
+                            <h2
+                                id="commit-github"
+                                class="title-font font-medium text-3xl text-white">
+                                Undefined
+                            </h2>
+                            <p class="leading-relaxed">Commit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="text-gray-400 bg-gray-900 body-font">
+            <div class="container px-5 py-20 mx-auto flex flex-col">
+                <div class="lg:w-4/6 mx-auto">
+                    <div class="flex flex-col sm:flex-row mt-10">
+                        <div
+                            class="border-gray-800 mt-4 pt-2 sm:mt-0 text-center sm:text-left">
+                            <h2
+                                class="text-xl text-blue-400 tracking-widest font-medium title-font mb-1">
+                                About the Project
+                            </h2>
+                            <p class="leading-relaxed text-lg mb-4">
+                                The Ecko Backend is a powerful and scalable
+                                backend application that serves as the
+                                foundation for the Ecko social media platform.
+                                It provides a robust set of features and
+                                functionalities to handle user authentication,
+                                data storage, and API management, supporting
+                                both SQL and NoSQL databases. The backend
+                                supports seamless database replication and
+                                synchronization, ensuring data consistency
+                                across multiple nodes. To enhance security, AES
+                                encryption is implemented for API keys and other
+                                sensitive user data, safeguarding user privacy.
+                            </p>
+                            <a
+                                class="text-blue-400 inline-flex items-center"
+                                href="https://github.com/iamvladw/ecko-backend/wiki/About-the-Project"
+                                target="_blank"
+                                >Learn More
+                                <svg
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    class="w-4 h-4 ml-2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="text-gray-400 bg-gray-900 body-font">
+            <div class="border-t border-gray-800">
+                <div
+                    class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
+                    <img
+                        src="https://i.imgur.com/CxZAMEc.png"
+                        alt="Logo"
+                        width="8%" />
+                    <p
+                        id="footer-data"
+                        class="text-sm text-gray-400 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
+                        © 2023 Ecko Backend v0.0.0 —
+                        <a
+                            href="https://github.com/iamvladw"
+                            class="text-red-500 ml-1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >📌 iamvladw</a
+                        >
+                        —
+                        <a
+                            href="https://github.com/sponsors/iamvladw"
+                            class="text-green-500 ml-1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >💸 Sponsor me</a
+                        >
+                    </p>
+                    <span
+                        class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+                        <button
+                            id="_githubButton"
+                            class="bg-gray-800 inline-flex py-3 px-5 rounded-lg items-center hover:bg-gray-700 hover:bg-opacity-50 focus:outline-none">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                class="w-6 h-6"
+                                viewBox="0 0 496 512">
+                                <path
+                                    d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" />
+                            </svg>
+                            <span
+                                class="ml-4 flex items-start flex-col leading-none">
+                                <span class="text-xs text-gray-500 mb-1"
+                                    >CLONE IT FROM</span
+                                >
+                                <span class="title-font font-medium"
+                                    >GitHub</span
+                                >
+                            </span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

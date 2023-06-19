@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, Send } from 'express';
 import logger from '../helpers/winston.helper';
 import { helperReplication } from '../helpers/replication.helper';
+import helperCache from '../helpers/cache.helper';
 
 const requestLoggerMiddleware = (
     req: Request,
@@ -17,6 +18,9 @@ const requestLoggerMiddleware = (
         }`
     );
     logger.log('request', `Headers: ${JSON.stringify(req.headers)}`);
+
+    helperCache.instance.data.numberOfRequests++;
+    helperCache.update();
 
     // Log the outgoing response
     const originalSend: Send = res.send;
@@ -41,6 +45,9 @@ const requestLoggerMiddleware = (
             );
             logger.error(`${String(err)}`);
         }
+
+        helperCache.instance.data.numberOfResponses++;
+        helperCache.update();
 
         return originalSend.call(this, body);
     };

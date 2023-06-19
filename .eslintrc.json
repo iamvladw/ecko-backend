@@ -21,13 +21,14 @@
         "coverage",
         "latest.log",
         "jest.config.js",
-        "dashboard.html",
         "config.example.json",
         "package.json",
         "README.md",
         "FUNDING.yml",
+        "tailwind.config.js",
         "settings.json",
-        "dashboard.js"
+        "index.html",
+        "main.js"
     ],
     "rules": {
         "indent": ["error", 4],
@@ -50,7 +51,7 @@
         "max-len": [
             "error",
             {
-                "code": 250
+                "code": 200
             }
         ],
         "object-curly-newline": [

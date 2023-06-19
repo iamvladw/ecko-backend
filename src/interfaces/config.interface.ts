@@ -23,15 +23,6 @@ interface SetupConfig {
     ssl?: boolean;
 }
 
-interface ACMEConfig {
-    serverName: string;
-    uuid: string;
-    location: string;
-    secret: string;
-    secretPhrase: string;
-    apiKey: string;
-}
-
 interface DatabaseConfig {
     type: SupportedDatabaseType;
     url?: string;
@@ -56,8 +47,12 @@ interface Config {
         key: string;
         cert: string;
     };
+    wss: {
+        port: number;
+        interval: number;
+    };
     apiAuthMethod: 'key' | 'ip' | 'both';
-    allowRoot: boolean;
+    runAsRoot: boolean;
     logs: boolean;
     debug: boolean;
     replication: boolean;
@@ -72,7 +67,6 @@ export {
     Config,
     DatabaseConfig,
     SetupConfig,
-    ACMEConfig,
     SupportedDatabaseType,
     SupportedDatabaseRole
 };

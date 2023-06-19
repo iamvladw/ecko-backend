@@ -89,7 +89,11 @@ class helperSetup {
                 const setupConfig = this.generateServerConfig(answers);
 
                 helperCache.instance.server = setupConfig;
-
+                helperCache.instance.data = {
+                    lastDatabaseLoaded: '',
+                    numberOfRequests: 0,
+                    numberOfResponses: 0
+                };
                 helperCache.update();
 
                 logger.log(
@@ -143,6 +147,14 @@ class helperSetup {
                     'setup',
                     'Please copy the data provided from the terminal or latest.log'
                 );
+            }
+            if (!helperCache.instance.data) {
+                helperCache.instance.data = {
+                    lastDatabaseLoaded: '',
+                    numberOfRequests: 0,
+                    numberOfResponses: 0
+                };
+                helperCache.update();
             }
         } catch (error) {
             logger.error(

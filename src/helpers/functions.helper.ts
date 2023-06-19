@@ -2,6 +2,7 @@ import os from 'os';
 import osu from 'node-os-utils';
 import config from './config.helper';
 import logger from '../helpers/winston.helper';
+import axios from 'axios';
 
 export default class helperFunctions {
     public static delay(ms: number) {
@@ -35,7 +36,7 @@ export default class helperFunctions {
     }
 
     public static rootPrivileges() {
-        if (config.allowRoot) {
+        if (config.runAsRoot) {
             if (
                 (process.getuid && process.getuid() === 0) ||
                 os.userInfo().username == 'root' ||
@@ -106,5 +107,53 @@ export default class helperFunctions {
         ut_sec = ut_sec % 60;
 
         return `${ut_day} Day(s) ${ut_hour} Hour(s) ${ut_min} Minute(s) ${ut_sec} Second(s)`;
+    }
+
+    public static bytesToGB(bytes: number) {
+        const gigabytes = bytes / (1024 * 1024 * 1024);
+        return gigabytes.toFixed(2);
+    }
+
+    public static formatNumber(number: number): string {
+        const suffixes = ['', 'k', 'M', 'B', 'T'];
+        const suffixNum = Math.floor(String(number).length / 4);
+        let shortValue = parseFloat(
+            (number / Math.pow(1000, suffixNum)).toFixed(1)
+        );
+        if (shortValue % 1 !== 0) {
+            shortValue = Number(shortValue.toFixed(1));
+        }
+        return `${shortValue}${suffixes[suffixNum]}`;
+    }
+
+    public static async getPublicIPAddress(): Promise<string> {
+        const response = await axios.get('https://api.ipify.org?format=json');
+        return String(response.data.ip);
+    }
+
+    public static async getCountryInfo(ipAddress: string): Promise<string> {
+        const apiKey = 'YOUR_API_KEY';
+        const response = await axios.get(
+            `http://ip-api.com/json/${ipAddress}?fields=country`
+        );
+        return String(response.data.country);
+    }
+
+    public static getLocalIPAddress() {
+        const interfaces = os.networkInterfaces();
+        for (const interfaceName in interfaces) {
+            const networkInterface = interfaces[interfaceName];
+            if (networkInterface) {
+                for (const addressInfo of networkInterface) {
+                    if (
+                        addressInfo.family === 'IPv4' &&
+                        !addressInfo.internal
+                    ) {
+                        return addressInfo.address;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

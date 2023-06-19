@@ -1,5 +1,4 @@
 interface JSONData {
-    lastDatabaseLoaded: string;
     server: {
         serverName: string;
         uuid: string;
@@ -7,6 +6,11 @@ interface JSONData {
         secret: string;
         secretPhrase: string;
         apiKey: string;
+    };
+    data: {
+        lastDatabaseLoaded: string;
+        numberOfRequests: number;
+        numberOfResponses: number;
     };
 }
 

@@ -3,7 +3,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import logger from './helpers/winston.helper';
-import dashboardRouter from './routes/dashboard.route';
+import indexRouter from './routes/public.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/users.route';
 import interestRouter from './routes/interests.route';
@@ -44,7 +44,7 @@ server.use(requestLoggerMiddleware);
 server.enable('trust proxy');
 
 // Define api routes
-server.use('/', dashboardRouter);
+server.use('/', indexRouter);
 server.use('/auth', authRouter);
 server.use('/users', userRouter);
 server.use('/interests', interestRouter);
@@ -83,9 +83,12 @@ try {
         // Loads that stats
         helperFunctions.loadStats();
 
+        // Starts the WebSocket server
+        helperEcko.initializeEckoWebSocketServer();
+
         serverEnabled = true;
         logger.info(
-            `Server is running in ${config.protocol.toUpperCase()} mode on ${
+            `Server is running with ${config.protocol.toUpperCase()} mode on ${
                 config.protocol
             }://${DNS}:${PORT}`
         );

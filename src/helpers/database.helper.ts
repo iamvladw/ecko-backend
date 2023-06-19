@@ -299,17 +299,18 @@ export class helperDatabase {
                         `Connected to the backup database: ${dbName}`
                     );
 
-                    if (helperCache.instance.lastDatabaseLoaded) {
+                    if (helperCache.instance.data.lastDatabaseLoaded) {
                         try {
                             if (
                                 String(dbName) !==
-                                    helperCache.instance.lastDatabaseLoaded &&
+                                    helperCache.instance.data
+                                        .lastDatabaseLoaded &&
                                 config.databases[
-                                    helperCache.instance.lastDatabaseLoaded
+                                    helperCache.instance.data.lastDatabaseLoaded
                                 ].role !== 'master'
                             ) {
                                 config.databases[
-                                    helperCache.instance.lastDatabaseLoaded
+                                    helperCache.instance.data.lastDatabaseLoaded
                                 ].role = 'master';
 
                                 config.databases[dbName].role = 'backup';
@@ -323,7 +324,8 @@ export class helperDatabase {
 
                                 if (
                                     await this.initializeBackupDatabase(
-                                        helperCache.instance.lastDatabaseLoaded
+                                        helperCache.instance.data
+                                            .lastDatabaseLoaded
                                     )
                                 ) {
                                     await helperReplication.performReplication();
@@ -333,18 +335,18 @@ export class helperDatabase {
                                         `Data replication for the backup database ${dbName} was successful. The backup database is now up-to-date.`
                                     );
 
-                                    helperCache.instance.lastDatabaseLoaded =
+                                    helperCache.instance.data.lastDatabaseLoaded =
                                         String(dbName);
                                     helperCache.update();
 
                                     config.databases[dbName].role = 'backup';
                                     config.databases[
-                                        helperCache.instance.lastDatabaseLoaded
+                                        helperCache.instance.data.lastDatabaseLoaded
                                     ].role = 'backup';
 
                                     await this.initializeBackupDatabases();
                                 } else {
-                                    helperCache.instance.lastDatabaseLoaded =
+                                    helperCache.instance.data.lastDatabaseLoaded =
                                         String(dbName);
                                     helperCache.update();
 
@@ -367,7 +369,7 @@ export class helperDatabase {
                             logger.error(`${String(err)}`);
                         }
                     } else {
-                        helperCache.instance.lastDatabaseLoaded =
+                        helperCache.instance.data.lastDatabaseLoaded =
                             String(dbName);
                         helperCache.update();
                     }
@@ -508,7 +510,7 @@ export class helperDatabase {
 
                 config.databases[currentDatabase].role = 'master';
 
-                helperCache.instance.lastDatabaseLoaded = databaseName;
+                helperCache.instance.data.lastDatabaseLoaded = databaseName;
                 helperCache.update();
 
                 logger.warn(
@@ -536,8 +538,8 @@ export class helperDatabase {
         try {
             if (
                 String(currentDatabase) !==
-                    helperCache.instance.lastDatabaseLoaded &&
-                config.databases[helperCache.instance.lastDatabaseLoaded]
+                    helperCache.instance.data.lastDatabaseLoaded &&
+                config.databases[helperCache.instance.data.lastDatabaseLoaded]
                     .role !== 'master'
             ) {
                 logger.warn(
@@ -548,7 +550,7 @@ export class helperDatabase {
                 );
 
                 await this.initializeBackupDatabase(
-                    helperCache.instance.lastDatabaseLoaded
+                    helperCache.instance.data.lastDatabaseLoaded
                 );
 
                 config.databases[initialMasterDatabase].role = 'backup';
@@ -565,7 +567,7 @@ export class helperDatabase {
 
                 await this.initializeDatabaseConnection();
 
-                helperCache.instance.lastDatabaseLoaded = String(
+                helperCache.instance.data.lastDatabaseLoaded = String(
                     initialMasterDatabase
                 );
 
