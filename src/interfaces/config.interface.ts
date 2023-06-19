@@ -52,6 +52,7 @@ interface Config {
         interval: number;
     };
     apiAuthMethod: 'key' | 'ip' | 'both';
+    staticPage: boolean,
     runAsRoot: boolean;
     logs: boolean;
     debug: boolean;

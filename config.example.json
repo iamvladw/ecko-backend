@@ -11,7 +11,8 @@
         "interval": 1000
     },
     "apiAuthMethod": "key",
-    "allowRoot": false,
+    "staticPage": true,
+    "runAsRoot": false,
     "logs": true,
     "debug": false,
     "replication": true,
