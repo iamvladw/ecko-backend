@@ -29,7 +29,7 @@ jobs:
 
             - name: Create and populate cache file
               run: |
-                  echo '{"server":{"serverName":"name","uuid":"73d18214-f52f-4498-9bfc-4503b92acdfb","location":"location","secret":"xDlWI`6ipto(6jFzjQ5<G3<0h3+?AJcYRo0KPI6V@3JgvGt%k+g3fGNmNplqKc`Z","secretPhrase":"secret secret secret secret","apiKey":"2p7FFxCZCt7feZW1llcBe7cakOj7bQKR/wIwKBjskYU="}}' > cache/cache.json
+                  echo '{"server":{"serverName":"name","uuid":"73d18214-f52f-4498-9bfc-4503b92acdfb","location":"location","secret":"xDlWI`6ipto(6jFzjQ5<G3<0h3+?AJcYRo0KPI6V@3JgvGt%k+g3fGNmNplqKc`Z","secretPhrase":"secret secret secret secret","apiKey":"2p7FFxCZCt7feZW1llcBe7cakOj7bQKR/wIwKBjskYU="},"data":{"lastDatabaseLoaded":"","numberOfRequests":491,"numberOfResponses":212}}' > cache/cache.json
 
             - name: Rename config
               run: mv config.example.json config.json
