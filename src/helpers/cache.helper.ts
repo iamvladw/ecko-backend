@@ -9,17 +9,17 @@ const cachePath = path.join(__dirname, '../../cache/');
 class helperCache {
     // Read data from JSON file
     private static fetch() {
-        try {
-            if (!fs.existsSync(cacheFilePath)) {
-                // File doesn't exist, create it
-                fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    fs.writeFileSync(cacheFilePath, '{}', 'utf8');
-                    if (err) {
-                        logger.error('Error creating directory:', err);
-                    }
-                });
-            }
+        if (!fs.existsSync(cacheFilePath)) {
+            // File doesn't exist, create it
+            fs.mkdir(cachePath, { recursive: true }, (err) => {
+                fs.writeFileSync(cacheFilePath, '{}', 'utf8');
+                if (err) {
+                    logger.error('Error creating directory:', err);
+                }
+            });
+        }
 
+        try {
             const fileData = fs.readFileSync(cacheFilePath, 'utf8');
             const jsonData = JSON.parse(fileData) as JSONData;
             return jsonData;
@@ -32,18 +32,16 @@ class helperCache {
 
     // Write data to JSON file
     public static update() {
-        try {
-            if (!fs.existsSync(cacheFilePath)) {
-                // File doesn't exist, create it
-                fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    if (err) {
-                        logger.error('Error creating directory:', err);
-                    }
-                });
-
+        if (!fs.existsSync(cacheFilePath)) {
+            // File doesn't exist, create it
+            fs.mkdir(cachePath, { recursive: true }, (err) => {
                 fs.writeFileSync(cacheFilePath, '{}', 'utf8');
-            }
-
+                if (err) {
+                    logger.error('Error creating directory:', err);
+                }
+            });
+        }
+        try {
             const jsonData = JSON.stringify(this.instance);
             fs.writeFileSync(cacheFilePath, jsonData, 'utf8');
         } catch (err) {
