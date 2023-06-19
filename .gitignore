@@ -5,3 +5,4 @@ database.sqlite
 latest.log
 config.json
 package-lock.json
+cache/cache.json
