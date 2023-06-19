@@ -13,7 +13,7 @@ const authKey = (
 ) => {
     try {
         // Check if the request is from the local machine
-        let ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
+        let ip = req.headers['x-real-ip'] ?? req.socket.remoteAddress;
 
         // Check if the ip is valid
         if (!ip) {

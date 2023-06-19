@@ -8,7 +8,7 @@ const requestLoggerMiddleware = (
     res: Response,
     next: NextFunction
 ): void => {
-    const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
+    const ip = req.headers['x-real-ip'] ?? req.socket.remoteAddress;
 
     // Log the incoming request
     logger.log(
