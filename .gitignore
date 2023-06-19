@@ -1,4 +1,4 @@
-cache
+cache.json
 coverage
 node_modules
 database.sqlite
