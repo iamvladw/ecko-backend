@@ -13,11 +13,12 @@ class helperCache {
             if (!fs.existsSync(cacheFilePath)) {
                 // File doesn't exist, create it
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    fs.writeFileSync(cacheFilePath, '{}', 'utf8');
                     if (err) {
                         logger.error('Error creating directory:', err);
                     }
                 });
+
+                fs.writeFileSync(cacheFilePath, '{"server":{},"data":{}}', 'utf8');
             }
 
             const fileData = fs.readFileSync(cacheFilePath, 'utf8');
@@ -36,11 +37,12 @@ class helperCache {
             if (!fs.existsSync(cacheFilePath)) {
                 // File doesn't exist, create it
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    fs.writeFileSync(cacheFilePath, '{}', 'utf8');
                     if (err) {
                         logger.error('Error creating directory:', err);
                     }
                 });
+
+                fs.writeFileSync(cacheFilePath, '{"server":{},"data":{}}', 'utf8');
             }
 
             const jsonData = JSON.stringify(this.instance);

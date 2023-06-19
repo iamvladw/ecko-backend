@@ -71,7 +71,7 @@ class helperSetup {
 
     public static async initializeServerSetup(): Promise<void> {
         try {
-            if (!helperCache.instance.server) {
+            if (!helperCache.instance.server.apiKey) {
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
                 logger.log('setup', '------------------------------------');
                 logger.log(

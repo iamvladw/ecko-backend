@@ -8,7 +8,6 @@ import SystemInformation from 'systeminformation';
 import websocket from 'ws';
 import { wssData } from './wss.helper';
 import helperGithub from './github.helper';
-import { EventEmitter } from 'stream';
 
 export default class helperEcko {
     public static generateEkoTag(): string {
@@ -47,7 +46,7 @@ export default class helperEcko {
             try {
                 const wss = new websocket.Server({ port: config.wss.port });
     
-                wss.setMaxListeners(15);
+                wss.setMaxListeners(50);
     
                 logger.info(
                     `WebSocket server is running on: ${config.protocol}://${config.dns}:${config.wss.port}`
