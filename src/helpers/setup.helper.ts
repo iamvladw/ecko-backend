@@ -12,12 +12,24 @@ class helperSetup {
         {
             type: 'input',
             name: 'serverName',
-            message: 'What\'s the server name?'
+            message: 'What\'s the server name?',
+            validate: (value) => {
+                if (value.trim() === '') {
+                    return 'Server name cannot be empty.';
+                }
+                return true;
+            }
         },
         {
             type: 'input',
             name: 'serverLocation',
-            message: 'What\'s the server location?'
+            message: 'What\'s the server location?',
+            validate: (value) => {
+                if (value.trim() === '') {
+                    return 'Server location cannot be empty.';
+                }
+                return true;
+            }
         },
         {
             type: 'input',

@@ -6,6 +6,10 @@
         "key": "/certificates/ssl/key.pem",
         "cert": "/certificates/ssl/cert.pem"
     },
+    "wss": {
+        "port": 8081,
+        "interval": 1000
+    },
     "apiAuthMethod": "key",
     "allowRoot": false,
     "logs": true,
