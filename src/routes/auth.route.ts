@@ -76,7 +76,7 @@ router.post(
 );
 
 router.post('/logout', (req, res) => {
-    const ip = req.headers['x-real-ip'] ?? req.socket.remoteAddress;
+    const ip = req.socket.remoteAddress;
 
     try {
         // Clear the token stored in the cookies

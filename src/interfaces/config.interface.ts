@@ -51,6 +51,7 @@ interface Config {
         port: number;
         interval: number;
     };
+    cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';
     staticPage: boolean,
     runAsRoot: boolean;

@@ -51,7 +51,7 @@
         "max-len": [
             "error",
             {
-                "code": 200
+                "code": 250
             }
         ],
         "object-curly-newline": [

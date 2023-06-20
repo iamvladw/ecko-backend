@@ -10,6 +10,7 @@
         "port": 8081,
         "interval": 1000
     },
+    "cloudflareProxy": false,
     "apiAuthMethod": "key",
     "staticPage": true,
     "runAsRoot": false,
