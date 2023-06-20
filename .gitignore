@@ -1,6 +1,7 @@
 cache
 coverage
-certificates
+certificates/ssl/cert.pem
+certificates/ssl/key.pem
 node_modules
 database.sqlite
 latest.log
