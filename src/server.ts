@@ -51,7 +51,7 @@ server.use('/interests', interestRouter);
 
 // Start the express ecko server
 try {
-    eckoServer.listen(PORT, async () => {
+    eckoServer.listen(PORT, DNS, async () => {
         logger.info('███████╗ ██████╗██╗  ██╗ ██████╗ ');
         logger.info('██╔════╝██╔════╝██║ ██╔╝██╔═══██╗');
         logger.info('█████╗  ██║     █████╔╝ ██║   ██║');
