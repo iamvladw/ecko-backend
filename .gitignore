@@ -1,5 +1,6 @@
 cache
 coverage
+certificates
 node_modules
 database.sqlite
 latest.log
