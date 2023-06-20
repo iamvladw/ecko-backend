@@ -13,7 +13,7 @@ const authKey = (
 ) => {
     try {
         // Check if the request is from the local machine
-        const ip = req.socket.remoteAddress;
+        const ip = req.headers['x-real-ip'] ?? req.socket.remoteAddress;
 
         // Skip API key check for local requests
         if (ip?.includes('127.0.0.1')) {
@@ -56,7 +56,11 @@ const authKey = (
         } else if (config.apiAuthMethod === 'ip') {
             const ip_pool = config.whitelist;
             const matchedIP = ip_pool.find((poolIP) => {
-                return ip?.includes(`::ffff:${poolIP}`);
+                if (config.cloudflareProxy) {
+                    return ip?.includes(poolIP);
+                } else {
+                    return ip?.includes(`::ffff:${poolIP}`);
+                }
             });
 
             if (matchedIP) {
