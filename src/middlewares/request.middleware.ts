@@ -40,10 +40,7 @@ const requestLoggerMiddleware = (
                 break;
             }
         } catch (err: unknown) {
-            logger.error(
-                `Error encountered while sending a response to ${String(ip)}`
-            );
-            logger.error(`${String(err)}`);
+            logger.error(`Error while trying to sending a response to ${String(ip)}: ${err as string}`);
         }
 
         helperCache.instance.data.numberOfResponses++;

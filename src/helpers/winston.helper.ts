@@ -9,8 +9,8 @@ const customLogging = {
         warn: 1,
         info: 2,
         request: 2,
+        response: 2,
         success: 2,
-        debug: 2,
         setup: 2
     },
     colors: {
@@ -18,8 +18,8 @@ const customLogging = {
         warn: 'yellow',
         info: 'blue',
         request: 'magenta',
+        response: 'magenta',
         success: 'green',
-        debug: 'yellow',
         setup: 'magenta'
     }
 };

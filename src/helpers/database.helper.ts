@@ -45,111 +45,107 @@ export class helperDatabase {
 
         logger.info('Connecting to the database...');
 
-        switch (databaseConfig.type) {
-        case 'mysql':
-        case 'mariadb':
-        case 'mongodb':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                url: databaseConfig.url,
-                charset: databaseConfig.charset,
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations
-            });
-            break;
-        case 'mssql':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                url: databaseConfig.url,
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations,
-                options: databaseConfig.options
-            });
-            break;
-        case 'postgres':
-        case 'cockroachdb':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                url: databaseConfig.url,
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations
-            } as PostgresConnectionOptions);
-            break;
-        case 'sqlite':
-        case 'better-sqlite3':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                database: databaseConfig.database ?? 'database-ecko.db',
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations
-            });
-            break;
-        case 'capacitor':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                database: databaseConfig.database ?? 'database-ecko.db',
-                driver: databaseConfig.driver,
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations
-            });
-            break;
-        case 'cordova':
-        case 'react-native':
-        case 'nativescript':
-            masterInstance = new DataSource({
-                type: databaseConfig.type,
-                database: databaseConfig.database ?? 'database-ecko.db',
-                driver: databaseConfig.driver,
-                location: databaseConfig.driver,
-                synchronize: databaseConfig.synchronize,
-                logging: databaseConfig.logging,
-                entities: helperDatabase.fetchEntitiesByType(
-                    databaseConfig.type
-                ),
-                migrations: databaseConfig.migrations
-            } as CordovaConnectionOptions);
-            break;
-        default:
-            logger.error(
-                `Unsupported database type: ${
-                        databaseConfig.type as string
-                }`
-            );
-            process.exit(1);
-        }
-
         try {
+            switch (databaseConfig.type) {
+            case 'mysql':
+            case 'mariadb':
+            case 'mongodb':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    url: databaseConfig.url,
+                    charset: databaseConfig.charset,
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations
+                });
+                break;
+            case 'mssql':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    url: databaseConfig.url,
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations,
+                    options: databaseConfig.options
+                });
+                break;
+            case 'postgres':
+            case 'cockroachdb':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    url: databaseConfig.url,
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations
+                } as PostgresConnectionOptions);
+                break;
+            case 'sqlite':
+            case 'better-sqlite3':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    database: databaseConfig.database ?? 'database-ecko.db',
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations
+                });
+                break;
+            case 'capacitor':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    database: databaseConfig.database ?? 'database-ecko.db',
+                    driver: databaseConfig.driver,
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations
+                });
+                break;
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                masterInstance = new DataSource({
+                    type: databaseConfig.type,
+                    database: databaseConfig.database ?? 'database-ecko.db',
+                    driver: databaseConfig.driver,
+                    location: databaseConfig.driver,
+                    synchronize: databaseConfig.synchronize,
+                    logging: databaseConfig.logging,
+                    entities: helperDatabase.fetchEntitiesByType(
+                        databaseConfig.type
+                    ),
+                    migrations: databaseConfig.migrations
+                } as CordovaConnectionOptions);
+                break;
+            default:
+                logger.error(
+                    `Unsupported database type: ${
+                                databaseConfig.type as string
+                    }`
+                );
+                process.exit(1);
+            }
+                
             await masterInstance.initialize();
 
             logger.info(`Master database detected: ${currentDatabase}`);
             logger.info(`Master database type: ${databaseConfig.type}`);
             logger.log('success', 'Connected to the master database');
         } catch (err) {
-            logger.error(
-                `Error connecting to the master database ${currentDatabase}: ${
-                    err as string
-                }`
-            );
+            logger.error(`Error while connecting to the master database ${currentDatabase}: ${err as string}`);
             await this.initializeBackupDatabases();
         }
 
@@ -167,7 +163,7 @@ export class helperDatabase {
                     );
                 })
                 .catch((err) => {
-                    logger.error('Database sync error:', err);
+                    logger.error(`Database sync error: ${err as string}`);
                     process.exit(1);
                 });
         }
@@ -363,10 +359,7 @@ export class helperDatabase {
                                 }
                             }
                         } catch (err) {
-                            logger.error(
-                                'Failed to initialize backup database replication'
-                            );
-                            logger.error(`${String(err)}`);
+                            logger.error(`Error while initializing backup database replication: ${err as string}`);
                         }
                     } else {
                         helperCache.instance.data.lastDatabaseLoaded =
@@ -376,12 +369,7 @@ export class helperDatabase {
                     break;
                 }
             } catch (err) {
-                if (config.debug) {
-                    logger.error(
-                        `Failed to connect to the database: ${dbName}`
-                    );
-                    logger.error(`${String(err)}`);
-                }
+                logger.error(`Error while connecting to ${dbName}: ${err as string}`);
             }
         }
 
@@ -523,12 +511,7 @@ export class helperDatabase {
                 );
                 return true;
             } catch (err: unknown) {
-                if (config.debug) {
-                    logger.error(
-                        `Failed to connect to the database: ${databaseName}`
-                    );
-                    logger.error(`${String(err)}`);
-                }
+                logger.error(`Error while connecting to ${databaseName}: ${err as string}`);
                 return false;
             }
         }
@@ -574,12 +557,7 @@ export class helperDatabase {
                 helperCache.update();
             }
         } catch (err) {
-            logger.error(
-                'Failed to initialize master database synchronization'
-            );
-            if (config.debug) {
-                logger.error(`${err as string}`);
-            }
+            logger.error(`Error while initializing master database synchronization: ${err as string}`);
         }
     }
 
@@ -870,7 +848,6 @@ export class helperDatabase {
             }
         } catch (err) {
             logger.error(`Error while fetching users: ${err as string}`);
-            logger.error(`${String(err)}`);
             return false;
         }
     }
@@ -948,12 +925,7 @@ export class helperDatabase {
                 }
             }
         } catch (err) {
-            logger.error(
-                `Error while getting user based on: ${JSON.stringify(
-                    identifier
-                )}`
-            );
-            logger.error(`${String(err)}`);
+            logger.error(`Error while getting user based on ${JSON.stringify(identifier)}: ${err as string}`);
             return false;
         }
     }
@@ -1071,7 +1043,7 @@ export class helperDatabase {
             );
         } catch (err) {
             logger.error(
-                `Error during updating the interest group {"uuid":${JSON.stringify(
+                `Error while updating the interest group {"uuid":${JSON.stringify(
                     {
                         uuid: uuid
                     }
@@ -1286,9 +1258,7 @@ export class helperDatabase {
                 }
             }
         } catch (err) {
-            logger.error(
-                `Error during fetching interest groups: ${err as string}`
-            );
+            logger.error(`Error while getting user based on ${JSON.stringify(identifier)}: ${err as string}`);
             return [];
         }
     }
@@ -1573,7 +1543,7 @@ export class helperDatabase {
                 return [];
             }
         } catch (err) {
-            logger.error(`Error during fetching interests: ${err as string}`);
+            logger.error(`Error while fetching interests: ${err as string}`);
             return [];
         }
     }
@@ -1895,7 +1865,7 @@ export class helperDatabase {
             );
         } catch (err) {
             logger.error(
-                `Error during removing a follower from the interest: ${
+                `Error while removing a follower from the interest: ${
                     err as string
                 }`
             );
@@ -1955,7 +1925,7 @@ export class helperDatabase {
             }
         } catch (err) {
             logger.error(
-                `Error during fetching followers of the interest: ${
+                `Error while fetching followers of the interest: ${
                     err as string
                 }`
             );
@@ -2081,11 +2051,7 @@ export class helperDatabase {
                 break;
             }
         } catch (err) {
-            logger.error(
-                `Error during adding a follower to the interest: ${
-                    err as string
-                }`
-            );
+            logger.error(`Error while adding a follower to the user: ${err as string}`);
         }
     }
 
@@ -2216,7 +2182,7 @@ export class helperDatabase {
             }
         } catch (err) {
             logger.error(
-                `Error during adding a follower to the interest: ${
+                `Error while adding a follower to the interest: ${
                     err as string
                 }`
             );

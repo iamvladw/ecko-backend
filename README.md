@@ -128,15 +128,8 @@ To get started with the Ecko Backend, follow these steps:
     ```bash
     npm run dev
     ```
-    **Note:** Running the server in with debug mode is recommended for the development branch. You can enable it from the config.json
 
-```bash
-...
-"debug": true,
-...
-```
-
-3. Complete the first-time setup by providing the following data:
+2. Complete the first-time setup by providing the following data:
 
     ```bash
     Server Name: <Enter the name of your server>
@@ -147,7 +140,7 @@ To get started with the Ecko Backend, follow these steps:
 
     ![Example GIF](./.media/setup-example.gif)
 
-4. Access the backend API at [http://localhost:8080](http://localhost:8080).
+3. Access the backend API at [http://localhost:8080](http://localhost:8080).
 
 Please note that the instructions assume you have NVM already installed. If you don't have NVM, you can follow the provided instructions to install it before proceeding with the Node.js 20 installation.
 

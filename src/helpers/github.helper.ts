@@ -36,7 +36,7 @@ export default class helperGithub {
             const content: string = response.data.version;
             return content;
         } catch (error) {
-            logger.error('Error retrieving GitHub package version:', error);
+            logger.error(`Error while trying to retrieve GitHub package version: ${error as string}`);
             return 'Error retrieving GitHub package version';
         }
     }

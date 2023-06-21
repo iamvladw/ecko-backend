@@ -16,7 +16,7 @@ class helperAES {
             }).toString();
             return ciphertext;
         } catch (err) {
-            logger.error(err as string);
+            logger.error(`Error while trying to encrypt ${value as string}: ${err as string}`);
         }
     }
 
@@ -33,7 +33,7 @@ class helperAES {
             });
             return decryptedData.toString(CryptoJS.enc.Utf8);
         } catch (err) {
-            logger.error(err as string);
+            logger.error(`Error while trying to decrypt ${value as string}: ${err as string}`);
         }
     }
 }

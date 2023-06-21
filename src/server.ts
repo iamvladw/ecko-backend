@@ -74,7 +74,7 @@ try {
         // Connecting to the database
         await helperDatabase.initializeDatabaseConnection();
 
-        // Connecting to the database
+        // Initializes the master sync
         await helperDatabase.initializeMasterSync();
 
         // Checks if the database is up-to-date
@@ -88,16 +88,13 @@ try {
 
         serverEnabled = true;
         logger.info(
-            `Server is running with ${config.protocol.toUpperCase()} mode on ${
+            `Server is running with ${config.protocol.toUpperCase()} mode on: ${
                 config.protocol
             }://${DNS}:${PORT}`
         );
     });
 } catch (err) {
-    logger.error(
-        'Error during initializing the server. Shutting down the server...'
-    );
-    logger.error(`${err as string}`);
+    logger.error(`Error while trying to start the server: ${err as string}`);
     process.exit(1);
 }
 

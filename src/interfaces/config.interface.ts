@@ -56,7 +56,6 @@ interface Config {
     staticPage: boolean,
     runAsRoot: boolean;
     logs: boolean;
-    debug: boolean;
     replication: boolean;
     whitelist: string[];
     databases: Record<string, DatabaseConfig>;

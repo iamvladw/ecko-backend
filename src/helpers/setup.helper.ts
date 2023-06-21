@@ -168,11 +168,8 @@ class helperSetup {
                 };
                 helperCache.update();
             }
-        } catch (error) {
-            logger.error(
-                'Error occurred while generating server configuration:',
-                error
-            );
+        } catch (err) {
+            logger.error(`Error while trying to generate server configuration: ${err as string}`);
         }
     }
 }

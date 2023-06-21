@@ -196,10 +196,7 @@ export class helperReplication {
 
                                 replicatedSyncDataBases.push(backupName);
                             } catch (err) {
-                                logger.error(
-                                    `Error during synchronization of the database: ${backupName}`
-                                );
-                                logger.error(`${err as string}`);
+                                logger.error(`Error while trying to synchronize ${backupName}: ${err as string}`);
                             }
                         }
 
@@ -730,12 +727,7 @@ export class helperReplication {
 
                         replicatedDataBases.push(backupName);
                     } catch (err) {
-                        if (config.debug) {
-                            logger.error(
-                                `Error during replication of the database: ${backupName}`
-                            );
-                            logger.error(`${String(err)}`);
-                        }
+                        logger.error(`Error while replicating ${backupName}: ${err as string}`);
                     }
                 }
 
@@ -756,8 +748,8 @@ export class helperReplication {
                         )}`
                     );
                 }
-            } catch (err) {
-                logger.error('Error during replication:', err);
+            } catch(err) {
+                logger.error(`Error while replicating: ${err as string}`);
             }
         }
     }

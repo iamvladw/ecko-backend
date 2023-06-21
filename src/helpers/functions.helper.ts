@@ -64,30 +64,25 @@ export default class helperFunctions {
     }
 
     public static loadStats() {
-        if (config.debug) {
-            try {
-                logger.log(
-                    'debug',
-                    `CPU model loaded as ${osu.cpu.model()} with Cores x${osu.cpu.count()}`
-                );
-            } catch {
-                logger.log('debug', 'Failed to fetch the current cpu model!');
-            }
-
-            logger.log(
-                'debug',
-                `OS was detected as ${os.platform()} ${os.arch()} ${os.machine()} `
+        try {
+            logger.info(
+                `CPU model loaded as ${osu.cpu.model()} with Cores x${osu.cpu.count()}`
             );
-            logger.log(
-                'debug',
-                `Uptime of the system is ${helperFunctions.uptime(os.uptime())}`
-            );
-            logger.log('debug', `PID of this process is ${process.pid}`);
-            logger.log(
-                'debug',
-                `Local version of the node is ${process.version}`
-            );
+        } catch(err) {
+            logger.error(`Error while trying to load CPU model: ${err as string}`);
         }
+
+        logger.info(
+            `OS was detected as ${os.platform()} ${os.arch()} ${os.machine()} `
+        );
+        logger.info(
+            `Uptime of the system is ${this.uptime(os.uptime())}`
+        );
+        logger.info(`PID of this process is ${process.pid}`);
+        logger.info(
+            `Local version of the node is ${process.version}`
+        );
+        
     }
 
     public static uptime(osuptime: number) {

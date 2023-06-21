@@ -15,7 +15,6 @@
     "staticPage": true,
     "runAsRoot": false,
     "logs": true,
-    "debug": false,
     "replication": true,
     "whitelist": [
         "127.0.0.1"

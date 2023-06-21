@@ -116,7 +116,7 @@ const authKey = (
         }
     } catch (err) {
         // Handle unexpected errors
-        logger.error(`Error during API key verification: ${err as string}`);
+        logger.error(`Error while verifying API key: ${err as string}`);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

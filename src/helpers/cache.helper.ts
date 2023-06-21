@@ -15,7 +15,7 @@ class helperCache {
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
                     fs.writeFileSync(cacheFilePath, '{"server":{},"data":{}}', 'utf8');
                     if (err) {
-                        logger.error('Error creating directory:', err);
+                        logger.error(`Error while trying to create ${cacheFilePath}: ${String(err)}`);
                     }
                 });
             }
@@ -24,7 +24,7 @@ class helperCache {
             const jsonData = JSON.parse(fileData) as JSONData;
             return jsonData;
         } catch (err) {
-            logger.error('Error reading data from file:', err);
+            logger.error(`Error while trying to read ${cacheFilePath}: ${err as string}`);
         }
     }
 
@@ -38,7 +38,7 @@ class helperCache {
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
                     fs.writeFileSync(cacheFilePath, '{"server":{},"data":{}}', 'utf8');
                     if (err) {
-                        logger.error('Error creating directory:', err);
+                        logger.error(`Error while trying to create ${cacheFilePath}: ${String(err)}`);
                     }
                 });
             }
@@ -46,7 +46,7 @@ class helperCache {
             const jsonData = JSON.stringify(this.instance);
             fs.writeFileSync(cacheFilePath, jsonData, 'utf8');
         } catch (err) {
-            logger.error('Error writing data to file:', err);
+            logger.error(`Error while trying to write ${cacheFilePath}: ${err as string}`);
         }
     }
 }

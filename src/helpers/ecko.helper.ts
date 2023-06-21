@@ -66,12 +66,7 @@ export default class helperEcko {
                     });
                 });
             } catch (err) {
-                logger.error(
-                    `Error initializing the WebSocket server on port ${
-                        config.wss.port
-                    }: ${err as string}`
-                );
-                logger.error('Shutting down the server...');
+                logger.error(`Error while trying to start the server on ${config.protocol}://${config.dns}:${config.wss.port}: ${err as string}`);
                 process.exit(1);
             }
         }
