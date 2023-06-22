@@ -35,6 +35,13 @@ router.post(
                 .json({ message: 'Please provide a username and a password' });
         }
 
+        const { score } = helperEcko.checkPasswordStrength(password as string);
+
+        if (score < 2) {
+            logger.warn('Password is too weak');
+            return res.status(400).json({ message: 'Password is too weak' });
+        }
+
         // Gets the user from the database
         const user = await helperDatabase.fetchUser(masterInstance, {
             username: username,
@@ -88,40 +95,61 @@ router.post(
     }
 );
 
-router.put('/edit/user/:uuid', authKey, async (req: Request, res: Response) => {
-    const { uuid } = req.params;
+router.put(
+    '/edit/user/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
+    authKey,
+    async (req: Request, res: Response) => {
+        const { uuid } = req.params;
 
-    // Find the user in the data store based on the UUID
-    const user = await helperDatabase.fetchUser(masterInstance, {
-        uuid: uuid
-    });
-
-    // Return an error if the user is not found
-    if (!user) {
-        logger.error('Invalid user');
-        return res.status(401).json({ error: 'Invalid user' });
-    }
-
-    // Update the user object with the data from req.body
-    const updatedUser: User = {
-        ...user,
-        ...req.body
-    };
-
-    await helperDatabase
-        .editUser(masterInstance, uuid, updatedUser)
-        .then(() => {
-            res.json({
-                updatedUser
-            });
-        })
-        .catch(() => {
-            res.status(500).json({ error: 'Internal Server Error' });
+        // Find the user in the data store based on the UUID
+        const user = await helperDatabase.fetchUser(masterInstance, {
+            uuid: uuid
         });
-});
+
+        // Return an error if the user is not found
+        if (!user) {
+            logger.error('Invalid user');
+            return res.status(401).json({ error: 'Invalid user' });
+        }
+
+        const { password } = req.body;
+
+        if (password) {
+            const { score } = helperEcko.checkPasswordStrength(
+                password as string
+            );
+
+            if (score < 2) {
+                logger.warn('Password is too weak');
+                return res
+                    .status(400)
+                    .json({ message: 'Password is too weak' });
+            }
+        }
+
+        // Update the user object with the data from req.body
+        const updatedUser: User = {
+            ...user,
+            ...req.body
+        };
+
+        await helperDatabase
+            .editUser(masterInstance, uuid, updatedUser)
+            .then(() => {
+                res.json({
+                    updatedUser
+                });
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
+    }
+);
 
 router.delete(
     '/remove/user/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -152,6 +180,7 @@ router.delete(
 
 router.get(
     '/fetch/user/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -195,8 +224,8 @@ router.get('/fetch/users', authKey, async (req: Request, res: Response) => {
 router.post(
     '/add/follower',
     [
-        body('userUUID').notEmpty().withMessage('User uuid is required'),
-        body('targetUUID').notEmpty().withMessage('Target uuid is required')
+        body('user').notEmpty().withMessage('UUID is required'),
+        body('target').notEmpty().withMessage('Target uuid is required')
     ],
     authKey,
     async (req: Request, res: Response) => {
@@ -205,14 +234,14 @@ router.post(
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { userUUID, targetUUID } = req.body;
+        const { user, target } = req.body;
 
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: userUUID
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {
+            uuid: user
         });
 
-        const target = await helperDatabase.fetchUser(masterInstance, {
-            uuid: targetUUID
+        const targetInstance = await helperDatabase.fetchUser(masterInstance, {
+            uuid: target
         });
 
         // Return an error if the user is not found
@@ -229,14 +258,14 @@ router.post(
         try {
             await helperDatabase.addFollowerToUser(
                 masterInstance,
-                userUUID as string,
-                targetUUID as string
+                user as string,
+                target as string
             );
 
             res.json({
                 message: `The follower ${
-                    targetUUID as string
-                } has been added to User ${userUUID as string} successfully`
+                    target as string
+                } has been added to User ${user as string} successfully`
             });
         } catch (err) {
             res.status(500).json({ error: 'Internal Server Error' });
@@ -247,8 +276,8 @@ router.post(
 router.delete(
     '/remove/follower',
     [
-        body('userUUID').notEmpty().withMessage('User uuid is required'),
-        body('targetUUID').notEmpty().withMessage('Target uuid is required')
+        body('user').notEmpty().withMessage('UUID is required'),
+        body('target').notEmpty().withMessage('Target uuid is required')
     ],
     authKey,
     async (req: Request, res: Response) => {
@@ -257,23 +286,23 @@ router.delete(
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { userUUID, targetUUID } = req.body;
+        const { user, target } = req.body;
 
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: userUUID
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {
+            uuid: user
         });
 
-        const target = await helperDatabase.fetchUser(masterInstance, {
-            uuid: targetUUID
+        const targetInstance = await helperDatabase.fetchUser(masterInstance, {
+            uuid: target
         });
 
         // Return an error if the user is not found
-        if (!user) {
+        if (!userInstance) {
             logger.error('Invalid user');
             return res.status(401).json({ error: 'Invalid user' });
         }
 
-        if (!target) {
+        if (!targetInstance) {
             logger.error('Invalid target');
             return res.status(401).json({ error: 'Invalid target' });
         }
@@ -281,14 +310,14 @@ router.delete(
         try {
             await helperDatabase.removeFollowerFromUser(
                 masterInstance,
-                userUUID as string,
-                targetUUID as string
+                user as string,
+                target as string
             );
 
             res.json({
                 message: `The follower ${
-                    targetUUID as string
-                } has been added to User ${userUUID as string} successfully`
+                    target as string
+                } has been added to User ${user as string} successfully`
             });
         } catch (err) {
             res.status(500).json({ error: 'Internal Server Error' });
@@ -298,7 +327,7 @@ router.delete(
 
 router.get(
     '/fetch/followers/:uuid',
-    [param('uuid').notEmpty().withMessage('User uuid is required')],
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
@@ -331,7 +360,7 @@ router.get(
 
 router.get(
     '/fetch/following/:uuid',
-    [param('uuid').notEmpty().withMessage('User uuid is required')],
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const errors = validationResult(req);

@@ -726,17 +726,16 @@ export class helperReplication {
                             const matchingBackupBadge = backupBadges.find(
                                 (backupBadge) => {
                                     return (
-                                        backupBadge.uuid ===
-                                                                masterBadge.uuid
+                                        backupBadge.uuid === masterBadge.uuid
                                     );
                                 }
                             );
-                        
+
                             const Badge = this.mapBadgeFields(
                                 masterBadge,
                                 backupDB.type
                             );
-                        
+
                             if (!matchingBackupBadge) {
                                 switch (backupDB.type) {
                                 case 'mysql':
@@ -761,44 +760,43 @@ export class helperReplication {
                                 }
                             }
                         }
-                        
+
                         for (const backupBadge of backupBadges) {
                             const masterBadge = masterBadges.find(
                                 (masterBadge) => {
                                     return (
-                                        masterBadge.uuid ===
-                                                                backupBadge.uuid
+                                        masterBadge.uuid === backupBadge.uuid
                                     );
                                 }
                             );
-                        
+
                             if (masterBadge) {
                                 const unpackedBackupBadge =
-                                                            helperReplication.unpackBadgeFields(
-                                                                backupBadge
-                                                            ) as Record<string, unknown>;
+                                    helperReplication.unpackBadgeFields(
+                                        backupBadge
+                                    ) as Record<string, unknown>;
                                 const unpackedMasterBadge =
-                                                            helperReplication.unpackBadgeFields(
-                                                                masterBadge
-                                                            ) as Record<string, unknown>;
-                        
+                                    helperReplication.unpackBadgeFields(
+                                        masterBadge
+                                    ) as Record<string, unknown>;
+
                                 const fieldsToUpdate: Record<string, unknown> =
-                                                            {};
-                        
+                                    {};
+
                                 for (const field in unpackedBackupBadge) {
                                     if (field in unpackedBackupBadge) {
                                         const backupBadgeFieldValue =
-                                                                    unpackedBackupBadge[field];
+                                            unpackedBackupBadge[field];
                                         const masterBadgeFieldValue =
-                                                                    unpackedMasterBadge[field];
-                        
+                                            unpackedMasterBadge[field];
+
                                         if (
                                             masterBadgeFieldValue !==
-                                                                    backupBadgeFieldValue
+                                            backupBadgeFieldValue
                                         ) {
                                             fieldsToUpdate[field] =
-                                                                        masterBadgeFieldValue;
-                        
+                                                masterBadgeFieldValue;
+
                                             switch (backupDB.type) {
                                             case 'mysql':
                                             case 'mariadb':
@@ -839,17 +837,16 @@ export class helperReplication {
                                 }
                             }
                         }
-                        
+
                         for (const backupBadge of backupBadges) {
                             const matchingMasterBadge = masterBadges.find(
                                 (masterBadge) => {
                                     return (
-                                        masterBadge.uuid ===
-                                                                backupBadge.uuid
+                                        masterBadge.uuid === backupBadge.uuid
                                     );
                                 }
                             );
-                        
+
                             if (!matchingMasterBadge) {
                                 switch (backupDB.type) {
                                 case 'mysql':
@@ -1142,15 +1139,12 @@ export class helperReplication {
         return userFields;
     }
 
-    public static unpackBadgeFields(
-        masterBadge: MySQLBadge | MongoDBBadge
-    ) {
+    public static unpackBadgeFields(masterBadge: MySQLBadge | MongoDBBadge) {
         let userFields;
         switch (masterBadge.constructor) {
         case MySQLBadge:
             // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
-            const { id, ...userFields_sql } =
-                    masterBadge as MySQLBadge;
+            const { id, ...userFields_sql } = masterBadge as MySQLBadge;
             userFields = userFields_sql;
             break;
         default:

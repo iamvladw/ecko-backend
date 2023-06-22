@@ -130,4 +130,45 @@ export default class helperEcko {
 
         return cpuUsagePercentage.toFixed(2);
     }
+
+    public static checkPasswordStrength(password: string) {
+        const criteria = {
+            minLength: 8,
+            hasUppercase: /[A-Z]/,
+            hasLowercase: /[a-z]/,
+            hasNumber: /[0-9]/,
+            hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/
+        };
+
+        const strength = {
+            length: password.length >= criteria.minLength,
+            uppercase: criteria.hasUppercase.test(password),
+            lowercase: criteria.hasLowercase.test(password),
+            number: criteria.hasNumber.test(password),
+            specialChar: criteria.hasSpecialChar.test(password)
+        };
+
+        const score = Object.values(strength).filter((valid) => {
+            return valid;
+        }).length;
+
+        let level;
+        if (score === 5) {
+            level = 'Excellent';
+        } else if (score === 4) {
+            level = 'Strong';
+        } else if (score === 3) {
+            level = 'Moderate';
+        } else if (score === 2) {
+            level = 'Fair';
+        } else {
+            level = 'Weak';
+        }
+
+        return {
+            level,
+            strength,
+            score
+        };
+    }
 }

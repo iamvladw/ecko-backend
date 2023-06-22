@@ -117,6 +117,13 @@ router.post(
                 .json({ message: 'Please provide a username and a password' });
         }
 
+        const { score } = helperEcko.checkPasswordStrength(password as string);
+
+        if (score < 2) {
+            logger.warn('Password is too weak');
+            return res.status(400).json({ message: 'Password is too weak' });
+        }
+
         // Gets the user from the database
         const user = await helperDatabase.fetchUser(masterInstance, {
             username: username,

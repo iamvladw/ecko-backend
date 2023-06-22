@@ -4,7 +4,7 @@ import logger from '../helpers/winston.helper';
 import { helperDatabase, masterInstance } from '../helpers/database.helper';
 import { v4 as uuid } from 'uuid';
 import authKey from '../middlewares/api.middleware';
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 import { Interest, InterestGroup } from '../interfaces/interest.interface';
 
 const router = express.Router();
@@ -65,6 +65,7 @@ router.post(
 
 router.put(
     '/edit/group/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -101,6 +102,7 @@ router.put(
 
 router.delete(
     '/remove/group/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -132,6 +134,7 @@ router.delete(
 
 router.get(
     '/fetch/group/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -246,6 +249,7 @@ router.post(
 
 router.put(
     '/edit/interest/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -279,6 +283,7 @@ router.put(
 
 router.delete(
     '/remove/interest/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
@@ -307,6 +312,7 @@ router.delete(
 
 router.get(
     '/fetch/interest/:uuid',
+    [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
