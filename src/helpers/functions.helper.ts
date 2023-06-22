@@ -68,21 +68,18 @@ export default class helperFunctions {
             logger.info(
                 `CPU model loaded as ${osu.cpu.model()} with Cores x${osu.cpu.count()}`
             );
-        } catch(err) {
-            logger.error(`Error while trying to load CPU model: ${err as string}`);
+        } catch (err) {
+            logger.error(
+                `Error while trying to load CPU model: ${err as string}`
+            );
         }
 
         logger.info(
             `OS was detected as ${os.platform()} ${os.arch()} ${os.machine()} `
         );
-        logger.info(
-            `Uptime of the system is ${this.uptime(os.uptime())}`
-        );
+        logger.info(`Uptime of the system is ${this.uptime(os.uptime())}`);
         logger.info(`PID of this process is ${process.pid}`);
-        logger.info(
-            `Local version of the node is ${process.version}`
-        );
-        
+        logger.info(`Local version of the node is ${process.version}`);
     }
 
     public static uptime(osuptime: number) {
@@ -108,12 +105,12 @@ export default class helperFunctions {
         const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
         let suffixIndex = 0;
         let size = bytes;
-      
+
         while (size >= 1024 && suffixIndex < suffixes.length - 1) {
             size /= 1024;
             suffixIndex++;
         }
-      
+
         return `${size.toFixed(2)} ${suffixes[suffixIndex]}`;
     }
 

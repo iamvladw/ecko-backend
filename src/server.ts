@@ -7,6 +7,7 @@ import indexRouter from './routes/public.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/users.route';
 import interestRouter from './routes/interests.route';
+import badgesRouter from './routes/badges.route';
 import config from './helpers/config.helper';
 import helperFunctions from './helpers/functions.helper';
 import helperGithub from './helpers/github.helper';
@@ -48,6 +49,7 @@ server.use('/', indexRouter);
 server.use('/auth', authRouter);
 server.use('/users', userRouter);
 server.use('/interests', interestRouter);
+server.use('/badges', badgesRouter);
 
 // Start the express ecko server
 try {

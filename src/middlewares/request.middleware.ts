@@ -42,8 +42,12 @@ const requestLoggerMiddleware = (
                 void helperReplication.performReplication();
                 break;
             }
-        } catch (err: unknown) {
-            logger.error(`Error while trying to sending a response to ${String(ip)}: ${err as string}`);
+        } catch (err) {
+            logger.error(
+                `Error while trying to sending a response to ${String(ip)}: ${
+                    err as string
+                }`
+            );
         }
 
         return originalSend.call(this, body);

@@ -84,7 +84,9 @@ router.post('/logout', (req, res) => {
 
         return res.status(200).json({ message: 'Logout successful' });
     } catch (err) {
-        logger.error(`Error while trying to log out ${ip as string}: ${err as string}`);
+        logger.error(
+            `Error while trying to log out ${ip as string}: ${err as string}`
+        );
         return res.status(500).json({ message: 'Failed to logout' });
     }
 });

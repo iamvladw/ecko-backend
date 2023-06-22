@@ -17,9 +17,7 @@
     "runAsRoot": false,
     "logs": true,
     "replication": true,
-    "whitelist": [
-        "127.0.0.1"
-    ],
+    "whitelist": ["127.0.0.1"],
     "databases": {
         "SQLite": {
             "type": "sqlite",

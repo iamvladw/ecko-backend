@@ -53,7 +53,7 @@ interface Config {
     };
     cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';
-    staticPage: boolean,
+    staticPage: boolean;
     runAsRoot: boolean;
     logs: boolean;
     replication: boolean;

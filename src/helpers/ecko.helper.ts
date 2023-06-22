@@ -54,7 +54,7 @@ export default class helperEcko {
                 this.wss = new websocket.Server({ port: config.wss.port });
 
                 this.wss.setMaxListeners(config.wss.maxListeners);
-    
+
                 logger.info(
                     `WebSocket server is running on: ${config.protocol}://${config.dns}:${config.wss.port}`
                 );
@@ -63,37 +63,45 @@ export default class helperEcko {
                     ws.on('message', (message) => {
                         const parsedMessage = JSON.parse(String(message));
                         const { route, key } = parsedMessage;
-                
+
                         if (route === 'staticPage') {
                             const publicDataInterval = setInterval(async () => {
                                 const wssData = {
                                     currentBranch: helperGithub.getBranch(),
                                     currentCommit: helperGithub.getCommit(),
                                     currentVersion: packageJson.version,
-                                    githubVersion: await helperGithub.getGitHubPackageVersion(),
-                                    memUsage: helperFunctions.formatBytes(os.totalmem() - os.freemem()),
+                                    githubVersion:
+                                        await helperGithub.getGitHubPackageVersion(),
+                                    memUsage: helperFunctions.formatBytes(
+                                        os.totalmem() - os.freemem()
+                                    ),
                                     cpuUsage: await helperEcko.serverCPUUsage(),
                                     requests: helperFunctions.formatNumber(
-                                        helperCache.instance.data.numberOfRequests
+                                        helperCache.instance.data
+                                            .numberOfRequests
                                     ),
                                     responses: helperFunctions.formatNumber(
-                                        helperCache.instance.data.numberOfResponses
+                                        helperCache.instance.data
+                                            .numberOfResponses
                                     )
                                 };
-                
+
                                 ws.send(JSON.stringify(wssData));
                             }, config.wss.interval);
-                
+
                             ws.on('close', () => {
                                 clearInterval(publicDataInterval);
                             });
                         } else if (route === 'private') {
-                            if (helperAES.decrypt(String(key)) === helperCache.instance.server.secret) {
+                            if (
+                                helperAES.decrypt(String(key)) ===
+                                helperCache.instance.server.secret
+                            ) {
                                 const dataInterval = setInterval(() => {
                                     // Update and send private data
-                                    ws.send(JSON.stringify({p: 'private'}));
+                                    ws.send(JSON.stringify({ p: 'private' }));
                                 }, config.wss.interval);
-                
+
                                 ws.on('close', () => {
                                     clearInterval(dataInterval);
                                 });
@@ -106,7 +114,11 @@ export default class helperEcko {
                     });
                 });
             } catch (err) {
-                logger.error(`Error while trying to start the websocket server on ${config.protocol}://${config.dns}:${config.wss.port}: ${err as string}`);
+                logger.error(
+                    `Error while trying to start the websocket server on ${
+                        config.protocol
+                    }://${config.dns}:${config.wss.port}: ${err as string}`
+                );
                 process.exit(1);
             }
         }

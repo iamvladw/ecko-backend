@@ -18,6 +18,8 @@ import {
     MySQLInterest,
     MySQLInterestGroup
 } from '../database/entities/interests.entity';
+import { MongoDBBadge, MySQLBadge } from '../database/entities/badge.entity';
+import { Badge } from '../interfaces/badge.interface';
 
 export class helperReplication {
     public static async performReplication() {
@@ -52,6 +54,7 @@ export class helperReplication {
                     | MongoDBInterestGroup
                 )[];
                 let masterInterests: (MySQLInterest | MongoDBInterest)[];
+                let masterBadges: (MySQLBadge | MongoDBBadge)[];
 
                 switch (currentDB.type) {
                 case 'mysql':
@@ -73,6 +76,9 @@ export class helperReplication {
                     masterInterests = await masterInstance
                         .getRepository(MySQLInterest)
                         .find();
+                    masterBadges = await masterInstance
+                        .getRepository(MySQLBadge)
+                        .find();
                     break;
                 case 'mongodb':
                     masterUsers = await masterInstance
@@ -83,6 +89,9 @@ export class helperReplication {
                         .find();
                     masterInterests = await masterInstance
                         .getRepository(MongoDBInterest)
+                        .find();
+                    masterBadges = await masterInstance
+                        .getRepository(MongoDBBadge)
                         .find();
                     break;
                 }
@@ -181,7 +190,11 @@ export class helperReplication {
 
                                 replicatedSyncDataBases.push(backupName);
                             } catch (err) {
-                                logger.error(`Error while trying to synchronize ${backupName}: ${err as string}`);
+                                logger.error(
+                                    `Error while trying to synchronize ${backupName}: ${
+                                        err as string
+                                    }`
+                                );
                             }
                         }
 
@@ -194,6 +207,7 @@ export class helperReplication {
                             | MySQLInterest
                             | MongoDBInterest
                         )[];
+                        let backupBadges: (MySQLBadge | MongoDBBadge)[];
 
                         switch (backupDB.type) {
                         case 'mysql':
@@ -215,6 +229,9 @@ export class helperReplication {
                             backupInterests = await backupInstance
                                 .getRepository(MySQLInterest)
                                 .find();
+                            backupBadges = await backupInstance
+                                .getRepository(MySQLBadge)
+                                .find();
                             break;
                         case 'mongodb':
                             backupUsers = await backupInstance
@@ -225,6 +242,9 @@ export class helperReplication {
                                 .find();
                             backupInterests = await backupInstance
                                 .getRepository(MongoDBInterest)
+                                .find();
+                            backupBadges = await backupInstance
+                                .getRepository(MongoDBBadge)
                                 .find();
                             break;
                         }
@@ -700,9 +720,176 @@ export class helperReplication {
                             }
                         }
 
+                        // Badges
+
+                        for (const masterBadge of masterBadges) {
+                            const matchingBackupBadge = backupBadges.find(
+                                (backupBadge) => {
+                                    return (
+                                        backupBadge.uuid ===
+                                                                masterBadge.uuid
+                                    );
+                                }
+                            );
+                        
+                            const Badge = this.mapBadgeFields(
+                                masterBadge,
+                                backupDB.type
+                            );
+                        
+                            if (!matchingBackupBadge) {
+                                switch (backupDB.type) {
+                                case 'mysql':
+                                case 'mariadb':
+                                case 'postgres':
+                                case 'cockroachdb':
+                                case 'sqlite':
+                                case 'better-sqlite3':
+                                case 'capacitor':
+                                case 'cordova':
+                                case 'react-native':
+                                case 'nativescript':
+                                    await backupInstance
+                                        .getRepository(MySQLBadge)
+                                        .save(Badge);
+                                    break;
+                                case 'mongodb':
+                                    await backupInstance
+                                        .getRepository(MongoDBBadge)
+                                        .save(Badge);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        for (const backupBadge of backupBadges) {
+                            const masterBadge = masterBadges.find(
+                                (masterBadge) => {
+                                    return (
+                                        masterBadge.uuid ===
+                                                                backupBadge.uuid
+                                    );
+                                }
+                            );
+                        
+                            if (masterBadge) {
+                                const unpackedBackupBadge =
+                                                            helperReplication.unpackBadgeFields(
+                                                                backupBadge
+                                                            ) as Record<string, unknown>;
+                                const unpackedMasterBadge =
+                                                            helperReplication.unpackBadgeFields(
+                                                                masterBadge
+                                                            ) as Record<string, unknown>;
+                        
+                                const fieldsToUpdate: Record<string, unknown> =
+                                                            {};
+                        
+                                for (const field in unpackedBackupBadge) {
+                                    if (field in unpackedBackupBadge) {
+                                        const backupBadgeFieldValue =
+                                                                    unpackedBackupBadge[field];
+                                        const masterBadgeFieldValue =
+                                                                    unpackedMasterBadge[field];
+                        
+                                        if (
+                                            masterBadgeFieldValue !==
+                                                                    backupBadgeFieldValue
+                                        ) {
+                                            fieldsToUpdate[field] =
+                                                                        masterBadgeFieldValue;
+                        
+                                            switch (backupDB.type) {
+                                            case 'mysql':
+                                            case 'mariadb':
+                                            case 'postgres':
+                                            case 'cockroachdb':
+                                            case 'sqlite':
+                                            case 'better-sqlite3':
+                                            case 'capacitor':
+                                            case 'cordova':
+                                            case 'react-native':
+                                            case 'nativescript':
+                                                await backupInstance
+                                                    .getRepository(
+                                                        MySQLBadge
+                                                    )
+                                                    .update(
+                                                        {
+                                                            uuid: backupBadge.uuid
+                                                        },
+                                                        fieldsToUpdate
+                                                    );
+                                                break;
+                                            case 'mongodb':
+                                                await backupInstance
+                                                    .getRepository(
+                                                        MongoDBBadge
+                                                    )
+                                                    .update(
+                                                        {
+                                                            uuid: backupBadge.uuid
+                                                        },
+                                                        fieldsToUpdate
+                                                    );
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        for (const backupBadge of backupBadges) {
+                            const matchingMasterBadge = masterBadges.find(
+                                (masterBadge) => {
+                                    return (
+                                        masterBadge.uuid ===
+                                                                backupBadge.uuid
+                                    );
+                                }
+                            );
+                        
+                            if (!matchingMasterBadge) {
+                                switch (backupDB.type) {
+                                case 'mysql':
+                                case 'mariadb':
+                                case 'postgres':
+                                case 'cockroachdb':
+                                case 'sqlite':
+                                case 'better-sqlite3':
+                                case 'capacitor':
+                                case 'cordova':
+                                case 'react-native':
+                                case 'nativescript':
+                                    await backupInstance
+                                        .getRepository(MySQLBadge)
+                                        .delete({
+                                            uuid: backupBadge.uuid
+                                        });
+                                    break;
+                                case 'mongodb':
+                                    await backupInstance
+                                        .getRepository(MongoDBBadge)
+                                        .delete({
+                                            uuid: backupBadge.uuid
+                                        });
+                                    break;
+                                }
+                            }
+                        }
+
                         replicatedDataBases.push(backupName);
                     } catch (err) {
-                        logger.error(`Error while replicating ${backupName}: ${err as string}`);
+                        logger.error(
+                            `Error while replicating ${backupName}: ${
+                                err as string
+                            }`
+                        );
+                        logger.warn(
+                            `Database ${backupName} has been disabled temporary for this session...`
+                        );
+                        config.databases[backupName].enabled = false;
                     }
                 }
 
@@ -723,7 +910,7 @@ export class helperReplication {
                         )}`
                     );
                 }
-            } catch(err) {
+            } catch (err) {
                 logger.error(`Error while replicating: ${err as string}`);
             }
         }
@@ -861,6 +1048,48 @@ export class helperReplication {
         }
     }
 
+    public static mapBadgeFields(
+        Badge: MySQLBadge | MongoDBBadge | Badge,
+        type: SupportedDatabaseType
+    ) {
+        let mappedBadge: MySQLBadge | MongoDBBadge | Badge;
+        switch (type) {
+        case 'mysql':
+        case 'mariadb':
+        case 'postgres':
+        case 'cockroachdb':
+        case 'sqlite':
+        case 'better-sqlite3':
+        case 'capacitor':
+        case 'cordova':
+        case 'react-native':
+        case 'nativescript':
+            mappedBadge = new MySQLBadge();
+
+            if ('_id' in Badge) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+                const { _id, ...badgeFields } = Badge;
+                Object.assign(mappedBadge, badgeFields);
+                return mappedBadge;
+            } else {
+                Object.assign(mappedBadge, Badge);
+                return mappedBadge;
+            }
+        case 'mongodb':
+            mappedBadge = new MongoDBBadge();
+
+            if ('id' in Badge) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+                const { id, ...badgeFields } = Badge;
+                Object.assign(mappedBadge, badgeFields);
+                return mappedBadge;
+            } else {
+                Object.assign(mappedBadge, Badge);
+                return mappedBadge;
+            }
+        }
+    }
+
     public static unpackUserFields(masterUser: MySQLUser | MongoDBUser) {
         let userFields;
         switch (masterUser.constructor) {
@@ -908,6 +1137,26 @@ export class helperReplication {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
             const { _id, ...userFields_mongo } =
                     masterInterest as MongoDBInterest;
+            userFields = userFields_mongo;
+        }
+        return userFields;
+    }
+
+    public static unpackBadgeFields(
+        masterBadge: MySQLBadge | MongoDBBadge
+    ) {
+        let userFields;
+        switch (masterBadge.constructor) {
+        case MySQLBadge:
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
+            const { id, ...userFields_sql } =
+                    masterBadge as MySQLBadge;
+            userFields = userFields_sql;
+            break;
+        default:
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-case-declarations, no-unused-vars
+            const { _id, ...userFields_mongo } =
+                    masterBadge as MongoDBBadge;
             userFields = userFields_mongo;
         }
         return userFields;

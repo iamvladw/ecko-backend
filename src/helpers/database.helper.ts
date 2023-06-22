@@ -18,6 +18,9 @@ import {
     MySQLInterestGroup
 } from '../database/entities/interests.entity';
 import { Interest, InterestGroup } from '../interfaces/interest.interface';
+import { Badge } from '../interfaces/badge.interface';
+import { MySQLBadge, MongoDBBadge } from '../database/entities/badge.entity';
+import e from 'express';
 
 let currentDatabase: string;
 let masterInstance: DataSource;
@@ -120,19 +123,23 @@ export class helperDatabase {
             default:
                 logger.error(
                     `Unsupported database type: ${
-                                databaseConfig.type as string
+                            databaseConfig.type as string
                     }`
                 );
                 process.exit(1);
             }
-                
+
             await masterInstance.initialize();
 
             logger.info(`Master database detected: ${currentDatabase}`);
             logger.info(`Master database type: ${databaseConfig.type}`);
             logger.log('success', 'Connected to the master database');
         } catch (err) {
-            logger.error(`Error while connecting to the master database ${currentDatabase}: ${err as string}`);
+            logger.error(
+                `Error while connecting to the master database ${currentDatabase}: ${
+                    err as string
+                }`
+            );
             await this.initializeBackupDatabases();
         }
 
@@ -270,12 +277,14 @@ export class helperDatabase {
                     );
 
                     helperCache.instance.data.lastDatabaseLoaded =
-                            String(dbName);
+                        String(dbName);
                     helperCache.update();
                     break;
                 }
             } catch (err) {
-                logger.error(`Error while connecting to ${dbName}: ${err as string}`);
+                logger.error(
+                    `Error while connecting to ${dbName}: ${err as string}`
+                );
             }
         }
 
@@ -404,7 +413,11 @@ export class helperDatabase {
                 );
                 return true;
             } catch (err: unknown) {
-                logger.error(`Error while connecting to ${databaseName}: ${err as string}`);
+                logger.error(
+                    `Error while connecting to ${databaseName}: ${
+                        err as string
+                    }`
+                );
                 return false;
             }
         }
@@ -450,7 +463,11 @@ export class helperDatabase {
                 helperCache.update();
             }
         } catch (err) {
-            logger.error(`Error while initializing master database synchronization: ${err as string}`);
+            logger.error(
+                `Error while initializing master database synchronization: ${
+                    err as string
+                }`
+            );
         }
     }
 
@@ -489,9 +506,19 @@ export class helperDatabase {
         case 'cordova':
         case 'react-native':
         case 'nativescript':
-            return [MySQLUser, MySQLInterestGroup, MySQLInterest];
+            return [
+                MySQLUser,
+                MySQLInterestGroup,
+                MySQLInterest,
+                MySQLBadge
+            ];
         case 'mongodb':
-            return [MongoDBUser, MongoDBInterestGroup, MongoDBInterest];
+            return [
+                MongoDBUser,
+                MongoDBInterestGroup,
+                MongoDBInterest,
+                MongoDBBadge
+            ];
         default:
             logger.error(
                 `Unsupported database type: ${databaseType as string}`
@@ -811,7 +838,11 @@ export class helperDatabase {
                 }
             }
         } catch (err) {
-            logger.error(`Error while getting user based on ${JSON.stringify(identifier)}: ${err as string}`);
+            logger.error(
+                `Error while getting user based on ${JSON.stringify(
+                    identifier
+                )}: ${err as string}`
+            );
             return false;
         }
     }
@@ -946,6 +977,7 @@ export class helperDatabase {
                 dbType ?? config.databases[currentDatabase].type;
 
             let groupInterests;
+            let users;
 
             switch (databaseType) {
             case 'mysql':
@@ -967,11 +999,36 @@ export class helperDatabase {
                     { uuid: uuid }
                 );
 
+                users = await databaseInstance
+                    .getRepository(MySQLUser)
+                    .find();
+
                 if (groupInterests) {
                     for (const interestUUID of groupInterests.interests) {
                         await databaseInstance
                             .getRepository(MySQLInterest)
                             .delete({ uuid: interestUUID });
+
+                        for (const user of users) {
+                            if (
+                                user.followedInterests.includes(
+                                    interestUUID
+                                )
+                            ) {
+                                user.followedInterests =
+                                        user.followedInterests.filter(
+                                            (interest) => {
+                                                return (
+                                                    interest !== interestUUID
+                                                );
+                                            }
+                                        );
+
+                                await databaseInstance
+                                    .getRepository(MySQLUser)
+                                    .save(user);
+                            }
+                        }
                     }
 
                     await databaseInstance
@@ -990,11 +1047,36 @@ export class helperDatabase {
                     { uuid: uuid }
                 );
 
+                users = await databaseInstance
+                    .getRepository(MongoDBUser)
+                    .find();
+
                 if (groupInterests) {
                     for (const interestUUID of groupInterests.interests) {
                         await databaseInstance
                             .getRepository(MongoDBInterest)
                             .delete({ uuid: interestUUID });
+
+                        for (const user of users) {
+                            if (
+                                user.followedInterests.includes(
+                                    interestUUID
+                                )
+                            ) {
+                                user.followedInterests =
+                                        user.followedInterests.filter(
+                                            (interest) => {
+                                                return (
+                                                    interest !== interestUUID
+                                                );
+                                            }
+                                        );
+
+                                await databaseInstance
+                                    .getRepository(MongoDBUser)
+                                    .save(user);
+                            }
+                        }
                     }
 
                     await databaseInstance
@@ -1139,7 +1221,11 @@ export class helperDatabase {
                 }
             }
         } catch (err) {
-            logger.error(`Error while getting user based on ${JSON.stringify(identifier)}: ${err as string}`);
+            logger.error(
+                `Error while getting user based on ${JSON.stringify(
+                    identifier
+                )}: ${err as string}`
+            );
             return [];
         }
     }
@@ -1290,6 +1376,7 @@ export class helperDatabase {
 
             let interest;
             let groupInterests;
+            let users;
 
             switch (databaseType) {
             case 'mysql':
@@ -1311,15 +1398,33 @@ export class helperDatabase {
                     }
                 );
 
-                if (interest) {
+                users = await databaseInstance
+                    .getRepository(MySQLUser)
+                    .find();
+
+                if (interest && users) {
+                    const interestUUID = interest.uuid;
+
                     groupInterests =
                             await databaseInstance.manager.findOneBy(
                                 MySQLInterestGroup,
                                 { uuid: interest.group }
                             );
 
+                    for (const user of users) {
+                        if (user.followedInterests.includes(interestUUID)) {
+                            user.followedInterests =
+                                    user.followedInterests.filter((uuid) => {
+                                        return uuid !== interestUUID;
+                                    });
+
+                            await databaseInstance
+                                .getRepository(MySQLUser)
+                                .save(user);
+                        }
+                    }
+
                     if (groupInterests) {
-                        const interestUUID = interest.uuid;
                         groupInterests.interests =
                                 groupInterests.interests.filter((uuid) => {
                                     return uuid !== interestUUID;
@@ -1348,15 +1453,33 @@ export class helperDatabase {
                     }
                 );
 
+                users = await databaseInstance
+                    .getRepository(MongoDBUser)
+                    .find();
+
                 if (interest) {
+                    const interestUUID = interest.uuid;
+
                     groupInterests =
                             await databaseInstance.manager.findOneBy(
                                 MongoDBInterestGroup,
                                 { uuid: interest.group }
                             );
 
+                    for (const user of users) {
+                        if (user.followedInterests.includes(interestUUID)) {
+                            user.followedInterests =
+                                    user.followedInterests.filter((uuid) => {
+                                        return uuid !== interestUUID;
+                                    });
+
+                            await databaseInstance
+                                .getRepository(MongoDBUser)
+                                .save(user);
+                        }
+                    }
+
                     if (groupInterests) {
-                        const interestUUID = interest.uuid;
                         groupInterests.interests.filter((uuid) => {
                             return uuid !== interestUUID;
                         });
@@ -1923,7 +2046,9 @@ export class helperDatabase {
                 break;
             }
         } catch (err) {
-            logger.error(`Error while adding a follower to the user: ${err as string}`);
+            logger.error(
+                `Error while adding a follower to the user: ${err as string}`
+            );
         }
     }
 
@@ -2056,6 +2181,480 @@ export class helperDatabase {
                 `Error while adding a follower to the interest: ${
                     err as string
                 }`
+            );
+        }
+    }
+
+    public static async addBadge(
+        databaseInstance: DataSource,
+        badge: Badge,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+
+            const mappedBadge = helperReplication.mapBadgeFields(
+                badge,
+                databaseType
+            );
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                logger.info('Adding the badge to the database...');
+
+                await databaseInstance
+                    .getRepository(MySQLBadge)
+                    .save(mappedBadge);
+                break;
+            case 'mongodb':
+                logger.info('Adding the badge to the database...');
+
+                await databaseInstance
+                    .getRepository(MongoDBBadge)
+                    .save(mappedBadge);
+                break;
+            }
+
+            logger.log(
+                'success',
+                `The badge ${JSON.stringify(
+                    badge.uuid
+                )} has been added successfully`
+            );
+        } catch (err) {
+            logger.error(
+                `Error during adding the badge {"uuid": ${JSON.stringify(
+                    badge.uuid
+                )}}: ${err as string}`
+            );
+        }
+    }
+
+    public static async editBadge(
+        databaseInstance: DataSource,
+        uuid: string,
+        updatedBadge: Badge,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                logger.info('Updating the badge in the database...');
+
+                await databaseInstance
+                    .getRepository(MySQLBadge)
+                    .update({ uuid: uuid }, updatedBadge as MySQLBadge);
+                break;
+            case 'mongodb':
+                logger.info('Updating the badge in the database...');
+
+                await databaseInstance
+                    .getRepository(MongoDBBadge)
+                    .update({ uuid: uuid }, updatedBadge as MongoDBBadge);
+                break;
+            }
+
+            logger.log(
+                'success',
+                `The badge ${JSON.stringify(
+                    updatedBadge.uuid
+                )} has been updated successfully`
+            );
+        } catch (err) {
+            logger.error(
+                `Error during updating the badge {"uuid": ${JSON.stringify(
+                    updatedBadge.uuid
+                )}}: ${err as string}`
+            );
+        }
+    }
+
+    public static async removeBadge(
+        databaseInstance: DataSource,
+        uuid: string,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+            let badge;
+            let users;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                logger.info('Removing the badge from the database...');
+
+                badge = await databaseInstance.manager.findOneBy(
+                    MySQLBadge,
+                    { uuid: uuid }
+                );
+
+                users = await databaseInstance
+                    .getRepository(MySQLUser)
+                    .find();
+
+                if (badge && users) {
+                    for (const user of users) {
+                        if (user.badges.includes(uuid)) {
+                            user.badges = user.badges.filter((badge) => {
+                                return badge !== uuid;
+                            });
+
+                            await databaseInstance
+                                .getRepository(MySQLUser)
+                                .save(user);
+                        }
+                    }
+
+                    await databaseInstance
+                        .getRepository(MySQLBadge)
+                        .delete({ uuid: uuid });
+
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'mongodb':
+                logger.info('Removing the badge from the database...');
+
+                badge = await databaseInstance.manager.findOneBy(
+                    MongoDBBadge,
+                    { uuid: uuid }
+                );
+
+                users = await databaseInstance
+                    .getRepository(MongoDBUser)
+                    .find();
+
+                if (badge && users) {
+                    for (const user of users) {
+                        if (user.badges.includes(uuid)) {
+                            user.badges = user.badges.filter((badge) => {
+                                return badge !== uuid;
+                            });
+
+                            await databaseInstance
+                                .getRepository(MongoDBUser)
+                                .save(user);
+                        }
+                    }
+
+                    await databaseInstance
+                        .getRepository(MongoDBBadge)
+                        .delete({ uuid: uuid });
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (err) {
+            logger.error(
+                `Error during removing the badge ${JSON.stringify({
+                    uuid: uuid
+                })}: ${err as string}`
+            );
+        }
+    }
+
+    public static async fetchBadges(
+        databaseInstance: DataSource,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                logger.info('Fetching badges from the database...');
+
+                return await databaseInstance
+                    .getRepository(MySQLBadge)
+                    .find();
+            case 'mongodb':
+                logger.info('Fetching badges from the database...');
+
+                return await databaseInstance
+                    .getRepository(MongoDBBadge)
+                    .find();
+            }
+        } catch (err) {
+            logger.error(`Error while fetching badges: ${err as string}`);
+        }
+    }
+
+    public static async fetchBadge(
+        databaseInstance: DataSource,
+        identifier:
+            | FindOptionsWhere<MySQLBadge>
+            | FindOptionsWhere<MongoDBBadge>,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+            let badge;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                logger.info(
+                    `Searching badge based on: ${JSON.stringify(
+                        identifier
+                    )}`
+                );
+
+                badge = await databaseInstance.manager.findOneBy(
+                    MySQLBadge,
+                    identifier
+                );
+
+                if (badge) {
+                    logger.log(
+                        'success',
+                        `Badge ${
+                            badge.name
+                        } has been fetched based on: ${JSON.stringify(
+                            identifier
+                        )}`
+                    );
+                    return badge;
+                } else {
+                    logger.error(
+                        `Failed to find the badge based on: ${JSON.stringify(
+                            identifier
+                        )}`
+                    );
+                    return false;
+                }
+            case 'mongodb':
+                logger.info(
+                    `Searching badge based on: ${JSON.stringify(
+                        identifier
+                    )}`
+                );
+
+                badge = await databaseInstance.manager.findOneBy(
+                    MongoDBBadge,
+                    identifier
+                );
+
+                if (badge) {
+                    logger.log(
+                        'success',
+                        `Badge ${
+                            badge.name
+                        } has been fetched based on: ${JSON.stringify(
+                            identifier
+                        )}`
+                    );
+                    return badge;
+                } else {
+                    logger.error(
+                        `Failed to find the badge based on: ${JSON.stringify(
+                            identifier
+                        )}`
+                    );
+                    return false;
+                }
+            }
+        } catch (err) {
+            logger.error(`Error during fetching badge: ${err as string}`);
+            return false;
+        }
+    }
+
+    public static async addBadgeToUser(
+        databaseInstance: DataSource,
+        uuid: string,
+        badgeUUID: string,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+
+            let user;
+            let badge;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                user = await databaseInstance
+                    .getRepository(MySQLUser)
+                    .findOneBy({ uuid: uuid });
+
+                badge = await databaseInstance
+                    .getRepository(MySQLBadge)
+                    .findOneBy({ uuid: badgeUUID });
+
+                if (user && badge) {
+                    user.badges.push(badgeUUID);
+
+                    await databaseInstance
+                        .getRepository(MySQLUser)
+                        .save(user);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'mongodb':
+                user = await databaseInstance
+                    .getRepository(MongoDBUser)
+                    .findOneBy({ uuid: uuid });
+
+                badge = await databaseInstance
+                    .getRepository(MongoDBBadge)
+                    .findOneBy({ uuid: badgeUUID });
+
+                if (user && badge) {
+                    user.badges.push(badgeUUID);
+
+                    await databaseInstance
+                        .getRepository(MongoDBUser)
+                        .save(user);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (err) {
+            logger.error(
+                `Error while adding a badge to the user: ${err as string}`
+            );
+        }
+    }
+
+    public static async removeBadgeFromUser(
+        databaseInstance: DataSource,
+        uuid: string,
+        badgeUUID: string,
+        dbType?: SupportedDatabaseType
+    ) {
+        try {
+            const databaseType =
+                dbType ?? config.databases[currentDatabase].type;
+
+            let user;
+            let badge;
+
+            switch (databaseType) {
+            case 'mysql':
+            case 'mariadb':
+            case 'postgres':
+            case 'cockroachdb':
+            case 'sqlite':
+            case 'better-sqlite3':
+            case 'capacitor':
+            case 'cordova':
+            case 'react-native':
+            case 'nativescript':
+                user = await databaseInstance
+                    .getRepository(MySQLUser)
+                    .findOneBy({ uuid: uuid });
+
+                badge = await databaseInstance
+                    .getRepository(MySQLBadge)
+                    .findOneBy({ uuid: badgeUUID });
+
+                if (user && badge) {
+                    user.badges = user.badges.filter((badge) => {
+                        return badge !== badgeUUID;
+                    });
+
+                    await databaseInstance
+                        .getRepository(MySQLUser)
+                        .save(user);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'mongodb':
+                user = await databaseInstance
+                    .getRepository(MongoDBUser)
+                    .findOneBy({ uuid: uuid });
+
+                badge = await databaseInstance
+                    .getRepository(MongoDBBadge)
+                    .findOneBy({ uuid: badgeUUID });
+
+                if (user && badge) {
+                    user.badges = user.badges.filter((badge) => {
+                        return badge !== badgeUUID;
+                    });
+
+                    await databaseInstance
+                        .getRepository(MongoDBUser)
+                        .save(user);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (err) {
+            logger.error(
+                `Error while removing a badge from the user: ${err as string}`
             );
         }
     }

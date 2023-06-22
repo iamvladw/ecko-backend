@@ -85,8 +85,8 @@ To get started with the Ecko Backend, follow these steps:
         ```
 
 2. Reload the shell configuration
-   
-   - **Linux/macOS**: Run the following command:
+
+    - **Linux/macOS**: Run the following command:
         ```bash
         source ~/.bashrc
         ```
@@ -125,6 +125,7 @@ To get started with the Ecko Backend, follow these steps:
 ### Usage
 
 1. Start the server as dev:
+
     ```bash
     npm run dev
     ```

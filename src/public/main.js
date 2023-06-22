@@ -25,9 +25,7 @@ function connectWebSocket() {
         document.getElementById(
             'cpu-usage'
         ).textContent = `${wsData.cpuUsage} %`;
-        document.getElementById(
-            'mem-usage'
-        ).textContent = `${wsData.memUsage}`;
+        document.getElementById('mem-usage').textContent = `${wsData.memUsage}`;
         document.getElementById('requests').textContent = `${wsData.requests}`;
         document.getElementById(
             'responses'

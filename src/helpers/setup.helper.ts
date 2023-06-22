@@ -169,7 +169,11 @@ class helperSetup {
                 helperCache.update();
             }
         } catch (err) {
-            logger.error(`Error while trying to generate server configuration: ${err as string}`);
+            logger.error(
+                `Error while trying to generate server configuration: ${
+                    err as string
+                }`
+            );
         }
     }
 }

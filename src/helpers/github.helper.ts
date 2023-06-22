@@ -20,11 +20,15 @@ export default class helperGithub {
     public static async displayGit() {
         try {
             logger.info(
-                `Backend Server v${packageJson.version} | Branch: ${helperGithub.getBranch()} | Commit: ${helperGithub.getCommit()}`
+                `Backend Server v${
+                    packageJson.version
+                } | Branch: ${helperGithub.getBranch()} | Commit: ${helperGithub.getCommit()}`
             );
             const githubVersion = await this.getGitHubPackageVersion();
             if (githubVersion !== packageJson.version) {
-                logger.warn(`There is a new version available: v${githubVersion}`);
+                logger.warn(
+                    `There is a new version available: v${githubVersion}`
+                );
             }
         } catch (err) {
             logger.warn(
@@ -41,7 +45,11 @@ export default class helperGithub {
             const content: string = response.data.version;
             return content;
         } catch (error) {
-            logger.error(`Error while trying to retrieve GitHub package version: ${error as string}`);
+            logger.error(
+                `Error while trying to retrieve GitHub package version: ${
+                    error as string
+                }`
+            );
             return 'Error retrieving GitHub package version';
         }
     }
