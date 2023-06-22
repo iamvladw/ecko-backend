@@ -11,11 +11,13 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 401 if username is empty', async () => {
-        const response = await request(server).post('/users/add/user').send({
-            username: '',
-            email: 'test@example.com',
-            password: 'password123'
-        });
+        const response = await request(server)
+            .post('/users/add/user')
+            .send({
+                username: '',
+                email: 'test@example.com',
+                password: 'password123'
+            });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -51,11 +53,13 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 400 if password is empty', async () => {
-        const response = await request(server).post('/users/add/user').send({
-            username: 'testuser',
-            email: 'test@example.com',
-            password: ''
-        });
+        const response = await request(server)
+            .post('/users/add/user')
+            .send({
+                username: 'testuser',
+                email: 'test@example.com',
+                password: ''
+            });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -100,11 +104,7 @@ describe('Testing Users Route', () => {
     it('route /edit/user should return 401 if username is empty', async () => {
         const response = await request(server)
             .put('/users/edit/user/:uuid')
-            .send({
-                username: '',
-                email: '',
-                password: 'password123'
-            });
+            .send({ username: '', email: '', password: 'password123' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
@@ -113,9 +113,7 @@ describe('Testing Users Route', () => {
     it('route /remove/user should return 401 if username is empty', async () => {
         const response = await request(server)
             .delete('/users/remove/user/:uuid')
-            .send({
-                username: ''
-            });
+            .send({ username: '' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
@@ -124,9 +122,7 @@ describe('Testing Users Route', () => {
     it('route /remove/user should return 401 if user does not exist', async () => {
         const response = await request(server)
             .delete('/users/remove/user/:uuid')
-            .send({
-                username: 'nonexistent'
-            });
+            .send({ username: 'nonexistent' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
@@ -135,21 +131,16 @@ describe('Testing Users Route', () => {
     it('route /fetch/user should return 401 if username is empty', async () => {
         const response = await request(server)
             .get('/users/fetch/user/:uuid')
-            .send({
-                username: ''
-            });
+            .send({ username: '' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
     });
 
-    it('route /add/follower should return 400 if userUUID is empty', async () => {
+    it('route /add/follower should return 400 if user is empty', async () => {
         const response = await request(server)
             .post('/users/add/follower')
-            .send({
-                userUUID: '',
-                targetUUID: 'testuser'
-            });
+            .send({ user: '', target: 'testuser' });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -157,7 +148,7 @@ describe('Testing Users Route', () => {
                 {
                     location: 'body',
                     msg: 'User uuid is required',
-                    path: 'userUUID',
+                    path: 'user',
                     type: 'field',
                     value: ''
                 }
@@ -165,13 +156,10 @@ describe('Testing Users Route', () => {
         });
     });
 
-    it('route /add/follower should return 400 if targetUUID is empty', async () => {
+    it('route /add/follower should return 400 if target is empty', async () => {
         const response = await request(server)
             .post('/users/add/follower')
-            .send({
-                userUUID: 'testuser',
-                targetUUID: ''
-            });
+            .send({ user: 'testuser', target: '' });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -179,7 +167,7 @@ describe('Testing Users Route', () => {
                 {
                     location: 'body',
                     msg: 'Target uuid is required',
-                    path: 'targetUUID',
+                    path: 'target',
                     type: 'field',
                     value: ''
                 }
@@ -190,22 +178,16 @@ describe('Testing Users Route', () => {
     it('route /add/follower should return 401 if user does not exist', async () => {
         const response = await request(server)
             .post('/users/add/follower')
-            .send({
-                userUUID: 'nonexistent',
-                targetUUID: 'testuser'
-            });
+            .send({ user: 'nonexistent', target: 'testuser' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
     });
 
-    it('route /remove/follower should return 400 if userUUID is empty', async () => {
+    it('route /remove/follower should return 400 if user is empty', async () => {
         const response = await request(server)
             .delete('/users/remove/follower')
-            .send({
-                userUUID: '',
-                targetUUID: 'testuser'
-            });
+            .send({ user: '', target: 'testuser' });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -213,7 +195,7 @@ describe('Testing Users Route', () => {
                 {
                     location: 'body',
                     msg: 'User uuid is required',
-                    path: 'userUUID',
+                    path: 'user',
                     type: 'field',
                     value: ''
                 }
@@ -221,13 +203,10 @@ describe('Testing Users Route', () => {
         });
     });
 
-    it('route /remove/follower should return 400 if targetUUID is empty', async () => {
+    it('route /remove/follower should return 400 if target is empty', async () => {
         const response = await request(server)
             .delete('/users/remove/follower')
-            .send({
-                userUUID: 'testuser',
-                targetUUID: ''
-            });
+            .send({ user: 'testuser', target: '' });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -235,7 +214,7 @@ describe('Testing Users Route', () => {
                 {
                     location: 'body',
                     msg: 'Target uuid is required',
-                    path: 'targetUUID',
+                    path: 'target',
                     type: 'field',
                     value: ''
                 }
@@ -246,32 +225,25 @@ describe('Testing Users Route', () => {
     it('route /remove/follower should return 401 if user does not exist', async () => {
         const response = await request(server)
             .delete('/users/remove/follower')
-            .send({
-                userUUID: 'nonexistent',
-                targetUUID: 'testuser'
-            });
+            .send({ user: 'nonexistent', target: 'testuser' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
     });
 
-    it('route /fetch/followers should return 401 if userUUID is empty', async () => {
+    it('route /fetch/followers should return 401 if user is empty', async () => {
         const response = await request(server)
             .get('/users/fetch/followers/:uuid')
-            .send({
-                uuid: ''
-            });
+            .send({ uuid: '' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });
     });
 
-    it('route /fetch/following should return 401 if userUUID is empty', async () => {
+    it('route /fetch/following should return 401 if user is empty', async () => {
         const response = await request(server)
             .get('/users/fetch/following/:uuid')
-            .send({
-                uuid: ''
-            });
+            .send({ uuid: '' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'Invalid user' });

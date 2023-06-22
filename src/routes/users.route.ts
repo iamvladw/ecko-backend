@@ -55,9 +55,9 @@ router.post(
                     req.body
                 )}`
             );
-            return res.status(401).json({
-                message: 'User already exists based on the data provided'
-            });
+            return res
+                .status(401)
+                .json({message: 'User already exists based on the data provided'});
         }
 
         const currentDate = new Date();
@@ -85,9 +85,7 @@ router.post(
         await helperDatabase
             .addUser(masterInstance, userInstance)
             .then(() => {
-                res.json({
-                    userInstance
-                });
+                res.json({ userInstance });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -103,9 +101,7 @@ router.put(
         const { uuid } = req.params;
 
         // Find the user in the data store based on the UUID
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: uuid
-        });
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         // Return an error if the user is not found
         if (!user) {
@@ -129,17 +125,12 @@ router.put(
         }
 
         // Update the user object with the data from req.body
-        const updatedUser: User = {
-            ...user,
-            ...req.body
-        };
+        const updatedUser: User = { ...user, ...req.body };
 
         await helperDatabase
             .editUser(masterInstance, uuid, updatedUser)
             .then(() => {
-                res.json({
-                    updatedUser
-                });
+                res.json({ updatedUser });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -155,9 +146,7 @@ router.delete(
         const { uuid } = req.params;
 
         // Gets the user from the database
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: uuid
-        });
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         // Check if the user is valid
         if (!user) {
@@ -168,9 +157,7 @@ router.delete(
         await helperDatabase
             .removeUser(masterInstance, uuid)
             .then(() => {
-                res.json({
-                    message: `The user ${uuid} has been removed successfully`
-                });
+                res.json({message: `The user ${uuid} has been removed successfully`});
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -186,9 +173,7 @@ router.get(
         const { uuid } = req.params;
 
         // Find the user in the data store based on the UUID
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: uuid
-        });
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         // Return an error if the user is not found
         if (!user) {
@@ -236,13 +221,9 @@ router.post(
 
         const { user, target } = req.body;
 
-        const userInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: user
-        });
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {uuid: user});
 
-        const targetInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: target
-        });
+        const targetInstance = await helperDatabase.fetchUser(masterInstance, {uuid: target});
 
         // Return an error if the user is not found
         if (!user) {
@@ -288,13 +269,9 @@ router.delete(
 
         const { user, target } = req.body;
 
-        const userInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: user
-        });
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {uuid: user});
 
-        const targetInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: target
-        });
+        const targetInstance = await helperDatabase.fetchUser(masterInstance, {uuid: target});
 
         // Return an error if the user is not found
         if (!userInstance) {
@@ -337,9 +314,7 @@ router.get(
 
         const { uuid } = req.params;
 
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: uuid
-        });
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         // Return an error if the user is not found
         if (!user) {
@@ -370,9 +345,7 @@ router.get(
 
         const { uuid } = req.params;
 
-        const user = await helperDatabase.fetchUser(masterInstance, {
-            uuid: uuid
-        });
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         // Return an error if the user is not found
         if (!user) {

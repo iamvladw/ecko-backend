@@ -11,9 +11,7 @@ class helperAES {
             const key = CryptoJS.enc.Utf8.parse(
                 secret ?? helperCache.instance.server.secret
             );
-            const ciphertext = CryptoJS.AES.encrypt(value, key, {
-                iv: key
-            }).toString();
+            const ciphertext = CryptoJS.AES.encrypt(value, key, {iv: key}).toString();
             return ciphertext;
         } catch (err) {
             logger.error(
@@ -32,9 +30,7 @@ class helperAES {
             const key = CryptoJS.enc.Utf8.parse(
                 secret ?? helperCache.instance.server.secret
             );
-            const decryptedData = CryptoJS.AES.decrypt(value, key, {
-                iv: key
-            });
+            const decryptedData = CryptoJS.AES.decrypt(value, key, { iv: key });
             return decryptedData.toString(CryptoJS.enc.Utf8);
         } catch (err) {
             logger.error(

@@ -137,9 +137,9 @@ router.post(
                     req.body
                 )}`
             );
-            return res.status(401).json({
-                message: 'User already exists based on the data provided'
-            });
+            return res
+                .status(401)
+                .json({message: 'User already exists based on the data provided'});
         }
 
         const currentDate = new Date();
@@ -170,9 +170,7 @@ router.post(
         const token = jwt.sign(
             userInstance,
             helperCache.instance.server.secret,
-            {
-                expiresIn: config.jwt.expiresIn
-            }
+            { expiresIn: config.jwt.expiresIn }
         );
         logger.info('Signing in the token...');
 

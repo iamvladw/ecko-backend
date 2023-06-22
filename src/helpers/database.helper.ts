@@ -649,17 +649,13 @@ export class helperDatabase {
 
             logger.log(
                 'success',
-                `The user ${JSON.stringify({
-                    uuid: uuid
-                })} has been edited successfully`
+                `The user ${JSON.stringify({uuid: uuid})} has been edited successfully`
             );
 
             return true;
         } catch (err) {
             logger.error(
-                `Error during editing the user ${JSON.stringify({
-                    uuid: uuid
-                })}: ${err as string}`
+                `Error during editing the user ${JSON.stringify({uuid: uuid})}: ${err as string}`
             );
             return false;
         }
@@ -698,17 +694,13 @@ export class helperDatabase {
 
             logger.log(
                 'success',
-                `The user ${JSON.stringify({
-                    uuid: uuid
-                })} has been removed successfully`
+                `The user ${JSON.stringify({uuid: uuid})} has been removed successfully`
             );
 
             return true;
         } catch (err) {
             logger.error(
-                `Error during removing the user ${JSON.stringify({
-                    uuid: uuid
-                })}: ${err as string}`
+                `Error during removing the user ${JSON.stringify({uuid: uuid})}: ${err as string}`
             );
             return false;
         }
@@ -952,16 +944,12 @@ export class helperDatabase {
 
             logger.log(
                 'success',
-                `The interest group based on ${JSON.stringify({
-                    uuid: uuid
-                })} has been updated successfully`
+                `The interest group based on ${JSON.stringify({uuid: uuid})} has been updated successfully`
             );
         } catch (err) {
             logger.error(
                 `Error while updating the interest group {"uuid":${JSON.stringify(
-                    {
-                        uuid: uuid
-                    }
+                    { uuid: uuid }
                 )}}: ${err as string}`
             );
         }
@@ -1088,16 +1076,12 @@ export class helperDatabase {
 
             logger.log(
                 'success',
-                `The interest group ${JSON.stringify({
-                    uuid: uuid
-                })} has been removed successfully`
+                `The interest group ${JSON.stringify({uuid: uuid})} has been removed successfully`
             );
         } catch (err) {
             logger.error(
                 `Error during removing the interest group with ID ${JSON.stringify(
-                    {
-                        uuid: uuid
-                    }
+                    { uuid: uuid }
                 )}: ${err as string}`
             );
         }
@@ -1393,9 +1377,7 @@ export class helperDatabase {
 
                 interest = await databaseInstance.manager.findOneBy(
                     MySQLInterest,
-                    {
-                        uuid: uuid
-                    }
+                    { uuid: uuid }
                 );
 
                 users = await databaseInstance
@@ -1448,9 +1430,7 @@ export class helperDatabase {
 
                 interest = await databaseInstance.manager.findOneBy(
                     MongoDBInterest,
-                    {
-                        uuid: uuid
-                    }
+                    { uuid: uuid }
                 );
 
                 users = await databaseInstance
@@ -1498,16 +1478,12 @@ export class helperDatabase {
 
             logger.log(
                 'success',
-                `The interest ${JSON.stringify({
-                    uuid: uuid
-                })} has been removed successfully`
+                `The interest ${JSON.stringify({uuid: uuid})} has been removed successfully`
             );
         } catch (err) {
             logger.error(
                 `Error during removal of the interest based on ${JSON.stringify(
-                    {
-                        uuid: uuid
-                    }
+                    { uuid: uuid }
                 )}: ${err as string}`
             );
         }
@@ -2119,9 +2095,7 @@ export class helperDatabase {
                 } else {
                     logger.error(
                         `Failed to add follower to the user based on: ${JSON.stringify(
-                            {
-                                uuid: uuid
-                            }
+                            { uuid: uuid }
                         )}`
                     );
 
@@ -2167,9 +2141,7 @@ export class helperDatabase {
                 } else {
                     logger.error(
                         `Failed to add follower to the user based on: ${JSON.stringify(
-                            {
-                                uuid: uuid
-                            }
+                            { uuid: uuid }
                         )}`
                     );
 
@@ -2381,9 +2353,7 @@ export class helperDatabase {
             }
         } catch (err) {
             logger.error(
-                `Error during removing the badge ${JSON.stringify({
-                    uuid: uuid
-                })}: ${err as string}`
+                `Error during removing the badge ${JSON.stringify({uuid: uuid})}: ${err as string}`
             );
         }
     }

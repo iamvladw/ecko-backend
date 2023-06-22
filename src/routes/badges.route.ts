@@ -28,14 +28,10 @@ router.post(
             logger.warn('Please provide a icon, a name and a description');
             return res
                 .status(400)
-                .json({
-                    message: 'Please provide a icon, a name and a description'
-                });
+                .json({message: 'Please provide a icon, a name and a description'});
         }
 
-        const badge = await helperDatabase.fetchBadge(masterInstance, {
-            name: name
-        });
+        const badge = await helperDatabase.fetchBadge(masterInstance, {name: name});
 
         if (badge) {
             logger.warn(
@@ -43,9 +39,9 @@ router.post(
                     req.body
                 )}`
             );
-            return res.status(401).json({
-                message: 'Badge already exists based on the data provided'
-            });
+            return res
+                .status(401)
+                .json({message: 'Badge already exists based on the data provided'});
         }
 
         const badgeInstance: Badge = {
@@ -62,9 +58,7 @@ router.post(
                     'success',
                     `Badge ${badgeInstance.uuid as string} added`
                 );
-                res.json({
-                    badgeInstance
-                });
+                res.json({ badgeInstance });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -79,26 +73,19 @@ router.put(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const badge = await helperDatabase.fetchBadge(masterInstance, {
-            uuid: uuid
-        });
+        const badge = await helperDatabase.fetchBadge(masterInstance, {uuid: uuid});
 
         if (!badge) {
             logger.error('Invalid badge');
             return res.status(404).json({ message: 'Invalid badge' });
         }
 
-        const updatedBadge: Badge = {
-            ...badge,
-            ...req.body
-        };
+        const updatedBadge: Badge = { ...badge, ...req.body };
 
         await helperDatabase
             .editBadge(masterInstance, uuid, updatedBadge)
             .then(() => {
-                res.json({
-                    updatedBadge
-                });
+                res.json({ updatedBadge });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -113,9 +100,7 @@ router.delete(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const badge = await helperDatabase.fetchBadge(masterInstance, {
-            uuid: uuid
-        });
+        const badge = await helperDatabase.fetchBadge(masterInstance, {uuid: uuid});
 
         if (!badge) {
             logger.error('Invalid badge');
@@ -126,9 +111,7 @@ router.delete(
             .removeBadge(masterInstance, uuid)
             .then(() => {
                 logger.log('success', `Badge ${uuid} removed`);
-                res.json({
-                    message: `Badge ${uuid} removed`
-                });
+                res.json({ message: `Badge ${uuid} removed` });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -143,18 +126,14 @@ router.get(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const badge = await helperDatabase.fetchBadge(masterInstance, {
-            uuid: uuid
-        });
+        const badge = await helperDatabase.fetchBadge(masterInstance, {uuid: uuid});
 
         if (!badge) {
             logger.error('Invalid badge');
             return res.status(404).json({ message: 'Invalid badge' });
         }
 
-        res.json({
-            badge
-        });
+        res.json({ badge });
     }
 );
 
@@ -166,9 +145,7 @@ router.get('/fetch/badges', authKey, async (req: Request, res: Response) => {
         return res.status(404).json({ message: 'Invalid badges' });
     }
 
-    res.json({
-        badges
-    });
+    res.json({ badges });
 });
 
 router.post(
@@ -181,18 +158,14 @@ router.post(
     async (req: Request, res: Response) => {
         const { user, badge } = req.body;
 
-        const badgeInstance = await helperDatabase.fetchBadge(masterInstance, {
-            uuid: badge
-        });
+        const badgeInstance = await helperDatabase.fetchBadge(masterInstance, {uuid: badge});
 
         if (!badgeInstance) {
             logger.error('Invalid badge');
             return res.status(404).json({ message: 'Invalid badge' });
         }
 
-        const userInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: user
-        });
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {uuid: user});
 
         if (!userInstance) {
             logger.error('Invalid user');
@@ -228,18 +201,14 @@ router.delete(
     async (req: Request, res: Response) => {
         const { user, badge } = req.body;
 
-        const badgeInstance = await helperDatabase.fetchBadge(masterInstance, {
-            uuid: badge
-        });
+        const badgeInstance = await helperDatabase.fetchBadge(masterInstance, {uuid: badge});
 
         if (!badgeInstance) {
             logger.error('Invalid badge');
             return res.status(404).json({ message: 'Invalid badge' });
         }
 
-        const userInstance = await helperDatabase.fetchUser(masterInstance, {
-            uuid: user
-        });
+        const userInstance = await helperDatabase.fetchUser(masterInstance, {uuid: user});
 
         if (!userInstance) {
             logger.error('Invalid user');

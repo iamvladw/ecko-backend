@@ -165,10 +165,6 @@ export default class helperEcko {
             level = 'Weak';
         }
 
-        return {
-            level,
-            strength,
-            score
-        };
+        return { level, strength, score };
     }
 }

@@ -338,9 +338,7 @@ export class helperReplication {
                                                         MySQLUser
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupUser.uuid
-                                                        },
+                                                        {uuid: backupUser.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -350,9 +348,7 @@ export class helperReplication {
                                                         MongoDBUser
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupUser.uuid
-                                                        },
+                                                        {uuid: backupUser.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -384,16 +380,12 @@ export class helperReplication {
                                 case 'nativescript':
                                     await backupInstance
                                         .getRepository(MySQLUser)
-                                        .delete({
-                                            uuid: backupUser.uuid
-                                        });
+                                        .delete({ uuid: backupUser.uuid });
                                     break;
                                 case 'mongodb':
                                     await backupInstance
                                         .getRepository(MongoDBUser)
-                                        .delete({
-                                            uuid: backupUser.uuid
-                                        });
+                                        .delete({ uuid: backupUser.uuid });
                                     break;
                                 }
                             }
@@ -496,9 +488,7 @@ export class helperReplication {
                                                         MySQLInterestGroup
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupInterestGroup.uuid
-                                                        },
+                                                        {uuid: backupInterestGroup.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -508,9 +498,7 @@ export class helperReplication {
                                                         MongoDBInterestGroup
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupInterestGroup.uuid
-                                                        },
+                                                        {uuid: backupInterestGroup.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -546,16 +534,12 @@ export class helperReplication {
                                 case 'nativescript':
                                     await backupInstance
                                         .getRepository(MySQLInterestGroup)
-                                        .delete({
-                                            uuid: backupInterestGroup.uuid
-                                        });
+                                        .delete({uuid: backupInterestGroup.uuid});
                                     break;
                                 case 'mongodb':
                                     await backupInstance
                                         .getRepository(MongoDBInterestGroup)
-                                        .delete({
-                                            uuid: backupInterestGroup.uuid
-                                        });
+                                        .delete({uuid: backupInterestGroup.uuid});
                                     break;
                                 }
                             }
@@ -656,9 +640,7 @@ export class helperReplication {
                                                         MySQLInterest
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupInterest.uuid
-                                                        },
+                                                        {uuid: backupInterest.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -668,9 +650,7 @@ export class helperReplication {
                                                         MongoDBInterest
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupInterest.uuid
-                                                        },
+                                                        {uuid: backupInterest.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -705,16 +685,12 @@ export class helperReplication {
                                 case 'nativescript':
                                     await backupInstance
                                         .getRepository(MySQLInterest)
-                                        .delete({
-                                            uuid: backupInterest.uuid
-                                        });
+                                        .delete({uuid: backupInterest.uuid});
                                     break;
                                 case 'mongodb':
                                     await backupInstance
                                         .getRepository(MongoDBInterest)
-                                        .delete({
-                                            uuid: backupInterest.uuid
-                                        });
+                                        .delete({uuid: backupInterest.uuid});
                                     break;
                                 }
                             }
@@ -813,9 +789,7 @@ export class helperReplication {
                                                         MySQLBadge
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupBadge.uuid
-                                                        },
+                                                        {uuid: backupBadge.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -825,9 +799,7 @@ export class helperReplication {
                                                         MongoDBBadge
                                                     )
                                                     .update(
-                                                        {
-                                                            uuid: backupBadge.uuid
-                                                        },
+                                                        {uuid: backupBadge.uuid},
                                                         fieldsToUpdate
                                                     );
                                                 break;
@@ -861,16 +833,12 @@ export class helperReplication {
                                 case 'nativescript':
                                     await backupInstance
                                         .getRepository(MySQLBadge)
-                                        .delete({
-                                            uuid: backupBadge.uuid
-                                        });
+                                        .delete({ uuid: backupBadge.uuid });
                                     break;
                                 case 'mongodb':
                                     await backupInstance
                                         .getRepository(MongoDBBadge)
-                                        .delete({
-                                            uuid: backupBadge.uuid
-                                        });
+                                        .delete({ uuid: backupBadge.uuid });
                                     break;
                                 }
                             }

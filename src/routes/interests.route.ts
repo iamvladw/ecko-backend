@@ -26,9 +26,7 @@ router.post(
 
         const interestGroup = await helperDatabase.fetchInterestGroup(
             masterInstance,
-            {
-                name: name
-            }
+            { name: name }
         );
 
         if (interestGroup) {
@@ -37,10 +35,12 @@ router.post(
                     req.body
                 )}`
             );
-            return res.status(401).json({
-                message:
-                    'Interest group already exists based on the data provided'
-            });
+            return res
+                .status(401)
+                .json({
+                    message:
+                        'Interest group already exists based on the data provided'
+                });
         }
 
         const InterestGroupInstance: InterestGroup = {
@@ -53,9 +53,7 @@ router.post(
         await helperDatabase
             .addInterestGroup(masterInstance, InterestGroupInstance)
             .then(() => {
-                res.json({
-                    InterestGroupInstance
-                });
+                res.json({ InterestGroupInstance });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -72,9 +70,7 @@ router.put(
 
         const interestGroup = await helperDatabase.fetchInterestGroup(
             masterInstance,
-            {
-                uuid: uuid
-            }
+            { uuid: uuid }
         );
 
         if (!interestGroup) {
@@ -90,9 +86,7 @@ router.put(
         await helperDatabase
             .editInterestGroup(masterInstance, uuid, updatedInterestGroup)
             .then(() => {
-                res.json({
-                    updatedInterestGroup
-                });
+                res.json({ updatedInterestGroup });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -109,9 +103,7 @@ router.delete(
 
         const interestGroup = await helperDatabase.fetchInterestGroup(
             masterInstance,
-            {
-                uuid: uuid
-            }
+            { uuid: uuid }
         );
 
         if (!interestGroup) {
@@ -122,9 +114,7 @@ router.delete(
         await helperDatabase
             .removeInterestGroup(masterInstance, uuid)
             .then(() => {
-                res.json({
-                    message: `The interest group ${uuid} has been removed successfully`
-                });
+                res.json({message: `The interest group ${uuid} has been removed successfully`});
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -141,9 +131,7 @@ router.get(
 
         const interestGroup = await helperDatabase.fetchInterestGroup(
             masterInstance,
-            {
-                uuid: uuid
-            }
+            { uuid: uuid }
         );
 
         if (!interestGroup) {
@@ -199,9 +187,7 @@ router.post(
                 .json({ message: 'Please provide a name and a description' });
         }
 
-        const interest = await helperDatabase.fetchInterest(masterInstance, {
-            name: name
-        });
+        const interest = await helperDatabase.fetchInterest(masterInstance, {name: name});
 
         if (interest) {
             logger.warn(
@@ -209,16 +195,17 @@ router.post(
                     req.body
                 )}`
             );
-            return res.status(401).json({
-                message: 'Interest already exists based on the data provided'
-            });
+            return res
+                .status(401)
+                .json({
+                    message:
+                        'Interest already exists based on the data provided'
+                });
         }
 
         const interestGroup = await helperDatabase.fetchInterestGroup(
             masterInstance,
-            {
-                uuid: group
-            }
+            { uuid: group }
         );
 
         if (!interestGroup) {
@@ -237,9 +224,7 @@ router.post(
         await helperDatabase
             .addInterest(masterInstance, InterestInstance)
             .then(() => {
-                res.json({
-                    InterestInstance
-                });
+                res.json({ InterestInstance });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -254,26 +239,19 @@ router.put(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const interest = await helperDatabase.fetchInterest(masterInstance, {
-            uuid: uuid
-        });
+        const interest = await helperDatabase.fetchInterest(masterInstance, {uuid: uuid});
 
         if (!interest) {
             logger.error('Interest not found');
             return res.status(404).json({ error: 'Interest not found' });
         }
 
-        const updatedInterest: Interest = {
-            ...interest,
-            ...req.body
-        };
+        const updatedInterest: Interest = { ...interest, ...req.body };
 
         await helperDatabase
             .editInterest(masterInstance, uuid, updatedInterest)
             .then(() => {
-                res.json({
-                    updatedInterest
-                });
+                res.json({ updatedInterest });
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -288,9 +266,7 @@ router.delete(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const interest = await helperDatabase.fetchInterest(masterInstance, {
-            uuid: uuid
-        });
+        const interest = await helperDatabase.fetchInterest(masterInstance, {uuid: uuid});
 
         if (!interest) {
             logger.error('Invalid interest');
@@ -300,9 +276,7 @@ router.delete(
         await helperDatabase
             .removeInterest(masterInstance, uuid)
             .then(() => {
-                res.json({
-                    message: `The interest ${uuid} has been removed successfully`
-                });
+                res.json({message: `The interest ${uuid} has been removed successfully`});
             })
             .catch(() => {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -317,9 +291,7 @@ router.get(
     async (req: Request, res: Response) => {
         const { uuid } = req.params;
 
-        const interest = await helperDatabase.fetchInterest(masterInstance, {
-            uuid: uuid
-        });
+        const interest = await helperDatabase.fetchInterest(masterInstance, {uuid: uuid});
 
         if (!interest) {
             logger.error('Interest not found');
@@ -409,9 +381,7 @@ router.delete(
         const { interest, follower } = req.body;
 
         await helperDatabase
-            .fetchInterest(masterInstance, {
-                uuid: interest
-            })
+            .fetchInterest(masterInstance, { uuid: interest })
             .then(async (interestInstance) => {
                 if (!interestInstance) {
                     logger.error('Invalid interest');

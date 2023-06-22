@@ -7,9 +7,7 @@ const limiter = rateLimit({
     statusCode: 429, // HTTP status code for rate limit exceeded
     handler: (req, res) => {
         // Custom handler to send the rate limit exceeded response
-        res.status(429).json({
-            error: 'Too many requests, please try again later.'
-        });
+        res.status(429).json({error: 'Too many requests, please try again later.'});
     }
 });
 
