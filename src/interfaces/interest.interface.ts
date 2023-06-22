@@ -9,8 +9,8 @@ interface Interest {
     uuid: string;
     name: string;
     description: string;
-    followers: string[];
     group: string;
+    followers: string[];
 }
 
 export { InterestGroup, Interest };

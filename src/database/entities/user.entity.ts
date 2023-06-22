@@ -39,10 +39,13 @@ export class MySQLUser extends BaseEntity {
     @Column({ nullable: true })
         location: string;
 
+    @Column({ type: 'json', default: '[]' })
+        badges: string[];
+
     @Column({ nullable: true })
         joinedDate: string;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         followedInterests: string[];
 
     @Column({ default: 0 })
@@ -51,10 +54,10 @@ export class MySQLUser extends BaseEntity {
     @Column({ default: 0 })
         followingCount: number;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         followers: string[];
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         following: string[];
 }
 
@@ -90,10 +93,13 @@ export class MongoDBUser extends BaseEntity {
     @Column({ nullable: true })
         location: string;
 
+    @Column({ type: 'json', default: '[]' })
+        badges: string[];
+
     @Column({ nullable: true })
         joinedDate: string;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         followedInterests: string[];
 
     @Column({ default: 0 })
@@ -102,9 +108,9 @@ export class MongoDBUser extends BaseEntity {
     @Column({ default: 0 })
         followingCount: number;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         followers: string[];
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', default: '[]' })
         following: string[];
 }

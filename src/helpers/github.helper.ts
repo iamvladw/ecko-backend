@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import logger from '../helpers/winston.helper';
 import axios from 'axios';
+import packageJson from './package.helper';
 
 export default class helperGithub {
     public static getBranch() {
@@ -16,11 +17,15 @@ export default class helperGithub {
             .slice(0, 7)}`;
     }
 
-    public static displayGit() {
+    public static async displayGit() {
         try {
             logger.info(
-                `Backend Server | Branch: ${helperGithub.getBranch()} | Commit: ${helperGithub.getCommit()}`
+                `Backend Server v${packageJson.version} | Branch: ${helperGithub.getBranch()} | Commit: ${helperGithub.getCommit()}`
             );
+            const githubVersion = await this.getGitHubPackageVersion();
+            if (githubVersion !== packageJson.version) {
+                logger.warn(`There is a new version available: v${githubVersion}`);
+            }
         } catch (err) {
             logger.warn(
                 'Something went wrong with the .git folder or is not installed on the system.'

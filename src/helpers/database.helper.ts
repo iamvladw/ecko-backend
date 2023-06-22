@@ -62,19 +62,6 @@ export class helperDatabase {
                     migrations: databaseConfig.migrations
                 });
                 break;
-            case 'mssql':
-                masterInstance = new DataSource({
-                    type: databaseConfig.type,
-                    url: databaseConfig.url,
-                    synchronize: databaseConfig.synchronize,
-                    logging: databaseConfig.logging,
-                    entities: helperDatabase.fetchEntitiesByType(
-                        databaseConfig.type
-                    ),
-                    migrations: databaseConfig.migrations,
-                    options: databaseConfig.options
-                });
-                break;
             case 'postgres':
             case 'cockroachdb':
                 masterInstance = new DataSource({
@@ -209,19 +196,6 @@ export class helperDatabase {
                             migrations: databaseConfig.migrations
                         });
                         break;
-                    case 'mssql':
-                        masterInstance = new DataSource({
-                            type: databaseConfig.type,
-                            url: databaseConfig.url,
-                            synchronize: databaseConfig.synchronize,
-                            logging: databaseConfig.logging,
-                            entities: helperDatabase.fetchEntitiesByType(
-                                databaseConfig.type
-                            ),
-                            migrations: databaseConfig.migrations,
-                            options: databaseConfig.options
-                        });
-                        break;
                     case 'postgres':
                     case 'cockroachdb':
                         masterInstance = new DataSource({
@@ -295,77 +269,9 @@ export class helperDatabase {
                         `Connected to the backup database: ${dbName}`
                     );
 
-                    if (helperCache.instance.data.lastDatabaseLoaded) {
-                        try {
-                            if (
-                                String(dbName) !==
-                                    helperCache.instance.data
-                                        .lastDatabaseLoaded &&
-                                config.databases[
-                                    helperCache.instance.data.lastDatabaseLoaded
-                                ].role !== 'master'
-                            ) {
-                                config.databases[
-                                    helperCache.instance.data.lastDatabaseLoaded
-                                ].role = 'master';
-
-                                config.databases[dbName].role = 'backup';
-
-                                logger.warn(
-                                    `The backup database ${dbName} is of of sync because of the last connection disruption.`
-                                );
-                                logger.warn(
-                                    'Attempting to perform replication of the last backup database loaded...'
-                                );
-
-                                if (
-                                    await this.initializeBackupDatabase(
-                                        helperCache.instance.data
-                                            .lastDatabaseLoaded
-                                    )
-                                ) {
-                                    await helperReplication.performReplication();
-
-                                    logger.log(
-                                        'success',
-                                        `Data replication for the backup database ${dbName} was successful. The backup database is now up-to-date.`
-                                    );
-
-                                    helperCache.instance.data.lastDatabaseLoaded =
-                                        String(dbName);
-                                    helperCache.update();
-
-                                    config.databases[dbName].role = 'backup';
-                                    config.databases[
-                                        helperCache.instance.data.lastDatabaseLoaded
-                                    ].role = 'backup';
-
-                                    await this.initializeBackupDatabases();
-                                } else {
-                                    helperCache.instance.data.lastDatabaseLoaded =
-                                        String(dbName);
-                                    helperCache.update();
-
-                                    logger.error(
-                                        `Error while connecting to the last loaded backup database ${dbName}`
-                                    );
-                                    logger.warn(
-                                        `Data replication for the backup database ${dbName} has failed...`
-                                    );
-                                    logger.warn(
-                                        'Retrying to perform replication in the next session...'
-                                    );
-                                    await this.initializeBackupDatabases();
-                                }
-                            }
-                        } catch (err) {
-                            logger.error(`Error while initializing backup database replication: ${err as string}`);
-                        }
-                    } else {
-                        helperCache.instance.data.lastDatabaseLoaded =
+                    helperCache.instance.data.lastDatabaseLoaded =
                             String(dbName);
-                        helperCache.update();
-                    }
+                    helperCache.update();
                     break;
                 }
             } catch (err) {
@@ -418,19 +324,6 @@ export class helperDatabase {
                             databaseConfig.type
                         ),
                         migrations: databaseConfig.migrations
-                    });
-                    break;
-                case 'mssql':
-                    masterInstance = new DataSource({
-                        type: databaseConfig.type,
-                        url: databaseConfig.url,
-                        synchronize: databaseConfig.synchronize,
-                        logging: databaseConfig.logging,
-                        entities: helperDatabase.fetchEntitiesByType(
-                            databaseConfig.type
-                        ),
-                        migrations: databaseConfig.migrations,
-                        options: databaseConfig.options
                     });
                     break;
                 case 'postgres':
@@ -588,7 +481,6 @@ export class helperDatabase {
         switch (databaseType) {
         case 'mysql':
         case 'mariadb':
-        case 'mssql':
         case 'postgres':
         case 'cockroachdb':
         case 'sqlite':
@@ -617,7 +509,6 @@ export class helperDatabase {
             switch (config.databases[currentDatabase].type) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -658,7 +549,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -711,7 +601,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -761,7 +650,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -811,7 +699,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -869,7 +756,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -946,7 +832,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1001,7 +886,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1066,7 +950,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1149,7 +1032,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1200,7 +1082,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1282,7 +1163,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1361,7 +1241,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1415,7 +1294,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1523,7 +1401,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1563,7 +1440,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1644,7 +1520,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1767,7 +1642,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1886,7 +1760,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -1949,7 +1822,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':
@@ -2071,7 +1943,6 @@ export class helperDatabase {
             switch (databaseType) {
             case 'mysql':
             case 'mariadb':
-            case 'mssql':
             case 'postgres':
             case 'cockroachdb':
             case 'sqlite':

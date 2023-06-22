@@ -66,7 +66,10 @@ router.post(
                 day: 'numeric',
                 year: 'numeric'
             }),
+            badges: [],
             followedInterests: [],
+            followersCount: 0,
+            followingCount: 0,
             followers: [],
             following: []
         };

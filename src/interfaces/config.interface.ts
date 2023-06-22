@@ -1,7 +1,6 @@
 type SupportedDatabaseType =
     | 'mysql'
     | 'mariadb'
-    | 'mssql'
     | 'mongodb'
     | 'postgres'
     | 'cockroachdb'
@@ -49,6 +48,7 @@ interface Config {
     };
     wss: {
         port: number;
+        maxListeners: number;
         interval: number;
     };
     cloudflareProxy: boolean;

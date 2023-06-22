@@ -4,11 +4,12 @@ function connectWebSocket() {
     ws = new WebSocket('ws://localhost:8081');
 
     ws.addEventListener('open', () => {
+        ws.send(JSON.stringify({ route: 'staticPage' }));
         console.log('WebSocket connection established.');
     });
 
     ws.addEventListener('message', (event) => {
-        const wsData = JSON.parse(event.data).public;
+        const wsData = JSON.parse(event.data);
 
         if (wsData.currentVersion !== wsData.githubVersion) {
             const updateNotify = document.getElementById('updateNotify');
@@ -26,7 +27,7 @@ function connectWebSocket() {
         ).textContent = `${wsData.cpuUsage} %`;
         document.getElementById(
             'mem-usage'
-        ).textContent = `${wsData.memUsage} GB`;
+        ).textContent = `${wsData.memUsage}`;
         document.getElementById('requests').textContent = `${wsData.requests}`;
         document.getElementById(
             'responses'
@@ -40,7 +41,7 @@ function connectWebSocket() {
 
         document.getElementById(
             'footer-data'
-        ).innerHTML = `© 2023 Ecko Backend v${wsData.currentVersion} — <a href="https://github.com/iamvladw" class="text-red-500 ml-1" target="_blank" rel="noopener noreferrer">📌 iamvladw</a> — <a href="https://github.com/sponsors/iamvladw" class="text-green-500 ml-1" target="_blank" rel="noopener noreferrer">💸 Sponsor me</a>`;
+        ).innerHTML = `© 2023 Ecko Backend v${wsData.currentVersion} — <a href="https://github.com/iamvladw" class="text-red-500 ml-1" target="_blank" rel="noopener noreferrer">📌 @iamvladw</a> — <a href="https://github.com/sponsors/iamvladw" class="text-green-500 ml-1" target="_blank" rel="noopener noreferrer">💸 Sponsor me</a>`;
     });
 
     ws.addEventListener('error', (error) => {
@@ -62,7 +63,7 @@ function reconnectWebSocket() {
         document.getElementById('server-status').textContent = `OFFLINE`;
 
         document.getElementById('cpu-usage').textContent = `0.00 %`;
-        document.getElementById('mem-usage').textContent = `0.00 GB`;
+        document.getElementById('mem-usage').textContent = `0.00`;
         document.getElementById('requests').textContent = `0`;
         document.getElementById('responses').textContent = `0`;
         document.getElementById('branch-github').textContent = `Undefined`;

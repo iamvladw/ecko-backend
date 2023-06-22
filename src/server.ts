@@ -60,7 +60,7 @@ try {
         logger.info('╚══════╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ ');
 
         // Displays git info
-        helperGithub.displayGit();
+        await helperGithub.displayGit();
 
         // Starts the first time setup of the server
         await helperSetup.initializeServerSetup();

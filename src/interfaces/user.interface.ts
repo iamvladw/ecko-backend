@@ -8,10 +8,11 @@ interface User {
     profilePicture?: string;
     bannerPicture?: string;
     location?: string;
+    badges: string[];
     joinedDate: string;
     followedInterests: string[];
-    followersCount?: number;
-    followingCount?: number;
+    followersCount: number;
+    followingCount: number;
     followers: string[];
     following: string[];
 }

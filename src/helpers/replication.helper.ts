@@ -56,7 +56,6 @@ export class helperReplication {
                 switch (currentDB.type) {
                 case 'mysql':
                 case 'mariadb':
-                case 'mssql':
                 case 'postgres':
                 case 'cockroachdb':
                 case 'sqlite':
@@ -108,20 +107,6 @@ export class helperReplication {
                                             backupDB.type
                                         ),
                                 migrations: backupDB.migrations
-                            });
-                            break;
-                        case 'mssql':
-                            backupInstance = new DataSource({
-                                type: backupDB.type,
-                                url: backupDB.url,
-                                synchronize: backupDB.synchronize,
-                                logging: backupDB.logging,
-                                entities:
-                                        helperDatabase.fetchEntitiesByType(
-                                            backupDB.type
-                                        ),
-                                migrations: backupDB.migrations,
-                                options: backupDB.options
                             });
                             break;
                         case 'postgres':
@@ -213,7 +198,6 @@ export class helperReplication {
                         switch (backupDB.type) {
                         case 'mysql':
                         case 'mariadb':
-                        case 'mssql':
                         case 'postgres':
                         case 'cockroachdb':
                         case 'sqlite':
@@ -263,7 +247,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -322,7 +305,6 @@ export class helperReplication {
                                             switch (backupDB.type) {
                                             case 'mysql':
                                             case 'mariadb':
-                                            case 'mssql':
                                             case 'postgres':
                                             case 'cockroachdb':
                                             case 'sqlite':
@@ -372,7 +354,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -420,7 +401,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -483,7 +463,6 @@ export class helperReplication {
                                             switch (backupDB.type) {
                                             case 'mysql':
                                             case 'mariadb':
-                                            case 'mssql':
                                             case 'postgres':
                                             case 'cockroachdb':
                                             case 'sqlite':
@@ -537,7 +516,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -584,7 +562,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -646,7 +623,6 @@ export class helperReplication {
                                             switch (backupDB.type) {
                                             case 'mysql':
                                             case 'mariadb':
-                                            case 'mssql':
                                             case 'postgres':
                                             case 'cockroachdb':
                                             case 'sqlite':
@@ -699,7 +675,6 @@ export class helperReplication {
                                 switch (backupDB.type) {
                                 case 'mysql':
                                 case 'mariadb':
-                                case 'mssql':
                                 case 'postgres':
                                 case 'cockroachdb':
                                 case 'sqlite':
@@ -762,7 +737,6 @@ export class helperReplication {
         switch (type) {
         case 'mysql':
         case 'mariadb':
-        case 'mssql':
         case 'postgres':
         case 'cockroachdb':
         case 'sqlite':
@@ -811,7 +785,6 @@ export class helperReplication {
         switch (type) {
         case 'mysql':
         case 'mariadb':
-        case 'mssql':
         case 'postgres':
         case 'cockroachdb':
         case 'sqlite':
@@ -854,7 +827,6 @@ export class helperReplication {
         switch (type) {
         case 'mysql':
         case 'mariadb':
-        case 'mssql':
         case 'postgres':
         case 'cockroachdb':
         case 'sqlite':

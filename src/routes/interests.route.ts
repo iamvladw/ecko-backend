@@ -369,7 +369,7 @@ router.post(
                 try {
                     await helperDatabase.addFollowerToInterest(
                         masterInstance,
-                        String(interest.uuid),
+                        String(interest),
                         follower as string
                     );
 

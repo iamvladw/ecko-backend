@@ -104,9 +104,17 @@ export default class helperFunctions {
         return `${ut_day} Day(s) ${ut_hour} Hour(s) ${ut_min} Minute(s) ${ut_sec} Second(s)`;
     }
 
-    public static bytesToGB(bytes: number) {
-        const gigabytes = bytes / (1024 * 1024 * 1024);
-        return gigabytes.toFixed(2);
+    public static formatBytes(bytes: number): string {
+        const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let suffixIndex = 0;
+        let size = bytes;
+      
+        while (size >= 1024 && suffixIndex < suffixes.length - 1) {
+            size /= 1024;
+            suffixIndex++;
+        }
+      
+        return `${size.toFixed(2)} ${suffixes[suffixIndex]}`;
     }
 
     public static formatNumber(number: number): string {

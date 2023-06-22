@@ -26,9 +26,12 @@ const requestLoggerMiddleware = (
     const originalSend: Send = res.send;
     res.send = function (body: Send) {
         logger.log(
-            'request',
+            'response',
             `Outgoing response to ${String(ip)} with code: ${res.statusCode}`
         );
+
+        helperCache.instance.data.numberOfResponses++;
+        helperCache.update();
 
         try {
             switch (req.method) {
@@ -42,9 +45,6 @@ const requestLoggerMiddleware = (
         } catch (err: unknown) {
             logger.error(`Error while trying to sending a response to ${String(ip)}: ${err as string}`);
         }
-
-        helperCache.instance.data.numberOfResponses++;
-        helperCache.update();
 
         return originalSend.call(this, body);
     };

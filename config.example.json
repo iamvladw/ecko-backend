@@ -8,6 +8,7 @@
     },
     "wss": {
         "port": 8081,
+        "maxListeners": 50,
         "interval": 1000
     },
     "cloudflareProxy": false,
