@@ -226,12 +226,12 @@ router.post(
         const targetInstance = await helperDatabase.fetchUser(masterInstance, {uuid: target});
 
         // Return an error if the user is not found
-        if (!user) {
+        if (!userInstance) {
             logger.error('Invalid user');
             return res.status(401).json({ error: 'Invalid user' });
         }
 
-        if (!target) {
+        if (!targetInstance) {
             logger.error('Invalid target');
             return res.status(401).json({ error: 'Invalid target' });
         }

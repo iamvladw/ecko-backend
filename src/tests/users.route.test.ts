@@ -147,7 +147,7 @@ describe('Testing Users Route', () => {
             error: [
                 {
                     location: 'body',
-                    msg: 'User uuid is required',
+                    msg: 'UUID is required',
                     path: 'user',
                     type: 'field',
                     value: ''
@@ -194,7 +194,7 @@ describe('Testing Users Route', () => {
             error: [
                 {
                     location: 'body',
-                    msg: 'User uuid is required',
+                    msg: 'UUID is required',
                     path: 'user',
                     type: 'field',
                     value: ''
