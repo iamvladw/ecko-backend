@@ -11,6 +11,10 @@
         "maxListeners": 50,
         "interval": 1000
     },
+    "rateLimit": {
+        "max": 250,
+        "timeout": 15
+    },
     "cloudflareProxy": false,
     "apiAuthMethod": "key",
     "staticPage": true,

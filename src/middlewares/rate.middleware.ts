@@ -1,12 +1,12 @@
 import { rateLimit } from 'express-rate-limit';
+import config from '../helpers/config.helper';
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Maximum requests per windowMs
-    message: 'Too many requests, please try again later.', // Custom message for rate limit exceeded
-    statusCode: 429, // HTTP status code for rate limit exceeded
+    windowMs: config.rateLimit.timeout * 60 * 1000,
+    max: config.rateLimit.max,
+    message: 'Too many requests, please try again later.',
+    statusCode: 429, 
     handler: (req, res) => {
-        // Custom handler to send the rate limit exceeded response
         res.status(429).json({error: 'Too many requests, please try again later.'});
     }
 });

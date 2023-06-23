@@ -51,6 +51,10 @@ interface Config {
         maxListeners: number;
         interval: number;
     };
+    rateLimit: {
+        max: 250,
+        timeout: 15
+    };
     cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';
     staticPage: boolean;
