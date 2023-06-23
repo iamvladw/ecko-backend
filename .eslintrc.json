@@ -26,6 +26,7 @@
         "README.md",
         "FUNDING.yml",
         "tailwind.config.js",
+        "release.config.js",
         "settings.json",
         "index.html",
         "main.js"
