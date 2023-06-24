@@ -17,21 +17,13 @@ router.post(
     [param('uuid').notEmpty().withMessage('UUID is required')],
     authKey,
     uploadWithCompression,
-    async (req: Request, res: Response) => {
+    (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { uuid } = req.params;
         const uploadedFile = req.file;
-
-        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
-
-        if (!user) {
-            logger.error('Invalid user');
-            return res.status(401).json({ error: 'Invalid user' });
-        }
 
         if (uploadedFile) {
             const { originalname, filename, mimetype } = uploadedFile;
@@ -57,6 +49,7 @@ router.get('/:uuid/:type/:file',
         const { uuid, type, file } = req.params;
   
         const user = await helperDatabase.fetchUser(masterInstance, { uuid: uuid });
+
         if (!user) {
             logger.error('Invalid user');
             return res.status(401).json({ error: 'Invalid user' });

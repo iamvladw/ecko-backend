@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import logger from './winston.helper';
 import config from './config.helper';
@@ -6,11 +6,18 @@ import path from 'path';
 import fs from 'fs';
 import helperFunctions from './functions.helper';
 import helperEcko from './ecko.helper';
+import { helperDatabase, masterInstance } from './database.helper';
 
 const storage = multer.diskStorage({
-    destination: (req: Request, file: Express.Multer.File, cb) => {
+    destination: async (req: Request, file: Express.Multer.File, cb) => {
         const filePath = config.cdn.path;
         const { uuid } = req.params;
+
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
+
+        if (!user) {
+            return cb(new Error('Invalid user'), '');
+        }
 
         const subdirectories = ['audio', 'video', 'image', 'other'];
 
