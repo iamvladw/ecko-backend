@@ -6,4 +6,4 @@ latest.log
 config.json
 package-lock.json
 cache
-uploads
+storage

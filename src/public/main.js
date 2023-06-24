@@ -13,8 +13,8 @@ function connectWebSocket() {
 
         if (wsData.currentVersion !== wsData.githubVersion) {
             const updateNotify = document.getElementById('updateNotify');
-            updateNotify.href = `https://github.com/iamvladw/ecko-backend/tree/${wsData.currentBranch}`;
-            updateNotify.textContent = `Update available! v${wsData.githubVersion}`;
+            updateNotify.href = `https://github.com/iamvladw/ecko-backend/releases/tag/v${wsData.githubVersion}`;
+            updateNotify.textContent = `New release available! v${wsData.githubVersion}`;
         }
 
         document.getElementById(
@@ -26,13 +26,13 @@ function connectWebSocket() {
             'cpu-usage'
         ).textContent = `${wsData.cpuUsage} %`;
         document.getElementById('mem-usage').textContent = `${wsData.memUsage}`;
+        document.getElementById(
+            'storage-usage'
+        ).textContent = `${wsData.strorageUsage}`;
         document.getElementById('requests').textContent = `${wsData.requests}`;
         document.getElementById(
             'responses'
         ).textContent = `${wsData.responses}`;
-        document.getElementById(
-            'storage-usage'
-        ).textContent = `${wsData.strorageUsage}`;
         document.getElementById(
             'commit-github'
         ).textContent = `${wsData.currentCommit}`;
@@ -62,6 +62,7 @@ function reconnectWebSocket() {
 
         document.getElementById('cpu-usage').textContent = `0.00 %`;
         document.getElementById('mem-usage').textContent = `0.00`;
+        document.getElementById('storage-usage').textContent = `0.00`;
         document.getElementById('requests').textContent = `0`;
         document.getElementById('responses').textContent = `0`;
         document.getElementById('branch-github').textContent = `Undefined`;
