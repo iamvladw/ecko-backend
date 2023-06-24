@@ -24,8 +24,6 @@ router.post(
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { uuid } = req.params;
-
         const uploadedFile = req.file;
 
         if (uploadedFile) {
