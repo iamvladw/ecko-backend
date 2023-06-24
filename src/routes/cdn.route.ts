@@ -103,7 +103,7 @@ router.get('/:uuid/:file',
         }
 
         try {
-            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperEcko.fetchFileExtensionGroup(path.extname(file)), file);
+            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(file)), file);
             logger.info(`Fetching file: ${filePath}`);
 
             if (!fs.existsSync(filePath)) {
