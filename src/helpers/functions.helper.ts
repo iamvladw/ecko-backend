@@ -196,4 +196,5 @@ export default class helperFunctions {
       
         return milliseconds;
     }
+      
 }

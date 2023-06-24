@@ -82,14 +82,17 @@ try {
         // Checks if the database is up-to-date
         await helperReplication.performReplication();
 
+        // Syncs the file records
+        await helperEcko.syncFileRecords();
+
         // Loads that stats
         helperFunctions.loadStats();
 
-        // Starts the WebSocket server
-        helperEcko.initializeEckoWebSocketServer();
-
         // Starts the CDN server
         helperEcko.initializeEckoCDNServer(helperEcko.serverCDN);
+
+        // Starts the WebSocket server
+        helperEcko.initializeEckoWebSocketServer();
 
         serverEnabled = true;
         logger.info(`API is running on: ${config.protocol}://${DNS}:${PORT}`);

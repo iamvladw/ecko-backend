@@ -7,6 +7,7 @@ import fs from 'fs';
 import helperFunctions from './functions.helper';
 import helperEcko from './ecko.helper';
 import { helperDatabase, masterInstance } from './database.helper';
+import helperCache from './cache.helper';
 
 const storage = multer.diskStorage({
     destination: async (req: Request, file: Express.Multer.File, cb) => {
@@ -57,5 +58,47 @@ const upload = multer({
         }
     }
 }).single('file');
+
+const cleanupExpiredFiles = () => {
+    const currentTime = Date.now();
+    const expiredFiles = [];
+  
+    for (const filename in helperCache.instance.data.fileRecords) {
+        const expiresIn = helperCache.instance.data.fileRecords[filename].expiresIn;
+        const date = helperCache.instance.data.fileRecords[filename].date;
+
+        let expirationTime = expiresIn;
+
+        if (expiresIn) {
+            expirationTime = date + expiresIn;
+        }
+
+        if (expirationTime && currentTime > expirationTime) {
+            const filePath = helperCache.instance.data.fileRecords[filename].path;
+            expiredFiles.push(filename);
+            delete helperCache.instance.data.fileRecords[filename];
+
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+    }
+  
+    if (expiredFiles.length > 0) {
+        helperCache.update();
+        if (expiredFiles.length === 1) {
+            logger.warn(`Deleted ${expiredFiles.length} expired file from the storage`);
+        } else {
+            logger.warn(`Deleted ${expiredFiles.length} expired files from the storage`);
+        }
+    }
+};
+  
+const cleanupInterval = setInterval(cleanupExpiredFiles, 1 * 1000);
+  
+process.on('SIGINT', () => {
+    clearInterval(cleanupInterval);
+    process.exit(0);
+});
 
 export { storage, upload };

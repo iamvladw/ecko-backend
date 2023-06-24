@@ -104,7 +104,8 @@ class helperSetup {
                 helperCache.instance.data = {
                     lastDatabaseLoaded: '',
                     numberOfRequests: 0,
-                    numberOfResponses: 0
+                    numberOfResponses: 0,
+                    fileRecords: {}
                 };
                 helperCache.update();
 
@@ -164,7 +165,8 @@ class helperSetup {
                 helperCache.instance.data = {
                     lastDatabaseLoaded: '',
                     numberOfRequests: 0,
-                    numberOfResponses: 0
+                    numberOfResponses: 0,
+                    fileRecords: {}
                 };
                 helperCache.update();
             }

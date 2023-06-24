@@ -11,6 +11,7 @@ interface JSONData {
         lastDatabaseLoaded: string;
         numberOfRequests: number;
         numberOfResponses: number;
+        fileRecords: Record<string, { path: string; author: string; date: number; expiresIn?: number }>;
     };
 }
 

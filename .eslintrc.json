@@ -48,6 +48,7 @@
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-unnecessary-condition": "off",
+        "@typescript-eslint/no-dynamic-delete": "off",
         "no-case-declarations": "off",
         "max-len": [
             "error",

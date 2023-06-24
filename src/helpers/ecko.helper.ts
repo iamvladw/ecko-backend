@@ -157,7 +157,7 @@ export default class helperEcko {
         if (process.env.JEST_WORKER_ID === undefined) {
             try {
                 this.eckoCDNServer = this.initializeEckoServer(serverCDN);
-    
+
                 serverCDN.use(express.json());
                 serverCDN.use(express.urlencoded({ extended: false }));
                 serverCDN.use(helmet());
@@ -166,9 +166,9 @@ export default class helperEcko {
                 serverCDN.use(limiter);
                 serverCDN.use(checkDatabaseConnection);
                 serverCDN.use(requestLoggerMiddleware);
-    
+
                 serverCDN.use('/attachments', cdnRouter);
-    
+
                 this.eckoCDNServer.listen(config.cdn.port, config.dns, () => {
                     logger.info(
                         `CDN is running on: ${config.protocol}://${config.dns}:${config.cdn.port}`
@@ -292,6 +292,55 @@ export default class helperEcko {
             return 'audio';
         default:
             return 'other';
+        }
+    }
+
+    public static async syncFileRecords() {
+        const uploadDir = path.join(__dirname, '../../', config.cdn.path);
+
+        try {
+            logger.info('Attempting to sync the file records...');
+            const authors = await fs.promises.readdir(uploadDir, {withFileTypes: true});
+            const filesInFolder = new Set<string>();
+
+            for (const author of authors) {
+                if (author.isDirectory()) {
+                    const authorUUID = author.name;
+                    const authorDir = path.join(uploadDir, authorUUID);
+                    const fileGroups = await fs.promises.readdir(authorDir);
+
+                    for (const fileGroup of fileGroups) {
+                        const fileGroupDir = path.join(authorDir, fileGroup);
+                        const files = await fs.promises.readdir(fileGroupDir);
+
+                        for (const file of files) {
+                            const filePath = path.join(fileGroupDir, file);
+
+                            filesInFolder.add(file);
+
+                            if (!helperCache.instance.data.fileRecords[file]) {
+                                helperCache.instance.data.fileRecords[file] = {
+                                    path: filePath,
+                                    author: authorUUID,
+                                    date: Date.now()
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Remove files from cache that don't exist in the folder
+            for (const file in helperCache.instance.data.fileRecords) {
+                if (!filesInFolder.has(file)) {
+                    delete helperCache.instance.data.fileRecords[file];
+                }
+            }
+
+            helperCache.update();
+            logger.log('success', 'File records synced successfully');
+        } catch (err) {
+            logger.error(`Error while syncing file records: ${err as string}`);
         }
     }
 }

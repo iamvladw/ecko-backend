@@ -15,7 +15,7 @@ class helperCache {
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
                     fs.writeFileSync(
                         cacheFilePath,
-                        '{"server":{},"data":{}}',
+                        '{"server":{},"data":{"fileRecords":{}}}',
                         'utf8'
                     );
                     if (err) {
@@ -48,7 +48,7 @@ class helperCache {
                 fs.mkdir(cachePath, { recursive: true }, (err) => {
                     fs.writeFileSync(
                         cacheFilePath,
-                        '{"server":{},"data":{}}',
+                        '{"server":{},"data":{"fileRecords":{}}}',
                         'utf8'
                     );
                     if (err) {
