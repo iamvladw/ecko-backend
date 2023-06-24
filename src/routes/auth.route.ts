@@ -109,14 +109,6 @@ router.post(
 
         const { username, email, password } = req.body;
 
-        // Check if username and password are provided
-        if (!username || !password) {
-            logger.warn('Please provide a username and a password');
-            return res
-                .status(400)
-                .json({ message: 'Please provide a username and a password' });
-        }
-
         const { score } = helperEcko.checkPasswordStrength(password as string);
 
         if (score < 2) {
