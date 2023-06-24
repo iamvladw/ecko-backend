@@ -5,7 +5,7 @@ import { upload } from '../helpers/cdn.helper';
 import logger from '../helpers/winston.helper';
 import path from 'path';
 import { exec } from 'child_process';
-import helperEcko from '../helpers/ecko.helper';
+import helperFunctions from '../helpers/functions.helper';
 
 const uploadWithCompression = (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +18,7 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
             if (req.file) {
                 let filePath = req.file.path;
                 const fileExtension = path.extname(req.file.originalname);
-                const compressedPath = `${req.file.destination}/${helperEcko.fetchFileExtensionGroup(fileExtension)}/${path.parse(req.file.filename).name}`;
+                const compressedPath = `${req.file.destination}/${helperFunctions.fetchFileExtensionGroup(fileExtension)}/${path.parse(req.file.filename).name}`;
                 const tempPath = `${req.file.destination}/compressing-${path.parse(req.file.filename).name}`;
 
                 switch (fileExtension.toLowerCase()) {
