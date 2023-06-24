@@ -150,34 +150,38 @@ export default class helperEcko {
         }
     }
 
-    public static initializeEckoCDNServer() {
-        try {
-            const server = express();
-            const cdnServer = this.initializeEckoServer(server);
+    public static serverCDN: express.Express = express();
+    public static eckoCDNServer: http.Server | https.Server;
 
-            server.use(express.json());
-            server.use(express.urlencoded({ extended: false }));
-            server.use(helmet());
-            server.use(compression({ brotli: { quality: 2 } }));
-            server.use(cookieParser());
-            server.use(limiter);
-            server.use(checkDatabaseConnection);
-            server.use(requestLoggerMiddleware);
-
-            server.use('/attachments', cdnRouter);
-
-            cdnServer.listen(config.cdn.port, config.dns, () => {
-                logger.info(
-                    `CDN is running on: ${config.protocol}://${config.dns}:${config.cdn.port}`
+    public static initializeEckoCDNServer(serverCDN: express.Express) {
+        if (process.env.JEST_WORKER_ID === undefined) {
+            try {
+                this.eckoCDNServer = this.initializeEckoServer(serverCDN);
+    
+                serverCDN.use(express.json());
+                serverCDN.use(express.urlencoded({ extended: false }));
+                serverCDN.use(helmet());
+                serverCDN.use(compression({ brotli: { quality: 2 } }));
+                serverCDN.use(cookieParser());
+                serverCDN.use(limiter);
+                serverCDN.use(checkDatabaseConnection);
+                serverCDN.use(requestLoggerMiddleware);
+    
+                serverCDN.use('/attachments', cdnRouter);
+    
+                this.eckoCDNServer.listen(config.cdn.port, config.dns, () => {
+                    logger.info(
+                        `CDN is running on: ${config.protocol}://${config.dns}:${config.cdn.port}`
+                    );
+                });
+            } catch (err) {
+                logger.error(
+                    `Error while trying to start the CDN server on ${
+                        config.protocol
+                    }://${config.dns}:${config.cdn.port}: ${err as string}`
                 );
-            });
-        } catch (err) {
-            logger.error(
-                `Error while trying to start the CDN server on ${
-                    config.protocol
-                }://${config.dns}:${config.cdn.port}: ${err as string}`
-            );
-            process.exit(1);
+                process.exit(1);
+            }
         }
     }
 

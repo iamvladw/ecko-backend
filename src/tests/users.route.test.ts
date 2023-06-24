@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { eckoServer, server, serverEnabled } from '../server';
+import { eckoAPIServer, serverAPI, serverEnabled } from '../server';
 
 describe('Testing Users Route', () => {
     beforeAll(async () => {
@@ -11,7 +11,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 401 if username is empty', async () => {
-        const response = await request(server).post('/users/add/user').send({
+        const response = await request(serverAPI).post('/users/add/user').send({
             username: '',
             email: 'test@example.com',
             password: 'password123'
@@ -32,7 +32,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 400 if email is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/users/add/user')
             .send({ username: 'testuser', email: '', password: 'password123' });
 
@@ -51,7 +51,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 400 if password is empty', async () => {
-        const response = await request(server).post('/users/add/user').send({
+        const response = await request(serverAPI).post('/users/add/user').send({
             username: 'testuser',
             email: 'test@example.com',
             password: ''
@@ -72,7 +72,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 400 if username and password are empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/users/add/user')
             .send({ username: '', email: 'test@example.com', password: '' });
 
@@ -98,7 +98,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /edit/user should return 401 if username is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .put('/users/edit/user/:uuid')
             .send({ username: '', email: '', password: 'password123' });
 
@@ -107,7 +107,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /remove/user should return 401 if username is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .delete('/users/remove/user/:uuid')
             .send({ username: '' });
 
@@ -116,7 +116,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /remove/user should return 401 if user does not exist', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .delete('/users/remove/user/:uuid')
             .send({ username: 'nonexistent' });
 
@@ -125,7 +125,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /fetch/user should return 401 if username is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .get('/users/fetch/user/:uuid')
             .send({ username: '' });
 
@@ -134,7 +134,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/follower should return 400 if user is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/users/add/follower')
             .send({ user: '', target: 'testuser' });
 
@@ -153,7 +153,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/follower should return 400 if target is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/users/add/follower')
             .send({ user: 'testuser', target: '' });
 
@@ -172,7 +172,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/follower should return 401 if user does not exist', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/users/add/follower')
             .send({ user: 'nonexistent', target: 'testuser' });
 
@@ -181,7 +181,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /remove/follower should return 400 if user is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .delete('/users/remove/follower')
             .send({ user: '', target: 'testuser' });
 
@@ -200,7 +200,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /remove/follower should return 400 if target is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .delete('/users/remove/follower')
             .send({ user: 'testuser', target: '' });
 
@@ -219,7 +219,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /remove/follower should return 401 if user does not exist', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .delete('/users/remove/follower')
             .send({ user: 'nonexistent', target: 'testuser' });
 
@@ -228,7 +228,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /fetch/followers should return 401 if user is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .get('/users/fetch/followers/:uuid')
             .send({ uuid: '' });
 
@@ -237,7 +237,7 @@ describe('Testing Users Route', () => {
     });
 
     it('route /fetch/following should return 401 if user is empty', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .get('/users/fetch/following/:uuid')
             .send({ uuid: '' });
 
@@ -246,6 +246,6 @@ describe('Testing Users Route', () => {
     });
 
     afterAll(() => {
-        eckoServer.close();
+        eckoAPIServer.close();
     });
 });

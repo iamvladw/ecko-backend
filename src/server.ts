@@ -20,8 +20,8 @@ import requestLoggerMiddleware from './middlewares/request.middleware';
 import limiter from './middlewares/rate.middleware';
 import helperEcko from './helpers/ecko.helper';
 
-const server = express();
-const eckoServer = helperEcko.initializeEckoServer(server);
+const serverAPI = express();
+const eckoAPIServer = helperEcko.initializeEckoServer(serverAPI);
 
 // Define local variables
 let serverEnabled = false;
@@ -31,29 +31,29 @@ const PORT = config.port;
 const DNS = config.dns;
 
 // Loads middleware functions
-server.use(express.json());
-server.use(express.urlencoded({ extended: false }));
-server.use(helmet());
-server.use(compression());
-server.use(cookieParser());
-server.use(limiter);
-server.use(serverStatus);
-server.use(checkDatabaseConnection);
-server.use(requestLoggerMiddleware);
+serverAPI.use(express.json());
+serverAPI.use(express.urlencoded({ extended: false }));
+serverAPI.use(helmet());
+serverAPI.use(compression());
+serverAPI.use(cookieParser());
+serverAPI.use(limiter);
+serverAPI.use(serverStatus);
+serverAPI.use(checkDatabaseConnection);
+serverAPI.use(requestLoggerMiddleware);
 
 // Enables the use for F-Forwarded-For header
-server.enable('trust proxy');
+serverAPI.enable('trust proxy');
 
 // Define api routes
-server.use('/', indexRouter);
-server.use('/auth', authRouter);
-server.use('/users', userRouter);
-server.use('/interests', interestRouter);
-server.use('/badges', badgesRouter);
+serverAPI.use('/', indexRouter);
+serverAPI.use('/auth', authRouter);
+serverAPI.use('/users', userRouter);
+serverAPI.use('/interests', interestRouter);
+serverAPI.use('/badges', badgesRouter);
 
 // Start the express ecko server
 try {
-    eckoServer.listen(PORT, DNS, async () => {
+    eckoAPIServer.listen(PORT, DNS, async () => {
         logger.info('███████╗ ██████╗██╗  ██╗ ██████╗ ');
         logger.info('██╔════╝██╔════╝██║ ██╔╝██╔═══██╗');
         logger.info('█████╗  ██║     █████╔╝ ██║   ██║');
@@ -89,7 +89,7 @@ try {
         helperEcko.initializeEckoWebSocketServer();
 
         // Starts the CDN server
-        helperEcko.initializeEckoCDNServer();
+        helperEcko.initializeEckoCDNServer(helperEcko.serverCDN);
 
         serverEnabled = true;
         logger.info(`API is running on: ${config.protocol}://${DNS}:${PORT}`);
@@ -99,4 +99,4 @@ try {
     process.exit(1);
 }
 
-export { server, eckoServer, serverEnabled };
+export { serverAPI, eckoAPIServer, serverEnabled };

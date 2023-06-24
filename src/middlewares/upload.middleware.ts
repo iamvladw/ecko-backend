@@ -105,7 +105,6 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 throw new Error('No file uploaded');
             }
 
-            // Call the next middleware or route handler
             next();
         });
     } catch (err) {

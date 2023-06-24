@@ -1,5 +1,6 @@
 import request from 'supertest';
-import { eckoServer, server, serverEnabled } from '../server';
+import { eckoAPIServer, serverAPI, serverEnabled } from '../server';
+import helperEcko from '../helpers/ecko.helper';
 
 describe('Testing Auth Route', () => {
     beforeAll(async () => {
@@ -11,14 +12,14 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /login should return 400 if request body is empty', async () => {
-        const response = await request(server).post('/auth/login').send({});
+        const response = await request(serverAPI).post('/auth/login').send({});
 
         expect(response.status).toBe(400);
         expect(response.body).toHaveProperty('error');
     });
 
     test('route /login should return 401 if user does not exist', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/login')
             .send({ username: 'nonexistent', password: 'password123' });
 
@@ -27,7 +28,7 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /login should return 401 if password is incorrect', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/login')
             .send({ username: 'existing', password: 'incorrect' });
 
@@ -36,21 +37,21 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /logout should return 200 if user is logged in', async () => {
-        const response = await request(server).post('/auth/logout').send({});
+        const response = await request(serverAPI).post('/auth/logout').send({});
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('message');
     });
 
     test('route /register should return 400 if request body is empty', async () => {
-        const response = await request(server).post('/auth/register').send({});
+        const response = await request(serverAPI).post('/auth/register').send({});
 
         expect(response.status).toBe(400);
         expect(response.body).toHaveProperty('error');
     });
 
     test('route /register should return 400 if username and email are both missing', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/register')
             .send({ password: 'password123' });
 
@@ -59,7 +60,7 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /register should return 400 if password is missing', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/register')
             .send({ username: 'existing' });
 
@@ -68,7 +69,7 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /register should return 400 if username is already taken', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/register')
             .send({ username: 'existing', password: 'password123' });
 
@@ -77,7 +78,7 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /register should return 400 if email is already taken', async () => {
-        const response = await request(server)
+        const response = await request(serverAPI)
             .post('/auth/register')
             .send({ username: 'existing', password: 'password123' });
 
@@ -86,6 +87,6 @@ describe('Testing Auth Route', () => {
     });
 
     afterAll(() => {
-        eckoServer.close();
+        eckoAPIServer.close();
     });
 });
