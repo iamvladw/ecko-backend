@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { eckoAPIServer, serverAPI, serverEnabled } from '../server';
 import helperEcko from '../helpers/ecko.helper';
+import { cleanupInterval } from '../helpers/cdn.helper';
 
 describe('Testing Auth Route', () => {
     beforeAll(async () => {
@@ -87,6 +88,7 @@ describe('Testing Auth Route', () => {
     });
 
     afterAll(() => {
+        clearInterval(cleanupInterval);
         eckoAPIServer.close();
     });
 });

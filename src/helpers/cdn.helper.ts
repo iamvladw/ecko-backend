@@ -95,10 +95,5 @@ const cleanupExpiredFiles = () => {
 };
   
 const cleanupInterval = setInterval(cleanupExpiredFiles, 1 * 1000);
-  
-process.on('SIGINT', () => {
-    clearInterval(cleanupInterval);
-    process.exit(0);
-});
 
-export { storage, upload };
+export { storage, upload, cleanupInterval };
