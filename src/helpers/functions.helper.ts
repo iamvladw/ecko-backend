@@ -196,5 +196,38 @@ export default class helperFunctions {
       
         return milliseconds;
     }
+
+    public static fetchFileExtensionGroup(filename: string) {
+        switch (filename.toLowerCase()) {
+        case '.jpeg':
+        case '.jpg':
+        case '.png':
+        case '.webp':
+        case '.tiff':
+        case '.tif':
+        case '.bmp':
+            return 'image';
+        case '.avi':
+        case '.mp4':
+        case '.mov':
+        case '.mkv':
+        case '.mpeg':
+        case '.mpg':
+        case '.wmv':
+        case '.flv':
+        case '.webm':
+        case '.3gp':
+            return 'video';
+        case '.mp3':
+        case '.aac':
+        case '.wav':
+        case '.flac':
+        case '.ogg':
+        case '.wma':
+            return 'audio';
+        default:
+            return 'other';
+        }
+    }
       
 }

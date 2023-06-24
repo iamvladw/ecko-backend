@@ -32,7 +32,7 @@ router.post(
         
         if (uploadedFile) {
             const fileRecordsName = uploadedFile.filename;
-            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperEcko.fetchFileExtensionGroup(path.extname(fileRecordsName)), fileRecordsName);
+            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(fileRecordsName)), fileRecordsName);
             
             if (req.headers.expiresin) {
                 const expiresIn = helperFunctions.parseExpiration(String(req.headers.expiresin));
