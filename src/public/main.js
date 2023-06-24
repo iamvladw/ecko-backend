@@ -31,8 +31,8 @@ function connectWebSocket() {
             'responses'
         ).textContent = `${wsData.responses}`;
         document.getElementById(
-            'branch-github'
-        ).textContent = `${wsData.currentBranch}`;
+            'storage-usage'
+        ).textContent = `${wsData.strorageUsage}`;
         document.getElementById(
             'commit-github'
         ).textContent = `${wsData.currentCommit}`;

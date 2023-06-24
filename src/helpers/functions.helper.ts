@@ -3,6 +3,8 @@ import osu from 'node-os-utils';
 import config from './config.helper';
 import logger from '../helpers/winston.helper';
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 export default class helperFunctions {
     public static delay(ms: number) {
@@ -229,5 +231,26 @@ export default class helperFunctions {
             return 'other';
         }
     }
+    public static async calculateFolderSize(folderPath: string): Promise<number> {
+        let totalSize = 0;
       
+        const traverseDirectory = async (dirPath: string) => {
+            const files = await fs.promises.readdir(dirPath);
+      
+            for (const file of files) {
+                const filePath = path.join(dirPath, file);
+                const stats = await fs.promises.lstat(filePath);
+      
+                if (stats.isFile()) {
+                    totalSize += stats.size;
+                } else if (stats.isDirectory()) {
+                    await traverseDirectory(filePath);
+                }
+            }
+        };
+      
+        await traverseDirectory(folderPath);
+      
+        return totalSize;
+    }
 }

@@ -92,8 +92,9 @@ export default class helperEcko {
 
                         if (route === 'staticPage') {
                             const publicDataInterval = setInterval(async () => {
+                                const filePath = path.join(__dirname, '../../', config.cdn.path);
                                 const wssData = {
-                                    currentBranch: helperGithub.getBranch(),
+                                    strorageUsage: helperFunctions.formatBytes(await helperFunctions.calculateFolderSize(filePath)),
                                     currentCommit: helperGithub.getCommit(),
                                     currentVersion: packageJson.version,
                                     githubVersion:
