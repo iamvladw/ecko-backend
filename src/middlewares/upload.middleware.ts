@@ -23,14 +23,17 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
 
                 switch (fileExtension.toLowerCase()) {
                 case '.png':
+                    req.file.filename = `${path.parse(req.file.filename).name}.png`;
+
                     logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
+
                     await sharp(filePath)
                         .toFormat('png')
                         .png({ quality: 80 })
                         .toFile(`${compressedPath}.png`);
 
                     fs.unlinkSync(filePath);
-          
+            
                     filePath = `${compressedPath}.png`;
 
                     next();
@@ -41,15 +44,15 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.tiff':
                 case '.tif':
                 case '.bmp':
+                    req.file.filename = `${path.parse(req.file.filename).name}.jpeg`;
+
                     logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
                     await sharp(filePath)
                         .toFormat('jpeg')
                         .jpeg({ quality: 80 })
-                        .toFile(`${tempPath}.jpeg`);
-
-                    fs.renameSync(`${tempPath}.jpeg`, `${compressedPath}.jpeg`);
+                        .toFile(`${compressedPath}.jpeg`);
           
-                    filePath = `${tempPath}.jpeg`;
+                    filePath = `${compressedPath}.jpeg`;
 
                     next();
                     break;
@@ -63,12 +66,14 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.flv':
                 case '.webm':
                 case '.3gp':
+                    req.file.filename = `${path.parse(req.file.filename).name}.mp4`;
+
                     logger.info(`Compressing ${fileExtension.toLowerCase()} video: ${req.file.filename}`);
                     const commandVideo = `ffmpeg -i "${filePath}" -vcodec libx264 -crf 25 -preset veryslow "${tempPath}.mp4"`;
                     exec(commandVideo, (err) => {
                         if (err) {
                             logger.error(`Error occurred while compressing video format: ${String(err)}`);
-                            return res.status(500).json({ error: 'Something went wrong' });
+                            throw new Error('Something went wrong');
                         }
                         fs.unlinkSync(filePath);
           
@@ -85,12 +90,14 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.flac':
                 case '.ogg':
                 case '.wma':
+                    req.file.filename = `${path.parse(req.file.filename).name}.mp3`;
+                    
                     logger.info(`Compressing ${fileExtension.toLowerCase()} audio: ${req.file.filename}`);
                     const commandAudio = `ffmpeg -i "${filePath}" -codec:a libmp3lame -b:a 128k -compression_level 8 -qscale:a 2 "${tempPath}.mp3"`;
                     exec(commandAudio, (err) => {
                         if (err) {
                             logger.error(`Error occurred while compressing video format: ${String(err)}`);
-                            return res.status(500).json({ error: 'Something went wrong' });
+                            throw new Error('Something went wrong');
                         }
                         fs.unlinkSync(filePath);
           
@@ -112,7 +119,7 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
             next();
         });
     } catch (err) {
-        logger.error(`Error occurred while compressing image: ${err as string}`);
+        logger.error(`Error occurred while compressing file: ${err as string}`);
         return res.status(500).json({ error: 'Something went wrong' });
     }
 };

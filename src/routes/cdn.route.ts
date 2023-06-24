@@ -9,6 +9,7 @@ import { param, validationResult } from 'express-validator';
 import { helperDatabase, masterInstance } from '../helpers/database.helper';
 import uploadWithCompression from '../middlewares/upload.middleware';
 import path from 'path';
+import config from '../helpers/config.helper';
 
 const router = express.Router();
 
@@ -23,13 +24,13 @@ router.post(
             return res.status(400).json({ error: errors.array() });
         }
 
+        const { uuid } = req.params;
+
         const uploadedFile = req.file;
 
         if (uploadedFile) {
-            const { originalname, filename, mimetype } = uploadedFile;
-
-            logger.log('success', `File ${originalname} uploaded and compressed successfully`);
-            res.json({ message: 'File uploaded successfully' });
+            logger.log('success', `File ${uploadedFile.filename} uploaded and compressed successfully`);
+            res.status(200).json({ file: uploadedFile.filename});
         } else {
             logger.error('No file uploaded');
             res.status(400).json({ message: 'No file uploaded' });
@@ -37,10 +38,9 @@ router.post(
     }
 );
 
-router.get('/:uuid/:type/:file', 
+router.get('/:uuid/:file', 
     [
         param('uuid').notEmpty().withMessage('UUID is required'),
-        param('type').notEmpty().withMessage('Type is required'),
         param('file').notEmpty().withMessage('File is required')
     ],
     async (req: Request, res: Response) => {
@@ -54,7 +54,7 @@ router.get('/:uuid/:type/:file',
         }
 
         try {
-            const filePath = path.join(__dirname, '../../', 'uploads', uuid, type, file);
+            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperEcko.fetchFileExtensionGroup(path.extname(file)), file);
 
             logger.info(`Fetching file: ${filePath}`);
             logger.log('success', `File ${file} fetched successfully`);
