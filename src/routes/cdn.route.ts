@@ -28,8 +28,6 @@ router.post(
         if (uploadedFile) {
             const { originalname, filename, mimetype } = uploadedFile;
 
-            logger.info(originalname, filename, mimetype);
-
             logger.log('success', `File ${originalname} uploaded and compressed successfully`);
             res.json({ message: 'File uploaded successfully' });
         } else {

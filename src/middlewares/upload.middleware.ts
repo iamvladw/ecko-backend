@@ -22,24 +22,34 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 const tempPath = `${req.file.destination}/compressing-${path.parse(req.file.filename).name}`;
 
                 switch (fileExtension.toLowerCase()) {
+                case '.png':
+                    logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
+                    await sharp(filePath)
+                        .toFormat('png')
+                        .png({ quality: 80 })
+                        .toFile(`${compressedPath}.png`);
+
+                    fs.unlinkSync(filePath);
+          
+                    filePath = `${compressedPath}.png`;
+
+                    next();
+                    break;
                 case '.jpeg':
                 case '.jpg':
-                case '.png':
                 case '.webp':
                 case '.tiff':
                 case '.tif':
                 case '.bmp':
-                    logger.info(`Compressing image: ${req.file.filename}`);
+                    logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
                     await sharp(filePath)
-                        .toFormat('png')
-                        .png({ quality: 80 })
-                        .toFile(tempPath);
+                        .toFormat('jpeg')
+                        .jpeg({ quality: 80 })
+                        .toFile(`${tempPath}.jpeg`);
 
-                    fs.unlinkSync(filePath);
+                    fs.renameSync(`${tempPath}.jpeg`, `${compressedPath}.jpeg`);
           
-                    fs.renameSync(tempPath, compressedPath);
-
-                    filePath = compressedPath;
+                    filePath = `${tempPath}.jpeg`;
 
                     next();
                     break;
@@ -53,7 +63,7 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.flv':
                 case '.webm':
                 case '.3gp':
-                    logger.info(`Compressing video: ${req.file.filename}`);
+                    logger.info(`Compressing ${fileExtension.toLowerCase()} video: ${req.file.filename}`);
                     const commandVideo = `ffmpeg -i "${filePath}" -vcodec libx264 -crf 25 -preset veryslow "${tempPath}.mp4"`;
                     exec(commandVideo, (err) => {
                         if (err) {
@@ -68,14 +78,14 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
 
                         next();
                     });
-                    return;
+                    break;
                 case '.mp3':
                 case '.aac':
                 case '.wav':
                 case '.flac':
                 case '.ogg':
                 case '.wma':
-                    logger.info(`Compressing audio: ${req.file.filename}`);
+                    logger.info(`Compressing ${fileExtension.toLowerCase()} audio: ${req.file.filename}`);
                     const commandAudio = `ffmpeg -i "${filePath}" -codec:a libmp3lame -b:a 128k -compression_level 8 -qscale:a 2 "${tempPath}.mp3"`;
                     exec(commandAudio, (err) => {
                         if (err) {
@@ -90,17 +100,11 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
 
                         next();
                     });
-                    return;
+                    break;
                 default:
                     fs.copyFileSync(req.file.path, compressedPath);
                     break;
                 }
-          
-                fs.unlinkSync(req.file.path);
-          
-                fs.renameSync(tempPath, compressedPath);
-
-                req.file.path = compressedPath;
             } else {
                 throw new Error('No file uploaded');
             }

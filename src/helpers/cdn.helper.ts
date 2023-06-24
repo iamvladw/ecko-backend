@@ -47,13 +47,13 @@ const upload = multer({
         const allowedMimeTypes = [
             'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif',  'image/tiff', 'image/tif', 'image/bmp', 
             'video/x-msvideo', 'video/mp4', 'video/quicktime', 'video/quicktime', 'video/mpeg', 'video/mpg', 'video/x-ms-wmv', 'video/x-flv', 'video/webm', 'video/3gpp',
-            'audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/flac', 'audio/ogg', 'audio/x-ms-wma', 'audio/webm', 'audio/3gpp', 'audio/aac'
+            'audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/flac', 'audio/ogg', 'audio/x-ms-wma', 'audio/webm', 'audio/3gpp', 'audio/aac'
         ];
   
         if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Invalid file type'));
+            cb(new Error(`Invalid file type: ${file.mimetype}`));
         }
     }
 }).single('file');
