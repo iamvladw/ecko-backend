@@ -2,7 +2,6 @@ import http from 'http';
 import https from 'https';
 import fs from 'fs';
 import config from './config.helper';
-import { server } from '../server';
 import logger from './winston.helper';
 import SystemInformation from 'systeminformation';
 import websocket from 'ws';
@@ -12,6 +11,18 @@ import helperFunctions from './functions.helper';
 import helperCache from './cache.helper';
 import os from 'os';
 import helperAES from './aes.helper';
+import express, { Request } from 'express';
+import { helperDatabase, masterInstance } from './database.helper';
+import JwtPayload from '../interfaces/jwt.interface';
+import jwt from 'jsonwebtoken';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import checkDatabaseConnection from '../middlewares/database.middleware';
+import limiter from '../middlewares/rate.middleware';
+import requestLoggerMiddleware from '../middlewares/request.middleware';
+import cdnRouter from '../routes/cdn.route';
+import path from 'path';
 
 export default class helperEcko {
     public static generateEkoTag(): string {
@@ -28,7 +39,19 @@ export default class helperEcko {
         }
     }
 
-    public static initializeEckoServer() {
+    public static initializeEckoServer(server?: express.Express) {
+        if (!fs.existsSync(config.cdn.path)) {
+            fs.mkdir(config.cdn.path, { recursive: true }, (err) => {
+                if (err) {
+                    logger.error(
+                        `Error while trying to create the CDN folder: ${String(
+                            err
+                        )}`
+                    );
+                }
+            });
+        }
+
         if (config.protocol === 'http') {
             return http.createServer(server);
         } else {
@@ -39,6 +62,10 @@ export default class helperEcko {
                 };
                 return https.createServer(options, server);
             } catch (err) {
+                logger.warn(
+                    `Error while trying to load SSL Cert: ${err as string}`
+                );
+                logger.warn('Falling back to HTTP...');
                 config.protocol = 'http';
                 return http.createServer(server);
             }
@@ -50,13 +77,12 @@ export default class helperEcko {
     public static initializeEckoWebSocketServer() {
         if (process.env.JEST_WORKER_ID === undefined) {
             try {
-                const server = http.createServer();
                 this.wss = new websocket.Server({ port: config.wss.port });
 
                 this.wss.setMaxListeners(config.wss.maxListeners);
 
                 logger.info(
-                    `WebSocket server is running on: ${config.protocol}://${config.dns}:${config.wss.port}`
+                    `WSS is running on: ${config.protocol}://${config.dns}:${config.wss.port}`
                 );
 
                 this.wss.on('connection', (ws) => {
@@ -124,6 +150,37 @@ export default class helperEcko {
         }
     }
 
+    public static initializeEckoCDNServer() {
+        try {
+            const server = express();
+            const cdnServer = this.initializeEckoServer(server);
+
+            server.use(express.json());
+            server.use(express.urlencoded({ extended: false }));
+            server.use(helmet());
+            server.use(compression({ brotli: { quality: 2 } }));
+            server.use(cookieParser());
+            server.use(limiter);
+            server.use(checkDatabaseConnection);
+            server.use(requestLoggerMiddleware);
+
+            server.use('/attachments', cdnRouter);
+
+            cdnServer.listen(config.cdn.port, config.dns, () => {
+                logger.info(
+                    `CDN is running on: ${config.protocol}://${config.dns}:${config.cdn.port}`
+                );
+            });
+        } catch (err) {
+            logger.error(
+                `Error while trying to start the CDN server on ${
+                    config.protocol
+                }://${config.dns}:${config.cdn.port}: ${err as string}`
+            );
+            process.exit(1);
+        }
+    }
+
     public static async serverCPUUsage() {
         const cpuData = await SystemInformation.currentLoad();
         const cpuUsagePercentage = cpuData.currentLoad;
@@ -166,5 +223,71 @@ export default class helperEcko {
         }
 
         return { level, strength, score };
+    }
+
+    public static async fetchLocalUser(req: Request) {
+        try {
+            const token: string = req.cookies.authorization as string;
+
+            if (!token) {
+                logger.warn('Missing token');
+            }
+
+            const decoded = jwt.verify(
+                token,
+                helperCache.instance.server.secret
+            ) as JwtPayload;
+
+            const userData = decoded;
+
+            const user = await helperDatabase.fetchUser(masterInstance, {
+                username: userData.username,
+                email: userData.email
+            });
+
+            // Check if the user is valid
+            if (!user) {
+                logger.warn('Invalid username or password');
+            }
+
+            return userData;
+        } catch (err) {
+            logger.error(
+                `Error while trying to fetch the local user: ${err as string}`
+            );
+        }
+    }
+
+    public static fetchFileExtensionGroup(filename: string) {
+        switch (filename.toLowerCase()) {
+        case '.jpeg':
+        case '.jpg':
+        case '.png':
+        case '.webp':
+        case '.tiff':
+        case '.tif':
+        case '.bmp':
+            return 'image';
+        case '.avi':
+        case '.mp4':
+        case '.mov':
+        case '.mkv':
+        case '.mpeg':
+        case '.mpg':
+        case '.wmv':
+        case '.flv':
+        case '.webm':
+        case '.3gp':
+            return 'video';
+        case '.mp3':
+        case '.aac':
+        case '.wav':
+        case '.flac':
+        case '.ogg':
+        case '.wma':
+            return 'audio';
+        default:
+            return 'other';
+        }
     }
 }

@@ -11,13 +11,11 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 401 if username is empty', async () => {
-        const response = await request(server)
-            .post('/users/add/user')
-            .send({
-                username: '',
-                email: 'test@example.com',
-                password: 'password123'
-            });
+        const response = await request(server).post('/users/add/user').send({
+            username: '',
+            email: 'test@example.com',
+            password: 'password123'
+        });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -53,13 +51,11 @@ describe('Testing Users Route', () => {
     });
 
     it('route /add/user should return 400 if password is empty', async () => {
-        const response = await request(server)
-            .post('/users/add/user')
-            .send({
-                username: 'testuser',
-                email: 'test@example.com',
-                password: ''
-            });
+        const response = await request(server).post('/users/add/user').send({
+            username: 'testuser',
+            email: 'test@example.com',
+            password: ''
+        });
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({

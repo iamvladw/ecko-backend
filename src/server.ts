@@ -21,7 +21,7 @@ import limiter from './middlewares/rate.middleware';
 import helperEcko from './helpers/ecko.helper';
 
 const server = express();
-const eckoServer = helperEcko.initializeEckoServer();
+const eckoServer = helperEcko.initializeEckoServer(server);
 
 // Define local variables
 let serverEnabled = false;
@@ -88,12 +88,11 @@ try {
         // Starts the WebSocket server
         helperEcko.initializeEckoWebSocketServer();
 
+        // Starts the CDN server
+        helperEcko.initializeEckoCDNServer();
+
         serverEnabled = true;
-        logger.info(
-            `Server is running with ${config.protocol.toUpperCase()} mode on: ${
-                config.protocol
-            }://${DNS}:${PORT}`
-        );
+        logger.info(`API is running on: ${config.protocol}://${DNS}:${PORT}`);
     });
 } catch (err) {
     logger.error(`Error while trying to start the server: ${err as string}`);

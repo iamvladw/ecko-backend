@@ -51,9 +51,9 @@ interface Config {
         maxListeners: number;
         interval: number;
     };
-    rateLimit: {
-        max: 250,
-        timeout: 15
+    cdn: {
+        port: number;
+        path: string;
     };
     cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';
@@ -63,8 +63,12 @@ interface Config {
     replication: boolean;
     whitelist: string[];
     databases: Record<string, DatabaseConfig>;
+    rateLimit: {
+        max: number;
+        timeout: number;
+    };
     jwt: {
-        expiresIn: string | number | undefined;
+        expiresIn: string;
     };
 }
 

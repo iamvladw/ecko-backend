@@ -11,9 +11,9 @@
         "maxListeners": 50,
         "interval": 1000
     },
-    "rateLimit": {
-        "max": 250,
-        "timeout": 15
+    "cdn": {
+        "port": 8082,
+        "path": "./uploads"
     },
     "cloudflareProxy": false,
     "apiAuthMethod": "key",
@@ -35,7 +35,11 @@
             "migrations": ["src/database/migrations/*.ts"]
         }
     },
+    "rateLimit": {
+        "max": 250,
+        "timeout": 15
+    },
     "jwt": {
-        "expiresIn": "1min"
+        "expiresIn": "2h"
     }
 }

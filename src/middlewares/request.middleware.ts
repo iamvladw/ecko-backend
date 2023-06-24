@@ -43,7 +43,8 @@ const requestLoggerMiddleware = (
                 break;
             }
         } catch (err) {
-            logger.error(
+            logger.log(
+                'error',
                 `Error while trying to sending a response to ${String(ip)}: ${
                     err as string
                 }`
