@@ -156,4 +156,44 @@ export default class helperFunctions {
         }
         return null;
     }
+
+    public static parseExpiration(expiration: string): number {
+        const durationRegex = /^(\d+)([smhdwMy]?)$/;
+        const matches = expiration.match(durationRegex);
+        if (!matches) {
+            throw new Error('Invalid expiration format');
+        }
+      
+        const value = parseInt(matches[1]);
+        const unit = matches[2];
+      
+        let milliseconds = 0;
+        switch (unit) {
+        case 's':
+            milliseconds = value * 1000;
+            break;
+        case 'm':
+            milliseconds = value * 60 * 1000;
+            break;
+        case 'h':
+            milliseconds = value * 60 * 60 * 1000;
+            break;
+        case 'd':
+            milliseconds = value * 24 * 60 * 60 * 1000;
+            break;
+        case 'w':
+            milliseconds = value * 7 * 24 * 60 * 60 * 1000;
+            break;
+        case 'M':
+            milliseconds = value * 30 * 24 * 60 * 60 * 1000;
+            break;
+        case 'y':
+            milliseconds = value * 365 * 24 * 60 * 60 * 1000;
+            break;
+        default:
+            throw new Error('Invalid expiration unit');
+        }
+      
+        return milliseconds;
+    }
 }
