@@ -13,7 +13,11 @@
     },
     "cdn": {
         "port": 8082,
-        "path": "./storage"
+        "path": "./storage",
+        "rateLimit": {
+            "max": 5,
+            "timeout": 60
+        }
     },
     "cloudflareProxy": false,
     "apiAuthMethod": "key",

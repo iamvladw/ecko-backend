@@ -54,6 +54,10 @@ interface Config {
     cdn: {
         port: number;
         path: string;
+        rateLimit: {
+            max: number;
+            timeout: number;
+        };
     };
     cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';

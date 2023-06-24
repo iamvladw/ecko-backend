@@ -23,6 +23,8 @@ import limiter from '../middlewares/rate.middleware';
 import requestLoggerMiddleware from '../middlewares/request.middleware';
 import cdnRouter from '../routes/cdn.route';
 import path from 'path';
+import { Response } from 'express-serve-static-core';
+import rateLimit from 'express-rate-limit';
 
 export default class helperEcko {
     public static generateEkoTag(): string {
@@ -164,7 +166,15 @@ export default class helperEcko {
                 serverCDN.use(helmet());
                 serverCDN.use(compression({ brotli: { quality: 2 } }));
                 serverCDN.use(cookieParser());
-                serverCDN.use(limiter);
+                serverCDN.use(rateLimit({
+                    windowMs: config.cdn.rateLimit.timeout * 1000,
+                    max: config.cdn.rateLimit.max,
+                    message: 'Too many requests, please try again later.',
+                    statusCode: 429,
+                    handler: (req: Request, res: Response) => {
+                        res.status(429).json({error: 'Too many requests, please try again later.'});
+                    }
+                }));
                 serverCDN.use(checkDatabaseConnection);
                 serverCDN.use(requestLoggerMiddleware);
 
