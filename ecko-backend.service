@@ -1,0 +1,20 @@
+# Ecko Backend Service Worker
+# ---------------------------
+
+[Unit]
+Description=Ecko Backend
+Documentation=https://github.com/iamvladw/ecko-backend/wiki
+
+[Service]
+ExecStart=/bin/bash -c 'source /root/.nvm/nvm.sh && nvm use v20.3.0 && /root/.nvm/versions/node/v20.3.0/bin/npm start'
+WorkingDirectory=/root/ecko-backend
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=ecko-backend
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
