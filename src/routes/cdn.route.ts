@@ -27,35 +27,40 @@ router.post(
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { uuid } = req.params;
-        const uploadedFile = req.file;
+        try {
+            const { uuid } = req.params;
+            const uploadedFile = req.file;
         
-        if (uploadedFile) {
-            const fileRecordsName = uploadedFile.filename;
-            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(fileRecordsName)), fileRecordsName);
+            if (uploadedFile) {
+                const fileRecordsName = uploadedFile.filename;
+                const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(fileRecordsName)), fileRecordsName);
             
-            if (req.headers.expiresin) {
-                const expiresIn = helperFunctions.parseExpiration(String(req.headers.expiresin));
-                helperCache.instance.data.fileRecords[fileRecordsName] = {
-                    path: filePath,
-                    author: uuid,
-                    date: Date.now(),
-                    expiresIn: expiresIn
-                };
+                if (req.headers.expiresin) {
+                    const expiresIn = helperFunctions.parseExpiration(String(req.headers.expiresin));
+                    helperCache.instance.data.fileRecords[fileRecordsName] = {
+                        path: filePath,
+                        author: uuid,
+                        date: Date.now(),
+                        expiresIn: expiresIn
+                    };
+                } else {
+                    helperCache.instance.data.fileRecords[fileRecordsName] = {
+                        path: filePath,
+                        author: uuid,
+                        date: Date.now()
+                    };
+                }
+                helperCache.update();
+                const fileRecordsData = helperCache.instance.data.fileRecords[fileRecordsName];
+                logger.log('success', `File ${fileRecordsName} uploaded and compressed successfully`);
+                res.status(200).json({fileRecordsName, fileRecordsData});
             } else {
-                helperCache.instance.data.fileRecords[fileRecordsName] = {
-                    path: filePath,
-                    author: uuid,
-                    date: Date.now()
-                };
+                logger.error('No file uploaded');
+                res.status(400).json({ message: 'No file uploaded' });
             }
-            helperCache.update();
-            const fileRecordsData = helperCache.instance.data.fileRecords[fileRecordsName];
-            logger.log('success', `File ${fileRecordsName} uploaded and compressed successfully`);
-            res.status(200).json({fileRecordsName, fileRecordsData});
-        } else {
-            logger.error('No file uploaded');
-            res.status(400).json({ message: 'No file uploaded' });
+        } catch(err) {
+            logger.error(`Error while upload file: ${err as string}`);
+            res.status(500).json({ error: 'File upload failed' });
         }
     }
 );

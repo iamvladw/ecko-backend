@@ -51,6 +51,8 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                         .toFormat('jpeg')
                         .jpeg({ quality: 80 })
                         .toFile(`${compressedPath}.jpeg`);
+
+                    fs.unlinkSync(filePath);
           
                     filePath = `${compressedPath}.jpeg`;
 
