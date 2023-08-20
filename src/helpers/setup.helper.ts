@@ -83,7 +83,6 @@ class helperSetup {
                 }
                 this.originCache = (await responseVerify).data.cache;
                 this.originConfig = (await responseVerify).data.config;
-                logger.info(this.originCache);
                 return true;
             }
         },
@@ -262,8 +261,6 @@ class helperSetup {
                                     this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey
                         };
-                        logger.info(answers.cache);
-                        logger.info(answers.config);
                         break;
                     }
 
