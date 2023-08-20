@@ -40,7 +40,7 @@ router.post(
                     .json({ error: 'This server is not an origin server' });
             }
 
-            securityCode = String(Math.floor(Math.random() * 100000) + 100000);
+            securityCode = String(Math.floor(Math.random() * 1000000));
 
             logger.log(
                 'success',
