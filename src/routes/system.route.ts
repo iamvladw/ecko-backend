@@ -3,6 +3,7 @@ import { param, validationResult } from 'express-validator';
 import logger from '../helpers/winston.helper';
 import helperCache from '../helpers/cache.helper';
 import helperFunctions from '../helpers/functions.helper';
+import config from '../helpers/config.helper';
 
 const router = express.Router();
 
@@ -68,7 +69,7 @@ router.post('/loadbalancer/verify/:uuid', [param('uuid').notEmpty().withMessage(
         securityCode = '';
 
         logger.log('success', `${uuid} has been verified`);
-        res.status(200).json({ message: 'Edge server has been verified' });
+        res.status(200).json({ 'cache': helperCache.get, 'config': config});
     } catch (err) {
         logger.error(`Error while trying to verify the origin server: ${err as string}`);
         res.status(500).json({ error: 'Internal server error' });
