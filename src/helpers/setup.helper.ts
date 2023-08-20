@@ -10,6 +10,8 @@ import axios from 'axios';
 import { JSONData } from '../interfaces/cache.interface';
 
 class helperSetup {
+    public static serverUUID: string = uuid();
+
     public static originAddress: string;
     public static originCache: JSONData;
     public static originConfig: Config;
@@ -48,7 +50,7 @@ class helperSetup {
                     return 'Please enter a valid URL in the format http://example.com or https://192.168.1.1:8080';
                 }
                 const response = await axios.post(
-                    `${this.originAddress}/system/loadbalancer/setup/${helperCache.get.server.uuid}`
+                    `${this.originAddress}/system/loadbalancer/setup/${this.serverUUID}`
                 );
                 if (response.status !== 200) {
                     return 'Error while trying to setup the load balancer';
@@ -73,7 +75,7 @@ class helperSetup {
                     return 'Please enter a valid security code';
                 }
                 const responseVerify = axios.post(
-                    `${this.originAddress}/system/loadbalancer/verify/${helperCache.get.server.uuid}`,
+                    `${this.originAddress}/system/loadbalancer/verify/${this.serverUUID}`,
                     { securityCode: security }
                 );
                 if ((await responseVerify).status !== 200) {
@@ -197,10 +199,9 @@ class helperSetup {
                 !helperCache.get.server.role &&
                 !helperCache.get.server.origin
             ) {
-                const serverUUID = uuid();
 
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
-                logger.log('setup', `${serverUUID}`);
+                logger.log('setup', `${this.serverUUID}`);
                 logger.log('setup', '------------------------------------');
                 logger.log(
                     'setup',
@@ -225,7 +226,7 @@ class helperSetup {
 
                     setupConfig = this.generateServerConfig(
                         answers,
-                        serverUUID,
+                        this.serverUUID,
                         'Standalone',
                         'Origin'
                     );
@@ -240,7 +241,7 @@ class helperSetup {
                         );
                         setupConfig = this.generateServerConfig(
                             answers,
-                            serverUUID,
+                            this.serverUUID,
                             'Load Balancer',
                             'Origin'
                         );
