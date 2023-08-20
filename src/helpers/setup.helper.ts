@@ -13,7 +13,7 @@ class helperSetup {
     public static originAddress: string;
     public static originCache: JSONData;
     public static originConfig: Config;
-    
+
     private static serverModeQuestion: QuestionCollection[] = [
         {
             type: 'list',
@@ -48,9 +48,7 @@ class helperSetup {
                     return 'Please enter a valid URL in the format http://example.com or https://192.168.1.1:8080';
                 }
                 const response = await axios.post(
-                    `${this.originAddress}/system/loadbalancer/setup/${
-                        helperCache.get.server.uuid
-                    }`
+                    `${this.originAddress}/system/loadbalancer/setup/${helperCache.get.server.uuid}`
                 );
                 if (response.status !== 200) {
                     return 'Error while trying to setup the load balancer';
@@ -64,7 +62,8 @@ class helperSetup {
         {
             type: 'input',
             name: 'serverSecurityCode',
-            message: 'Enter the security code deployed in the origin server console:',
+            message:
+                'Enter the security code deployed in the origin server console:',
             validate: async (security: string) => {
                 if (security.trim() === '') {
                     return 'Server origin address cannot be empty.';
@@ -74,10 +73,8 @@ class helperSetup {
                     return 'Please enter a valid security code';
                 }
                 const responseVerify = axios.post(
-                    `${this.originAddress}/system/loadbalancer/verify/${
-                        helperCache.get.server.uuid
-                    }`,
-                    {securityCode: security}
+                    `${this.originAddress}/system/loadbalancer/verify/${helperCache.get.server.uuid}`,
+                    { securityCode: security }
                 );
                 if ((await responseVerify).status !== 200) {
                     return 'Invalid security code';
@@ -164,7 +161,12 @@ class helperSetup {
         }
     ];
 
-    private static generateServerConfig(answers: Answers, uuid: string, serverMode: 'Standalone' | 'Load Balancer', serverRole: 'Origin' | 'Edge'): SetupConfig {
+    private static generateServerConfig(
+        answers: Answers,
+        uuid: string,
+        serverMode: 'Standalone' | 'Load Balancer',
+        serverRole: 'Origin' | 'Edge'
+    ): SetupConfig {
         const secret = helperFunctions.randomString(
             answers.secretLenght as number
         );
@@ -189,7 +191,12 @@ class helperSetup {
 
     public static async initializeServerSetup(): Promise<void> {
         try {
-            if (!helperCache.get.server.apiKey && !helperCache.get.server.mode && !helperCache.get.server.role && !helperCache.get.server.origin) {
+            if (
+                !helperCache.get.server.apiKey &&
+                !helperCache.get.server.mode &&
+                !helperCache.get.server.role &&
+                !helperCache.get.server.origin
+            ) {
                 const serverUUID = uuid();
 
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
@@ -210,20 +217,38 @@ class helperSetup {
 
                 let setupConfig;
 
-                switch(answers.serverMode) {
+                switch (answers.serverMode) {
                 case 'Standalone':
-                    answers = await inquirer.prompt(this.standaloneQuestions);
+                    answers = await inquirer.prompt(
+                        this.standaloneQuestions
+                    );
 
-                    setupConfig = this.generateServerConfig(answers, serverUUID, 'Standalone', 'Origin');
+                    setupConfig = this.generateServerConfig(
+                        answers,
+                        serverUUID,
+                        'Standalone',
+                        'Origin'
+                    );
                     break;
                 case 'Load Balancer':
-                    answers = await inquirer.prompt(this.serverRoleQuestion);
+                    answers = await inquirer.prompt(
+                        this.serverRoleQuestion
+                    );
                     if (answers.serverRole === 'Origin') {
-                        answers = await inquirer.prompt(this.standaloneQuestions);
-                        setupConfig = this.generateServerConfig(answers, serverUUID, 'Load Balancer', 'Origin');
+                        answers = await inquirer.prompt(
+                            this.standaloneQuestions
+                        );
+                        setupConfig = this.generateServerConfig(
+                            answers,
+                            serverUUID,
+                            'Load Balancer',
+                            'Origin'
+                        );
                     } else {
                         await inquirer.prompt(this.serverOriginQuestion);
-                        answers = await inquirer.prompt(this.serverSecurityCodeQuestion);
+                        answers = await inquirer.prompt(
+                            this.serverSecurityCodeQuestion
+                        );
                         setupConfig = {
                             serverName: answers.serverName,
                             uuid: uuid(),
@@ -232,14 +257,14 @@ class helperSetup {
                             origin: this.originAddress,
                             location: answers.serverLocation,
                             secret: this.originCache.server.secret,
-                            secretPhrase: this.originCache.server.secretPhrase,
+                            secretPhrase:
+                                    this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey
                         };
                         logger.info(answers.cache);
                         logger.info(answers.config);
                         break;
                     }
-
 
                     helperCache.get.server = setupConfig;
                     helperCache.get.data = {

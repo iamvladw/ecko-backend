@@ -114,12 +114,10 @@ export default class helperEcko {
                                     ),
                                     cpuUsage: await helperEcko.serverCPUUsage(),
                                     requests: helperFunctions.formatNumber(
-                                        helperCache.get.data
-                                            .numberOfRequests
+                                        helperCache.get.data.numberOfRequests
                                     ),
                                     responses: helperFunctions.formatNumber(
-                                        helperCache.get.data
-                                            .numberOfResponses
+                                        helperCache.get.data.numberOfResponses
                                     )
                                 };
 
@@ -313,12 +311,8 @@ export default class helperEcko {
 
                                 filesInFolder.add(file);
 
-                                if (
-                                    !helperCache.get.data.fileRecords[file]
-                                ) {
-                                    helperCache.get.data.fileRecords[
-                                        file
-                                    ] = {
+                                if (!helperCache.get.data.fileRecords[file]) {
+                                    helperCache.get.data.fileRecords[file] = {
                                         path: filePath,
                                         author: authorUUID,
                                         date: Date.now()

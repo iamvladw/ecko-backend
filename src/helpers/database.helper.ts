@@ -276,8 +276,7 @@ export class helperDatabase {
                         `Connected to the backup database: ${dbName}`
                     );
 
-                    helperCache.get.data.lastDatabaseLoaded =
-                        String(dbName);
+                    helperCache.get.data.lastDatabaseLoaded = String(dbName);
                     helperCache.update();
                     break;
                 }
@@ -429,9 +428,8 @@ export class helperDatabase {
                 if (
                     String(currentDatabase) !==
                         helperCache.get.data.lastDatabaseLoaded &&
-                    config.databases[
-                        helperCache.get.data.lastDatabaseLoaded
-                    ].role !== 'master'
+                    config.databases[helperCache.get.data.lastDatabaseLoaded]
+                        .role !== 'master'
                 ) {
                     logger.warn(
                         'The master database is of of sync because of the last connection disruption.'

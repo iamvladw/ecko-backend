@@ -94,8 +94,7 @@ const cleanupExpiredFiles = () => {
     const expiredFiles = [];
 
     for (const filename in helperCache.get.data.fileRecords) {
-        const expiresIn =
-            helperCache.get.data.fileRecords[filename].expiresIn;
+        const expiresIn = helperCache.get.data.fileRecords[filename].expiresIn;
         const date = helperCache.get.data.fileRecords[filename].date;
 
         let expirationTime = expiresIn;
@@ -105,8 +104,7 @@ const cleanupExpiredFiles = () => {
         }
 
         if (expirationTime && currentTime > expirationTime) {
-            const filePath =
-                helperCache.get.data.fileRecords[filename].path;
+            const filePath = helperCache.get.data.fileRecords[filename].path;
             expiredFiles.push(filename);
             delete helperCache.get.data.fileRecords[filename];
 

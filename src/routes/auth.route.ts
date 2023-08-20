@@ -159,11 +159,7 @@ router.post(
         await helperDatabase.addUser(masterInstance, userInstance);
 
         // Signs the token based on the username
-        const token = jwt.sign(
-            userInstance,
-            helperCache.get.server.secret,
-            { expiresIn: config.jwt.expiresIn }
-        );
+        const token = jwt.sign(userInstance, helperCache.get.server.secret, {expiresIn: config.jwt.expiresIn});
         logger.info('Signing in the token...');
 
         // Set the token as an HTTP-only cookie in the response
