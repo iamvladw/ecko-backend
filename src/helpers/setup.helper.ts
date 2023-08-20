@@ -74,15 +74,15 @@ class helperSetup {
                 if (!codePattern.test(security)) {
                     return 'Please enter a valid security code';
                 }
-                const responseVerify = axios.post(
+                const responseVerify = await axios.post(
                     `${this.originAddress}/system/loadbalancer/verify/${this.serverUUID}`,
                     { securityCode: security }
                 );
-                if ((await responseVerify).status !== 200) {
+                if (responseVerify.status !== 200) {
                     return 'Invalid security code';
                 }
-                this.originCache = (await responseVerify).data.cache;
-                this.originConfig = (await responseVerify).data.config;
+                this.originCache = responseVerify.data.cache as JSONData;
+                this.originConfig = responseVerify.data.config as Config;
                 return true;
             }
         },
@@ -216,28 +216,22 @@ class helperSetup {
 
                 let setupConfig;
 
-                switch (answers.serverMode) {
-                case 'Standalone':
+                if (answers.serverMode === 'Standalone') {
                     answers = await inquirer.prompt(
                         this.standaloneQuestions
                     );
-
-                    setupConfig = this.generateServerConfig(
+                    helperCache.get.server = this.generateServerConfig(
                         answers,
                         this.serverUUID,
                         'Standalone',
                         'Origin'
                     );
-                    break;
-                case 'Load Balancer':
-                    answers = await inquirer.prompt(
-                        this.serverRoleQuestion
-                    );
+                } else if (answers.serverMode === 'Load Balancer') {
                     if (answers.serverRole === 'Origin') {
                         answers = await inquirer.prompt(
                             this.standaloneQuestions
                         );
-                        setupConfig = this.generateServerConfig(
+                        helperCache.get.server = this.generateServerConfig(
                             answers,
                             this.serverUUID,
                             'Load Balancer',
@@ -248,7 +242,7 @@ class helperSetup {
                         answers = await inquirer.prompt(
                             this.serverSecurityCodeQuestion
                         );
-                        setupConfig = {
+                        helperCache.get.server = {
                             serverName: answers.serverName,
                             uuid: uuid(),
                             mode: 'Load Balancer',
@@ -256,74 +250,19 @@ class helperSetup {
                             origin: this.originAddress,
                             location: answers.serverLocation,
                             secret: this.originCache.server.secret,
-                            secretPhrase:
-                                    this.originCache.server.secretPhrase,
+                            secretPhrase: this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey
                         };
-                        break;
                     }
-
-                    helperCache.get.server = setupConfig;
-                    helperCache.get.data = {
-                        lastDatabaseLoaded: '',
-                        numberOfRequests: 0,
-                        numberOfResponses: 0,
-                        fileRecords: {}
-                    };
-                    helperCache.update();
-
-                    logger.log(
-                        'setup',
-                        `Server configuration generated successfully! ${JSON.stringify(
-                            setupConfig
-                        )}`
-                    );
-
-                    logger.log(
-                        'setup',
-                        'Based on the data provided, the server generated a UUID and an apiKey'
-                    );
-                    logger.log(
-                        'setup',
-                        'Please copy the apiKey to connect the front-end to the backend'
-                    );
-                    logger.log(
-                        'setup',
-                        '---------------------------------------------'
-                    );
-                    logger.log(
-                        'setup',
-                        `Name: ${helperCache.get.server.serverName}`
-                    );
-                    logger.log(
-                        'setup',
-                        `UUID: ${helperCache.get.server.uuid}`
-                    );
-                    logger.log(
-                        'setup',
-                        `Location: ${helperCache.get.server.location}`
-                    );
-                    logger.log(
-                        'setup',
-                        `Secret: ${helperCache.get.server.secret}`
-                    );
-                    logger.log(
-                        'setup',
-                        `Secret Phrase: ${helperCache.get.server.secretPhrase}`
-                    );
-                    logger.log(
-                        'setup',
-                        `apiKey: ${helperCache.get.server.apiKey}`
-                    );
-                    logger.log(
-                        'setup',
-                        '---------------------------------------------'
-                    );
-                    logger.log(
-                        'setup',
-                        'Please copy the data provided from the terminal or latest.log'
-                    );
                 }
+
+                helperCache.get.data = {
+                    lastDatabaseLoaded: '',
+                    numberOfRequests: 0,
+                    numberOfResponses: 0,
+                    fileRecords: {}
+                };
+                helperCache.update();
 
                 if (!helperCache.get.data) {
                     helperCache.get.data = {
