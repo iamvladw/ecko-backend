@@ -227,6 +227,9 @@ class helperSetup {
                         'Origin'
                     );
                 } else if (answers.serverMode === 'Load Balancer') {
+                    answers = await inquirer.prompt(
+                        this.serverRoleQuestion
+                    );
                     if (answers.serverRole === 'Origin') {
                         answers = await inquirer.prompt(
                             this.standaloneQuestions
