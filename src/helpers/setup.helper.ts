@@ -198,7 +198,6 @@ class helperSetup {
                 !helperCache.get.server.role &&
                 !helperCache.get.server.origin
             ) {
-
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
                 logger.log('setup', `${this.serverUUID}`);
                 logger.log('setup', '------------------------------------');
