@@ -30,42 +30,58 @@ router.post(
         try {
             const { uuid } = req.params;
             const uploadedFile = req.file;
-        
+
             if (uploadedFile) {
                 const fileRecordsName = uploadedFile.filename;
-                const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(fileRecordsName)), fileRecordsName);
-            
+                const filePath = path.join(
+                    __dirname,
+                    '../../',
+                    config.cdn.path,
+                    uuid,
+                    helperFunctions.fetchFileExtensionGroup(
+                        path.extname(fileRecordsName)
+                    ),
+                    fileRecordsName
+                );
+
                 if (req.headers.expiresin) {
-                    const expiresIn = helperFunctions.parseExpiration(String(req.headers.expiresin));
-                    helperCache.instance.data.fileRecords[fileRecordsName] = {
+                    const expiresIn = helperFunctions.parseExpiration(
+                        String(req.headers.expiresin)
+                    );
+                    helperCache.get.data.fileRecords[fileRecordsName] = {
                         path: filePath,
                         author: uuid,
                         date: Date.now(),
                         expiresIn: expiresIn
                     };
                 } else {
-                    helperCache.instance.data.fileRecords[fileRecordsName] = {
+                    helperCache.get.data.fileRecords[fileRecordsName] = {
                         path: filePath,
                         author: uuid,
                         date: Date.now()
                     };
                 }
                 helperCache.update();
-                const fileRecordsData = helperCache.instance.data.fileRecords[fileRecordsName];
-                logger.log('success', `File ${fileRecordsName} uploaded and compressed successfully`);
-                res.status(200).json({fileRecordsName, fileRecordsData});
+                const fileRecordsData =
+                    helperCache.get.data.fileRecords[fileRecordsName];
+                logger.log(
+                    'success',
+                    `File ${fileRecordsName} uploaded and compressed successfully`
+                );
+                res.status(200).json({ fileRecordsName, fileRecordsData });
             } else {
                 logger.error('No file uploaded');
                 res.status(400).json({ message: 'No file uploaded' });
             }
-        } catch(err) {
+        } catch (err) {
             logger.error(`Error while upload file: ${err as string}`);
             res.status(500).json({ error: 'File upload failed' });
         }
     }
 );
 
-router.delete('/:uuid/:file',
+router.delete(
+    '/:uuid/:file',
     [
         param('uuid').notEmpty().withMessage('UUID is required'),
         param('file').notEmpty().withMessage('File is required')
@@ -73,34 +89,42 @@ router.delete('/:uuid/:file',
     authKey,
     (req: Request, res: Response) => {
         const { uuid, file } = req.params;
-  
+
         try {
-            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, file);
-  
-            if (helperCache.instance.data.fileRecords[file]) {
-                delete helperCache.instance.data.fileRecords[file];
+            const filePath = path.join(
+                __dirname,
+                '../../',
+                config.cdn.path,
+                uuid,
+                file
+            );
+
+            if (helperCache.get.data.fileRecords[file]) {
+                delete helperCache.get.data.fileRecords[file];
                 helperCache.update();
             }
-  
+
             fs.unlinkSync(filePath);
-  
+
             logger.log('success', `File ${file} deleted successfully`);
             res.status(200).json({ message: 'File deleted' });
         } catch (err) {
             logger.error(`Error while deleting file: ${err as string}`);
             res.status(500).json({ error: 'File deletion failed' });
         }
-    });
-  
-router.get('/:uuid/:file', 
+    }
+);
+
+router.get(
+    '/:uuid/:file',
     [
         param('uuid').notEmpty().withMessage('UUID is required'),
         param('file').notEmpty().withMessage('File is required')
     ],
     async (req: Request, res: Response) => {
         const { uuid, type, file } = req.params;
-  
-        const user = await helperDatabase.fetchUser(masterInstance, { uuid: uuid });
+
+        const user = await helperDatabase.fetchUser(masterInstance, {uuid: uuid});
 
         if (!user) {
             logger.error('Invalid user');
@@ -108,7 +132,14 @@ router.get('/:uuid/:file',
         }
 
         try {
-            const filePath = path.join(__dirname, '../../', config.cdn.path, uuid, helperFunctions.fetchFileExtensionGroup(path.extname(file)), file);
+            const filePath = path.join(
+                __dirname,
+                '../../',
+                config.cdn.path,
+                uuid,
+                helperFunctions.fetchFileExtensionGroup(path.extname(file)),
+                file
+            );
             logger.info(`Fetching file: ${filePath}`);
 
             if (!fs.existsSync(filePath)) {
@@ -118,10 +149,11 @@ router.get('/:uuid/:file',
 
             logger.log('success', `File ${file} fetched successfully`);
             res.sendFile(filePath);
-        } catch(err) {
+        } catch (err) {
             logger.error(`Error while fetching file: ${err as string}`);
             res.status(500).json({ error: 'File not found' });
         }
-    });
+    }
+);
 
 export default router;

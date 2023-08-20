@@ -276,7 +276,7 @@ export class helperDatabase {
                         `Connected to the backup database: ${dbName}`
                     );
 
-                    helperCache.instance.data.lastDatabaseLoaded =
+                    helperCache.get.data.lastDatabaseLoaded =
                         String(dbName);
                     helperCache.update();
                     break;
@@ -400,7 +400,7 @@ export class helperDatabase {
 
                 config.databases[currentDatabase].role = 'master';
 
-                helperCache.instance.data.lastDatabaseLoaded = databaseName;
+                helperCache.get.data.lastDatabaseLoaded = databaseName;
                 helperCache.update();
 
                 logger.warn(
@@ -424,13 +424,14 @@ export class helperDatabase {
     }
 
     public static async initializeMasterSync() {
-        if (config.databases[helperCache.instance.data.lastDatabaseLoaded]) {
+        if (config.databases[helperCache.get.data.lastDatabaseLoaded]) {
             try {
                 if (
                     String(currentDatabase) !==
-                        helperCache.instance.data.lastDatabaseLoaded &&
-                    config.databases[helperCache.instance.data.lastDatabaseLoaded]
-                        .role !== 'master'
+                        helperCache.get.data.lastDatabaseLoaded &&
+                    config.databases[
+                        helperCache.get.data.lastDatabaseLoaded
+                    ].role !== 'master'
                 ) {
                     logger.warn(
                         'The master database is of of sync because of the last connection disruption.'
@@ -438,29 +439,29 @@ export class helperDatabase {
                     logger.warn(
                         'Attempting to synchronize it with the last backup database loaded...'
                     );
-    
+
                     await this.initializeBackupDatabase(
-                        helperCache.instance.data.lastDatabaseLoaded
+                        helperCache.get.data.lastDatabaseLoaded
                     );
-    
+
                     config.databases[initialMasterDatabase].role = 'backup';
-    
+
                     await helperReplication.performReplication();
-    
+
                     logger.log(
                         'success',
                         'Data synchronization for the master database was successful. The master database is now up-to-date.'
                     );
-    
+
                     config.databases[initialMasterDatabase].role = 'master';
                     config.databases[currentDatabase].role = 'backup';
-    
+
                     await this.initializeDatabaseConnection();
-    
-                    helperCache.instance.data.lastDatabaseLoaded = String(
+
+                    helperCache.get.data.lastDatabaseLoaded = String(
                         initialMasterDatabase
                     );
-    
+
                     helperCache.update();
                 }
             } catch (err) {
@@ -471,7 +472,9 @@ export class helperDatabase {
                 );
             }
         } else {
-            logger.warn('Skipping master database synchronization for this session...');
+            logger.warn(
+                'Skipping master database synchronization for this session...'
+            );
         }
     }
 

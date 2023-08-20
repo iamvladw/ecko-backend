@@ -134,7 +134,6 @@ export default class helperFunctions {
     }
 
     public static async getCountryInfo(ipAddress: string): Promise<string> {
-        const apiKey = 'YOUR_API_KEY';
         const response = await axios.get(
             `http://ip-api.com/json/${ipAddress}?fields=country`
         );
@@ -165,10 +164,10 @@ export default class helperFunctions {
         if (!matches) {
             throw new Error('Invalid expiration format');
         }
-      
+
         const value = parseInt(matches[1]);
         const unit = matches[2];
-      
+
         let milliseconds = 0;
         switch (unit) {
         case 's':
@@ -195,7 +194,7 @@ export default class helperFunctions {
         default:
             throw new Error('Invalid expiration unit');
         }
-      
+
         return milliseconds;
     }
 
@@ -231,16 +230,18 @@ export default class helperFunctions {
             return 'other';
         }
     }
-    public static async calculateFolderSize(folderPath: string): Promise<number> {
+    public static async calculateFolderSize(
+        folderPath: string
+    ): Promise<number> {
         let totalSize = 0;
-      
+
         const traverseDirectory = async (dirPath: string) => {
             const files = await fs.promises.readdir(dirPath);
-      
+
             for (const file of files) {
                 const filePath = path.join(dirPath, file);
                 const stats = await fs.promises.lstat(filePath);
-      
+
                 if (stats.isFile()) {
                     totalSize += stats.size;
                 } else if (stats.isDirectory()) {
@@ -248,9 +249,9 @@ export default class helperFunctions {
                 }
             }
         };
-      
+
         await traverseDirectory(folderPath);
-      
+
         return totalSize;
     }
 }

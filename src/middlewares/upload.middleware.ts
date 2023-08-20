@@ -7,7 +7,11 @@ import path from 'path';
 import { exec } from 'child_process';
 import helperFunctions from '../helpers/functions.helper';
 
-const uploadWithCompression = (req: Request, res: Response, next: NextFunction) => {
+const uploadWithCompression = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         upload(req, res, async (err: string) => {
             if (err) {
@@ -18,14 +22,26 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
             if (req.file) {
                 let filePath = req.file.path;
                 const fileExtension = path.extname(req.file.originalname);
-                const compressedPath = `${req.file.destination}/${helperFunctions.fetchFileExtensionGroup(fileExtension)}/${path.parse(req.file.filename).name}`;
-                const tempPath = `${req.file.destination}/compressing-${path.parse(req.file.filename).name}`;
+                const compressedPath = `${
+                    req.file.destination
+                }/${helperFunctions.fetchFileExtensionGroup(fileExtension)}/${
+                    path.parse(req.file.filename).name
+                }`;
+                const tempPath = `${req.file.destination}/compressing-${
+                    path.parse(req.file.filename).name
+                }`;
 
                 switch (fileExtension.toLowerCase()) {
                 case '.png':
-                    req.file.filename = `${path.parse(req.file.filename).name}.png`;
+                    req.file.filename = `${
+                        path.parse(req.file.filename).name
+                    }.png`;
 
-                    logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
+                    logger.info(
+                        `Compressing ${fileExtension.toLowerCase()} image: ${
+                            req.file.filename
+                        }`
+                    );
 
                     await sharp(filePath)
                         .toFormat('png')
@@ -33,7 +49,7 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                         .toFile(`${compressedPath}.png`);
 
                     fs.unlinkSync(filePath);
-            
+
                     filePath = `${compressedPath}.png`;
 
                     next();
@@ -44,16 +60,22 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.tiff':
                 case '.tif':
                 case '.bmp':
-                    req.file.filename = `${path.parse(req.file.filename).name}.jpeg`;
+                    req.file.filename = `${
+                        path.parse(req.file.filename).name
+                    }.jpeg`;
 
-                    logger.info(`Compressing ${fileExtension.toLowerCase()} image: ${req.file.filename}`);
+                    logger.info(
+                        `Compressing ${fileExtension.toLowerCase()} image: ${
+                            req.file.filename
+                        }`
+                    );
                     await sharp(filePath)
                         .toFormat('jpeg')
                         .jpeg({ quality: 80 })
                         .toFile(`${compressedPath}.jpeg`);
 
                     fs.unlinkSync(filePath);
-          
+
                     filePath = `${compressedPath}.jpeg`;
 
                     next();
@@ -68,18 +90,31 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.flv':
                 case '.webm':
                 case '.3gp':
-                    req.file.filename = `${path.parse(req.file.filename).name}.mp4`;
+                    req.file.filename = `${
+                        path.parse(req.file.filename).name
+                    }.mp4`;
 
-                    logger.info(`Compressing ${fileExtension.toLowerCase()} video: ${req.file.filename}`);
+                    logger.info(
+                        `Compressing ${fileExtension.toLowerCase()} video: ${
+                            req.file.filename
+                        }`
+                    );
                     const commandVideo = `ffmpeg -i "${filePath}" -vcodec libx264 -crf 25 -preset veryslow "${tempPath}.mp4"`;
                     exec(commandVideo, (err) => {
                         if (err) {
-                            logger.error(`Error occurred while compressing video format: ${String(err)}`);
+                            logger.error(
+                                `Error occurred while compressing video format: ${String(
+                                    err
+                                )}`
+                            );
                             throw new Error('Something went wrong');
                         }
                         fs.unlinkSync(filePath);
-          
-                        fs.renameSync(`${tempPath}.mp4`, `${compressedPath}.mp4`);
+
+                        fs.renameSync(
+                            `${tempPath}.mp4`,
+                            `${compressedPath}.mp4`
+                        );
 
                         filePath = compressedPath;
 
@@ -92,18 +127,31 @@ const uploadWithCompression = (req: Request, res: Response, next: NextFunction) 
                 case '.flac':
                 case '.ogg':
                 case '.wma':
-                    req.file.filename = `${path.parse(req.file.filename).name}.mp3`;
-                    
-                    logger.info(`Compressing ${fileExtension.toLowerCase()} audio: ${req.file.filename}`);
+                    req.file.filename = `${
+                        path.parse(req.file.filename).name
+                    }.mp3`;
+
+                    logger.info(
+                        `Compressing ${fileExtension.toLowerCase()} audio: ${
+                            req.file.filename
+                        }`
+                    );
                     const commandAudio = `ffmpeg -i "${filePath}" -codec:a libmp3lame -b:a 128k -compression_level 8 -qscale:a 2 "${tempPath}.mp3"`;
                     exec(commandAudio, (err) => {
                         if (err) {
-                            logger.error(`Error occurred while compressing video format: ${String(err)}`);
+                            logger.error(
+                                `Error occurred while compressing video format: ${String(
+                                    err
+                                )}`
+                            );
                             throw new Error('Something went wrong');
                         }
                         fs.unlinkSync(filePath);
-          
-                        fs.renameSync(`${tempPath}.mp3`, `${compressedPath}.mp3`);
+
+                        fs.renameSync(
+                            `${tempPath}.mp3`,
+                            `${compressedPath}.mp3`
+                        );
 
                         filePath = compressedPath;
 

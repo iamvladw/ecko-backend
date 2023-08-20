@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import logger from './helpers/winston.helper';
 import indexRouter from './routes/public.route';
+import systemRouter from './routes/system.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/users.route';
 import interestRouter from './routes/interests.route';
@@ -46,6 +47,7 @@ serverAPI.enable('trust proxy');
 
 // Define api routes
 serverAPI.use('/', indexRouter);
+serverAPI.use('/system', systemRouter);
 serverAPI.use('/auth', authRouter);
 serverAPI.use('/users', userRouter);
 serverAPI.use('/interests', interestRouter);

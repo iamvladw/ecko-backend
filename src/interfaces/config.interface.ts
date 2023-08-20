@@ -15,6 +15,9 @@ type SupportedDatabaseRole = 'master' | 'backup';
 interface SetupConfig {
     serverName: string;
     uuid: string;
+    mode: 'Standalone' | 'Load Balancer';
+    role: 'Origin' | 'Edge';
+    origin: string;
     location: string;
     secret: string;
     secretPhrase: string;

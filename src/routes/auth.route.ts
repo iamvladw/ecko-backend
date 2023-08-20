@@ -60,7 +60,7 @@ router.post(
         // Signs the token based on the username
         const token = jwt.sign(
             helperReplication.unpackUserFields(user),
-            helperCache.instance.server.secret,
+            helperCache.get.server.secret,
             { expiresIn: config.jwt.expiresIn }
         );
         logger.info('Signing in the token...');
@@ -161,7 +161,7 @@ router.post(
         // Signs the token based on the username
         const token = jwt.sign(
             userInstance,
-            helperCache.instance.server.secret,
+            helperCache.get.server.secret,
             { expiresIn: config.jwt.expiresIn }
         );
         logger.info('Signing in the token...');

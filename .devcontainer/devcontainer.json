@@ -2,7 +2,7 @@
     "name": "Ecko Dev Container",
     "image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
     "workspaceFolder": "/workspaces/ecko-backend",
-    "forwardPorts": [8080,8081,8082],
+    "forwardPorts": [8080, 8081, 8082],
     "postCreateCommand": "npm install && apt-get update && apt-get install -y ffmpeg",
     "customizations": {
         "extensions": [

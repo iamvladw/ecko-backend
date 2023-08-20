@@ -38,14 +38,14 @@ const authKey = (
             }
 
             // Verify if the API key is valid
-            if (apiKey !== helperCache.instance.server.apiKey) {
+            if (apiKey !== helperCache.get.server.apiKey) {
                 logger.warn('Invalid API key');
                 return res.status(401).json({ error: 'Invalid API key' });
             }
 
             // Verify the decrypted value of the API key
             const decryptedApiKey = helperAES.decrypt(apiKey);
-            if (decryptedApiKey !== helperCache.instance.server.secretPhrase) {
+            if (decryptedApiKey !== helperCache.get.server.secretPhrase) {
                 logger.warn('Invalid API key secret phrase');
                 return res
                     .status(401)
@@ -98,14 +98,14 @@ const authKey = (
             }
 
             // Verify if the API key is valid
-            if (apiKey !== helperCache.instance.server.apiKey) {
+            if (apiKey !== helperCache.get.server.apiKey) {
                 logger.warn('Invalid API key');
                 return res.status(401).json({ error: 'Invalid API key' });
             }
 
             // Verify the decrypted value of the API key
             const decryptedApiKey = helperAES.decrypt(apiKey);
-            if (decryptedApiKey !== helperCache.instance.server.secretPhrase) {
+            if (decryptedApiKey !== helperCache.get.server.secretPhrase) {
                 logger.warn('Invalid API key secret phrase');
                 return res
                     .status(401)

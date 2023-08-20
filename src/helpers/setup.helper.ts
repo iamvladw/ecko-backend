@@ -6,9 +6,84 @@ import helperCache from './cache.helper';
 import { v4 as uuid } from 'uuid';
 import helperAES from './aes.helper';
 import helperFunctions from './functions.helper';
+import axios from 'axios';
 
 class helperSetup {
-    private static questions: QuestionCollection[] = [
+    private static serverModeQuestion: QuestionCollection[] = [
+        {
+            type: 'list',
+            name: 'serverMode',
+            message: 'What\'s the server mode?',
+            choices: ['Standalone', 'Load Balancer']
+        }
+    ];
+
+    private static serverRoleQuestion: QuestionCollection[] = [
+        {
+            type: 'list',
+            name: 'serverRole',
+            message: 'What\'s the server role?',
+            choices: ['Origin', 'Edge']
+        }
+    ];
+
+    private static serverOriginQuestion: QuestionCollection[] = [
+        {
+            type: 'input',
+            name: 'serverOrigin',
+            message:
+                'What\'s the server origin address? (https://example.com or http://192.168.1.1:8080)',
+            validate: async (origin) => {
+                if (origin.trim() === '') {
+                    return 'Server origin address cannot be empty.';
+                }
+                const urlPattern = /^(http?|https?):\/\/[^\s/$.?#].[^\s]*$/;
+                if (!urlPattern.test(origin as string)) {
+                    return 'Please enter a valid URL in the format http://example.com or https://192.168.1.1:8080';
+                }
+                const response = await axios.get(
+                    `${origin as string}/system/loadbalancer/setup/${
+                        helperCache.get.server.uuid
+                    }`
+                );
+                if (response.status !== 200) {
+                    return 'Error while trying to setup the load balancer';
+                }
+                const serverSecurityCodeQuestion: QuestionCollection[] = [
+                    {
+                        type: 'input',
+                        name: 'serverSecurityCode',
+                        message: 'Enter the security code deployed in the origin server console:',
+                        validate: async (security: string) => {
+                            if (security.trim() === '') {
+                                return 'Server origin address cannot be empty.';
+                            }
+                            const codePattern = /^[0-9]{6}$/;
+                            if (!codePattern.test(security)) {
+                                return 'Please enter a valid security code';
+                            }
+                            const responseVerify = axios.post(
+                                `${origin as string}/system/loadbalancer/verify/${
+                                    helperCache.get.server.uuid
+                                }`,
+                                {securityCode: security}
+                            );
+                            if ((await responseVerify).status !== 200) {
+                                return 'Invalid security code';
+                            }
+                            return true;
+                        }
+                    }
+                ];
+
+                await inquirer.prompt(
+                    serverSecurityCodeQuestion
+                );
+            }
+        }
+    ];
+
+    private static standaloneQuestions: QuestionCollection[] = [
         {
             type: 'input',
             name: 'serverName',
@@ -60,7 +135,7 @@ class helperSetup {
         }
     ];
 
-    private static generateServerConfig(answers: Answers): SetupConfig {
+    private static generateServerConfig(answers: Answers, serverMode: 'Standalone' | 'Load Balancer', serverRole: 'Origin' | 'Edge'): SetupConfig {
         const secret = helperFunctions.randomString(
             answers.secretLenght as number
         );
@@ -68,12 +143,14 @@ class helperSetup {
         const serverConfig: SetupConfig = {
             serverName: answers.serverName as string,
             uuid: uuid(),
+            mode: serverMode,
+            role: serverRole,
+            origin: answers.serverOrigin,
             location: answers.serverLocation as string,
             secret: secret,
             secretPhrase: answers.secretPhrase as string,
             apiKey: helperAES.encrypt(
-                (answers.secretPhrase as string) ||
-                    'api.node.ecko.backend.server',
+                answers.secretPhrase as string,
                 secret
             ) as string
         };
@@ -83,7 +160,7 @@ class helperSetup {
 
     public static async initializeServerSetup(): Promise<void> {
         try {
-            if (!helperCache.instance.server.apiKey) {
+            if (!helperCache.get.server.apiKey && !helperCache.get.server.mode && !helperCache.get.server.role) {
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
                 logger.log('setup', '------------------------------------');
                 logger.log(
@@ -95,80 +172,111 @@ class helperSetup {
                     'Please provide the requested information to generate the server configuration.'
                 );
 
-                const answers: Answers = await inquirer.prompt(this.questions);
-
-                // Generate the server configuration
-                const setupConfig = this.generateServerConfig(answers);
-
-                helperCache.instance.server = setupConfig;
-                helperCache.instance.data = {
-                    lastDatabaseLoaded: '',
-                    numberOfRequests: 0,
-                    numberOfResponses: 0,
-                    fileRecords: {}
-                };
-                helperCache.update();
-
-                logger.log(
-                    'setup',
-                    `Server configuration generated successfully! ${JSON.stringify(
-                        setupConfig
-                    )}`
+                let answers: Answers = await inquirer.prompt(
+                    this.serverModeQuestion
                 );
 
-                logger.log(
-                    'setup',
-                    'Based on the data provided, the server generated a UUID and an apiKey'
-                );
-                logger.log(
-                    'setup',
-                    'Please copy the apiKey to connect the front-end to the backend'
-                );
-                logger.log(
-                    'setup',
-                    '---------------------------------------------'
-                );
-                logger.log(
-                    'setup',
-                    `Name: ${helperCache.instance.server.serverName}`
-                );
-                logger.log(
-                    'setup',
-                    `UUID: ${helperCache.instance.server.uuid}`
-                );
-                logger.log(
-                    'setup',
-                    `Location: ${helperCache.instance.server.location}`
-                );
-                logger.log(
-                    'setup',
-                    `Secret: ${helperCache.instance.server.secret}`
-                );
-                logger.log(
-                    'setup',
-                    `Secret Phrase: ${helperCache.instance.server.secretPhrase}`
-                );
-                logger.log(
-                    'setup',
-                    `apiKey: ${helperCache.instance.server.apiKey}`
-                );
-                logger.log(
-                    'setup',
-                    '---------------------------------------------'
-                );
-                logger.log(
-                    'setup',
-                    'Please copy the data provided from the terminal or latest.log'
-                );
-            }
-            if (!helperCache.instance.data) {
-                helperCache.instance.data = {
-                    lastDatabaseLoaded: '',
-                    numberOfRequests: 0,
-                    numberOfResponses: 0,
-                    fileRecords: {}
-                };
-                helperCache.update();
+                let setupConfig;
+
+                switch(answers.serverMode) {
+                case 'Standalone':
+                    answers = await inquirer.prompt(this.standaloneQuestions);
+
+                    setupConfig = this.generateServerConfig(answers, 'Standalone', 'Origin');
+                    break;
+                case 'Load Balancer':
+                    answers = await inquirer.prompt(this.serverRoleQuestion);
+                    if (answers.serverRole === 'Origin') {
+                        answers = await inquirer.prompt(this.standaloneQuestions);
+                        setupConfig = this.generateServerConfig(answers, 'Load Balancer', 'Origin');
+                    } else {
+                        answers = await inquirer.prompt(this.serverOriginQuestion);
+                        setupConfig = {
+                            serverName: answers.serverName,
+                            uuid: uuid(),
+                            mode: 'Load Balancer',
+                            role: 'Edge',
+                            origin: answers.serverOrigin,
+                            location: answers.serverLocation,
+                            secret: answers.secret,
+                            secretPhrase: answers.secretPhrase,
+                            apiKey: answers.apiKey
+                        };
+                        break;
+                    }
+
+
+                    helperCache.get.server = setupConfig;
+                    helperCache.get.data = {
+                        lastDatabaseLoaded: '',
+                        numberOfRequests: 0,
+                        numberOfResponses: 0,
+                        fileRecords: {}
+                    };
+                    helperCache.update();
+
+                    logger.log(
+                        'setup',
+                        `Server configuration generated successfully! ${JSON.stringify(
+                            setupConfig
+                        )}`
+                    );
+
+                    logger.log(
+                        'setup',
+                        'Based on the data provided, the server generated a UUID and an apiKey'
+                    );
+                    logger.log(
+                        'setup',
+                        'Please copy the apiKey to connect the front-end to the backend'
+                    );
+                    logger.log(
+                        'setup',
+                        '---------------------------------------------'
+                    );
+                    logger.log(
+                        'setup',
+                        `Name: ${helperCache.get.server.serverName}`
+                    );
+                    logger.log(
+                        'setup',
+                        `UUID: ${helperCache.get.server.uuid}`
+                    );
+                    logger.log(
+                        'setup',
+                        `Location: ${helperCache.get.server.location}`
+                    );
+                    logger.log(
+                        'setup',
+                        `Secret: ${helperCache.get.server.secret}`
+                    );
+                    logger.log(
+                        'setup',
+                        `Secret Phrase: ${helperCache.get.server.secretPhrase}`
+                    );
+                    logger.log(
+                        'setup',
+                        `apiKey: ${helperCache.get.server.apiKey}`
+                    );
+                    logger.log(
+                        'setup',
+                        '---------------------------------------------'
+                    );
+                    logger.log(
+                        'setup',
+                        'Please copy the data provided from the terminal or latest.log'
+                    );
+                }
+
+                if (!helperCache.get.data) {
+                    helperCache.get.data = {
+                        lastDatabaseLoaded: '',
+                        numberOfRequests: 0,
+                        numberOfResponses: 0,
+                        fileRecords: {}
+                    };
+                    helperCache.update();
+                }
             }
         } catch (err) {
             logger.error(

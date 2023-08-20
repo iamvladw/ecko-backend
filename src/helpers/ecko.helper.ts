@@ -94,9 +94,17 @@ export default class helperEcko {
 
                         if (route === 'staticPage') {
                             const publicDataInterval = setInterval(async () => {
-                                const filePath = path.join(__dirname, '../../', config.cdn.path);
+                                const filePath = path.join(
+                                    __dirname,
+                                    '../../',
+                                    config.cdn.path
+                                );
                                 const wssData = {
-                                    strorageUsage: helperFunctions.formatBytes(await helperFunctions.calculateFolderSize(filePath)),
+                                    strorageUsage: helperFunctions.formatBytes(
+                                        await helperFunctions.calculateFolderSize(
+                                            filePath
+                                        )
+                                    ),
                                     currentCommit: helperGithub.getCommit(),
                                     currentVersion: packageJson.version,
                                     githubVersion:
@@ -106,11 +114,11 @@ export default class helperEcko {
                                     ),
                                     cpuUsage: await helperEcko.serverCPUUsage(),
                                     requests: helperFunctions.formatNumber(
-                                        helperCache.instance.data
+                                        helperCache.get.data
                                             .numberOfRequests
                                     ),
                                     responses: helperFunctions.formatNumber(
-                                        helperCache.instance.data
+                                        helperCache.get.data
                                             .numberOfResponses
                                     )
                                 };
@@ -124,7 +132,7 @@ export default class helperEcko {
                         } else if (route === 'private') {
                             if (
                                 helperAES.decrypt(String(key)) ===
-                                helperCache.instance.server.secret
+                                helperCache.get.server.secret
                             ) {
                                 const dataInterval = setInterval(() => {
                                     // Update and send private data
@@ -166,15 +174,17 @@ export default class helperEcko {
                 serverCDN.use(helmet());
                 serverCDN.use(compression({ brotli: { quality: 2 } }));
                 serverCDN.use(cookieParser());
-                serverCDN.use(rateLimit({
-                    windowMs: config.cdn.rateLimit.timeout * 1000,
-                    max: config.cdn.rateLimit.max,
-                    message: 'Too many requests, please try again later.',
-                    statusCode: 429,
-                    handler: (req: Request, res: Response) => {
-                        res.status(429).json({error: 'Too many requests, please try again later.'});
-                    }
-                }));
+                serverCDN.use(
+                    rateLimit({
+                        windowMs: config.cdn.rateLimit.timeout * 1000,
+                        max: config.cdn.rateLimit.max,
+                        message: 'Too many requests, please try again later.',
+                        statusCode: 429,
+                        handler: (req: Request, res: Response) => {
+                            res.status(429).json({error: 'Too many requests, please try again later.'});
+                        }
+                    })
+                );
                 serverCDN.use(checkDatabaseConnection);
                 serverCDN.use(requestLoggerMiddleware);
 
@@ -250,7 +260,7 @@ export default class helperEcko {
 
             const decoded = jwt.verify(
                 token,
-                helperCache.instance.server.secret
+                helperCache.get.server.secret
             ) as JwtPayload;
 
             const userData = decoded;
@@ -275,32 +285,40 @@ export default class helperEcko {
 
     public static async syncFileRecords() {
         const uploadDir = path.join(__dirname, '../../', config.cdn.path);
-      
+
         try {
             logger.info('Attempting to sync the file records...');
-            const authors = await fs.promises.readdir(uploadDir, { withFileTypes: true });
+            const authors = await fs.promises.readdir(uploadDir, {withFileTypes: true});
             const filesInFolder = new Set<string>();
-      
+
             for (const author of authors) {
                 if (author.isDirectory()) {
                     const authorUUID = author.name;
                     const authorDir = path.join(uploadDir, authorUUID);
                     const fileGroups = await fs.promises.readdir(authorDir);
-      
+
                     for (const fileGroup of fileGroups) {
                         const fileGroupDir = path.join(authorDir, fileGroup);
-                        const fileGroupDirStats = await fs.promises.stat(fileGroupDir);
-      
+                        const fileGroupDirStats = await fs.promises.stat(
+                            fileGroupDir
+                        );
+
                         if (fileGroupDirStats.isDirectory()) {
-                            const files = await fs.promises.readdir(fileGroupDir);
-      
+                            const files = await fs.promises.readdir(
+                                fileGroupDir
+                            );
+
                             for (const file of files) {
                                 const filePath = path.join(fileGroupDir, file);
-      
+
                                 filesInFolder.add(file);
-      
-                                if (!helperCache.instance.data.fileRecords[file]) {
-                                    helperCache.instance.data.fileRecords[file] = {
+
+                                if (
+                                    !helperCache.get.data.fileRecords[file]
+                                ) {
+                                    helperCache.get.data.fileRecords[
+                                        file
+                                    ] = {
                                         path: filePath,
                                         author: authorUUID,
                                         date: Date.now()
@@ -311,19 +329,18 @@ export default class helperEcko {
                     }
                 }
             }
-      
+
             // Remove files from cache that don't exist in the folder
-            for (const file in helperCache.instance.data.fileRecords) {
+            for (const file in helperCache.get.data.fileRecords) {
                 if (!filesInFolder.has(file)) {
-                    delete helperCache.instance.data.fileRecords[file];
+                    delete helperCache.get.data.fileRecords[file];
                 }
             }
-      
+
             helperCache.update();
             logger.log('success', 'File records synced successfully');
         } catch (err) {
             logger.error(`Error while syncing file records: ${err as string}`);
         }
     }
-      
 }

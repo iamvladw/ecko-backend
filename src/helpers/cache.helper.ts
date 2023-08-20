@@ -38,7 +38,7 @@ class helperCache {
         }
     }
 
-    public static instance: JSONData = this.fetch() as JSONData;
+    public static get: JSONData = this.fetch() as JSONData;
 
     // Write data to JSON file
     public static update() {
@@ -61,7 +61,7 @@ class helperCache {
                 });
             }
 
-            const jsonData = JSON.stringify(this.instance);
+            const jsonData = JSON.stringify(this.get);
             fs.writeFileSync(cacheFilePath, jsonData, 'utf8');
         } catch (err) {
             logger.error(

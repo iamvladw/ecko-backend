@@ -7,8 +7,7 @@
         "start": "ts-node src/server.ts",
         "dev": "nodemon src/server.ts",
         "test": "jest --detectOpenHandles --coverage --passWithNoTests",
-        "format": "prettier --write . && eslint --fix .",
-        "prepare": "husky install"
+        "format": "prettier --write . && eslint --fix ."
     },
     "keywords": [
         "Backend",
@@ -77,7 +76,6 @@
         "commitizen": "^4.3.0",
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^8.42.0",
-        "husky": "^8.0.3",
         "jest": "^29.5.0",
         "nodemon": "^2.0.22",
         "prettier": "^2.8.8",

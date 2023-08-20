@@ -45,7 +45,9 @@ describe('Testing Auth Route', () => {
     });
 
     test('route /register should return 400 if request body is empty', async () => {
-        const response = await request(serverAPI).post('/auth/register').send({});
+        const response = await request(serverAPI)
+            .post('/auth/register')
+            .send({});
 
         expect(response.status).toBe(400);
         expect(response.body).toHaveProperty('error');

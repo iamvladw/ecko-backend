@@ -27,7 +27,7 @@ async function authenticate(
         // Verify the token and decode the payload
         const decoded = jwt.verify(
             token,
-            helperCache.instance.server.secret
+            helperCache.get.server.secret
         ) as JwtPayload;
 
         // Attach the decoded user object to the request for future use
@@ -50,7 +50,7 @@ async function authenticate(
         // Renews the token when the user is active on the platform
         const renewedToken = jwt.sign(
             helperReplication.unpackUserFields(user),
-            helperCache.instance.server.secret,
+            helperCache.get.server.secret,
             { expiresIn: config.jwt.expiresIn }
         );
 

@@ -22,6 +22,7 @@
         "libmp",
         "libx",
         "linebreak",
+        "loadbalancer",
         "logform",
         "middlewares",
         "msvideo",

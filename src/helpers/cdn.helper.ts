@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
         }
         for (const subdirectory of subdirectories) {
             if (!fs.existsSync(`${filePath}/${uuid}/${subdirectory}`)) {
-                fs.mkdirSync(`${filePath}/${uuid}/${subdirectory}`, { recursive: true });
+                fs.mkdirSync(`${filePath}/${uuid}/${subdirectory}`, {recursive: true});
             }
         }
         cb(null, `${filePath}/${uuid}`);
@@ -44,13 +44,43 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    fileFilter: (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
+    fileFilter: (
+        req: Request,
+        file: Express.Multer.File,
+        cb: FileFilterCallback
+    ) => {
         const allowedMimeTypes = [
-            'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif',  'image/tiff', 'image/tif', 'image/bmp', 
-            'video/x-msvideo', 'video/mp4', 'video/quicktime', 'video/quicktime', 'video/mpeg', 'video/mpg', 'video/x-ms-wmv', 'video/x-flv', 'video/webm', 'video/3gpp',
-            'audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/flac', 'audio/ogg', 'audio/x-ms-wma', 'audio/webm', 'audio/3gpp', 'audio/aac'
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/webp',
+            'image/gif',
+            'image/tiff',
+            'image/tif',
+            'image/bmp',
+            'video/x-msvideo',
+            'video/mp4',
+            'video/quicktime',
+            'video/quicktime',
+            'video/mpeg',
+            'video/mpg',
+            'video/x-ms-wmv',
+            'video/x-flv',
+            'video/webm',
+            'video/3gpp',
+            'audio/mp3',
+            'audio/mpeg',
+            'audio/wav',
+            'audio/wave',
+            'audio/x-wav',
+            'audio/flac',
+            'audio/ogg',
+            'audio/x-ms-wma',
+            'audio/webm',
+            'audio/3gpp',
+            'audio/aac'
         ];
-  
+
         if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
@@ -62,10 +92,11 @@ const upload = multer({
 const cleanupExpiredFiles = () => {
     const currentTime = Date.now();
     const expiredFiles = [];
-  
-    for (const filename in helperCache.instance.data.fileRecords) {
-        const expiresIn = helperCache.instance.data.fileRecords[filename].expiresIn;
-        const date = helperCache.instance.data.fileRecords[filename].date;
+
+    for (const filename in helperCache.get.data.fileRecords) {
+        const expiresIn =
+            helperCache.get.data.fileRecords[filename].expiresIn;
+        const date = helperCache.get.data.fileRecords[filename].date;
 
         let expirationTime = expiresIn;
 
@@ -74,26 +105,31 @@ const cleanupExpiredFiles = () => {
         }
 
         if (expirationTime && currentTime > expirationTime) {
-            const filePath = helperCache.instance.data.fileRecords[filename].path;
+            const filePath =
+                helperCache.get.data.fileRecords[filename].path;
             expiredFiles.push(filename);
-            delete helperCache.instance.data.fileRecords[filename];
+            delete helperCache.get.data.fileRecords[filename];
 
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
             }
         }
     }
-  
+
     if (expiredFiles.length > 0) {
         helperCache.update();
         if (expiredFiles.length === 1) {
-            logger.warn(`Deleted ${expiredFiles.length} expired file from the storage`);
+            logger.warn(
+                `Deleted ${expiredFiles.length} expired file from the storage`
+            );
         } else {
-            logger.warn(`Deleted ${expiredFiles.length} expired files from the storage`);
+            logger.warn(
+                `Deleted ${expiredFiles.length} expired files from the storage`
+            );
         }
     }
 };
-  
+
 const cleanupInterval = setInterval(cleanupExpiredFiles, 1 * 1000);
 
 export { storage, upload, cleanupInterval };

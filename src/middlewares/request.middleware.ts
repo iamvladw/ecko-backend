@@ -19,7 +19,7 @@ const requestLoggerMiddleware = (
     );
     logger.log('request', `Headers: ${JSON.stringify(req.headers)}`);
 
-    helperCache.instance.data.numberOfRequests++;
+    helperCache.get.data.numberOfRequests++;
     helperCache.update();
 
     // Log the outgoing response
@@ -30,7 +30,7 @@ const requestLoggerMiddleware = (
             `Outgoing response to ${String(ip)} with code: ${res.statusCode}`
         );
 
-        helperCache.instance.data.numberOfResponses++;
+        helperCache.get.data.numberOfResponses++;
         helperCache.update();
 
         try {

@@ -9,7 +9,7 @@ class helperAES {
     ) {
         try {
             const key = CryptoJS.enc.Utf8.parse(
-                secret ?? helperCache.instance.server.secret
+                secret ?? helperCache.get.server.secret
             );
             const ciphertext = CryptoJS.AES.encrypt(value, key, {iv: key}).toString();
             return ciphertext;
@@ -28,7 +28,7 @@ class helperAES {
     ) {
         try {
             const key = CryptoJS.enc.Utf8.parse(
-                secret ?? helperCache.instance.server.secret
+                secret ?? helperCache.get.server.secret
             );
             const decryptedData = CryptoJS.AES.decrypt(value, key, { iv: key });
             return decryptedData.toString(CryptoJS.enc.Utf8);
