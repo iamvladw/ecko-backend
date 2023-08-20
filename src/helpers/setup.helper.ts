@@ -47,7 +47,7 @@ class helperSetup {
                 if (!urlPattern.test(this.originAddress)) {
                     return 'Please enter a valid URL in the format http://example.com or https://192.168.1.1:8080';
                 }
-                const response = await axios.get(
+                const response = await axios.post(
                     `${this.originAddress}/system/loadbalancer/setup/${
                         helperCache.get.server.uuid
                     }`
@@ -164,14 +164,14 @@ class helperSetup {
         }
     ];
 
-    private static generateServerConfig(answers: Answers, serverMode: 'Standalone' | 'Load Balancer', serverRole: 'Origin' | 'Edge'): SetupConfig {
+    private static generateServerConfig(answers: Answers, uuid: string, serverMode: 'Standalone' | 'Load Balancer', serverRole: 'Origin' | 'Edge'): SetupConfig {
         const secret = helperFunctions.randomString(
             answers.secretLenght as number
         );
 
         const serverConfig: SetupConfig = {
             serverName: answers.serverName as string,
-            uuid: uuid(),
+            uuid: uuid,
             mode: serverMode,
             role: serverRole,
             origin: answers.serverOrigin,
@@ -190,7 +190,10 @@ class helperSetup {
     public static async initializeServerSetup(): Promise<void> {
         try {
             if (!helperCache.get.server.apiKey && !helperCache.get.server.mode && !helperCache.get.server.role && !helperCache.get.server.origin) {
+                const serverUUID = uuid();
+
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
+                logger.log('setup', `${serverUUID}`);
                 logger.log('setup', '------------------------------------');
                 logger.log(
                     'setup',
@@ -211,13 +214,13 @@ class helperSetup {
                 case 'Standalone':
                     answers = await inquirer.prompt(this.standaloneQuestions);
 
-                    setupConfig = this.generateServerConfig(answers, 'Standalone', 'Origin');
+                    setupConfig = this.generateServerConfig(answers, serverUUID, 'Standalone', 'Origin');
                     break;
                 case 'Load Balancer':
                     answers = await inquirer.prompt(this.serverRoleQuestion);
                     if (answers.serverRole === 'Origin') {
                         answers = await inquirer.prompt(this.standaloneQuestions);
-                        setupConfig = this.generateServerConfig(answers, 'Load Balancer', 'Origin');
+                        setupConfig = this.generateServerConfig(answers, serverUUID, 'Load Balancer', 'Origin');
                     } else {
                         await inquirer.prompt(this.serverOriginQuestion);
                         answers = await inquirer.prompt(this.serverSecurityCodeQuestion);
