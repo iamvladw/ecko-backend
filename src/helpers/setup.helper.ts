@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import inquirer, { QuestionCollection, Answers } from 'inquirer';
 import logger from './winston.helper';
-import { SetupConfig } from '../interfaces/config.interface';
+import { Config, SetupConfig } from '../interfaces/config.interface';
 import helperCache from './cache.helper';
 import { v4 as uuid } from 'uuid';
 import helperAES from './aes.helper';
 import helperFunctions from './functions.helper';
 import axios from 'axios';
+import { JSONData } from '../interfaces/cache.interface';
 
 class helperSetup {
     public static originAddress: string;
+    public static originCache: JSONData;
+    public static originConfig: Config;
     
     private static serverModeQuestion: QuestionCollection[] = [
         {
@@ -79,7 +82,32 @@ class helperSetup {
                 if ((await responseVerify).status !== 200) {
                     return 'Invalid security code';
                 }
-                return (await responseVerify).data.body as string;
+                this.originCache = (await responseVerify).data.cache;
+                this.originConfig = (await responseVerify).data.config;
+                logger.info(this.originCache);
+                return true;
+            }
+        },
+        {
+            type: 'input',
+            name: 'serverName',
+            message: 'What\'s the server name?',
+            validate: (value) => {
+                if (value.trim() === '') {
+                    return 'Server name cannot be empty.';
+                }
+                return true;
+            }
+        },
+        {
+            type: 'input',
+            name: 'serverLocation',
+            message: 'What\'s the server location?',
+            validate: (value) => {
+                if (value.trim() === '') {
+                    return 'Server location cannot be empty.';
+                }
+                return true;
             }
         }
     ];
@@ -200,10 +228,12 @@ class helperSetup {
                             role: 'Edge',
                             origin: this.originAddress,
                             location: answers.serverLocation,
-                            secret: answers.secret,
-                            secretPhrase: answers.secretPhrase,
-                            apiKey: answers.apiKey
+                            secret: this.originCache.server.secret,
+                            secretPhrase: this.originCache.server.secretPhrase,
+                            apiKey: this.originCache.server.apiKey
                         };
+                        logger.info(answers.cache);
+                        logger.info(answers.config);
                         break;
                     }
 
