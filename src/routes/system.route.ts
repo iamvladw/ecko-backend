@@ -65,6 +65,8 @@ router.post('/loadbalancer/verify/:uuid', [param('uuid').notEmpty().withMessage(
             return res.status(400).json({ error: 'Invalid security code' });
         }
 
+        securityCode = '';
+
         logger.log('success', `${uuid} has been verified`);
         res.status(200).json({ message: 'Edge server has been verified' });
     } catch (err) {
