@@ -9,6 +9,8 @@ import helperFunctions from './functions.helper';
 import axios from 'axios';
 
 class helperSetup {
+    public static originAddress: string;
+    
     private static serverModeQuestion: QuestionCollection[] = [
         {
             type: 'list',
@@ -34,51 +36,50 @@ class helperSetup {
             message:
                 'What\'s the server origin address? (https://example.com or http://192.168.1.1:8080)',
             validate: async (origin) => {
-                if (origin.trim() === '') {
+                this.originAddress = origin;
+                if (this.originAddress.trim() === '') {
                     return 'Server origin address cannot be empty.';
                 }
                 const urlPattern = /^(http?|https?):\/\/[^\s/$.?#].[^\s]*$/;
-                if (!urlPattern.test(origin as string)) {
+                if (!urlPattern.test(this.originAddress)) {
                     return 'Please enter a valid URL in the format http://example.com or https://192.168.1.1:8080';
                 }
                 const response = await axios.get(
-                    `${origin as string}/system/loadbalancer/setup/${
+                    `${this.originAddress}/system/loadbalancer/setup/${
                         helperCache.get.server.uuid
                     }`
                 );
                 if (response.status !== 200) {
                     return 'Error while trying to setup the load balancer';
                 }
-                const serverSecurityCodeQuestion: QuestionCollection[] = [
-                    {
-                        type: 'input',
-                        name: 'serverSecurityCode',
-                        message: 'Enter the security code deployed in the origin server console:',
-                        validate: async (security: string) => {
-                            if (security.trim() === '') {
-                                return 'Server origin address cannot be empty.';
-                            }
-                            const codePattern = /^[0-9]{6}$/;
-                            if (!codePattern.test(security)) {
-                                return 'Please enter a valid security code';
-                            }
-                            const responseVerify = axios.post(
-                                `${origin as string}/system/loadbalancer/verify/${
-                                    helperCache.get.server.uuid
-                                }`,
-                                {securityCode: security}
-                            );
-                            if ((await responseVerify).status !== 200) {
-                                return 'Invalid security code';
-                            }
-                            return true;
-                        }
-                    }
-                ];
+                return true;
+            }
+        }
+    ];
 
-                await inquirer.prompt(
-                    serverSecurityCodeQuestion
+    public static serverSecurityCodeQuestion: QuestionCollection[] = [
+        {
+            type: 'input',
+            name: 'serverSecurityCode',
+            message: 'Enter the security code deployed in the origin server console:',
+            validate: async (security: string) => {
+                if (security.trim() === '') {
+                    return 'Server origin address cannot be empty.';
+                }
+                const codePattern = /^[0-9]{6}$/;
+                if (!codePattern.test(security)) {
+                    return 'Please enter a valid security code';
+                }
+                const responseVerify = axios.post(
+                    `${this.originAddress}/system/loadbalancer/verify/${
+                        helperCache.get.server.uuid
+                    }`,
+                    {securityCode: security}
                 );
+                if ((await responseVerify).status !== 200) {
+                    return 'Invalid security code';
+                }
+                return (await responseVerify).data.body as string;
             }
         }
     ];
@@ -160,7 +161,7 @@ class helperSetup {
 
     public static async initializeServerSetup(): Promise<void> {
         try {
-            if (!helperCache.get.server.apiKey && !helperCache.get.server.mode && !helperCache.get.server.role) {
+            if (!helperCache.get.server.apiKey && !helperCache.get.server.mode && !helperCache.get.server.role && !helperCache.get.server.origin) {
                 logger.log('setup', 'Welcome to Ecko Backend Server Setup');
                 logger.log('setup', '------------------------------------');
                 logger.log(
@@ -190,13 +191,14 @@ class helperSetup {
                         answers = await inquirer.prompt(this.standaloneQuestions);
                         setupConfig = this.generateServerConfig(answers, 'Load Balancer', 'Origin');
                     } else {
-                        answers = await inquirer.prompt(this.serverOriginQuestion);
+                        await inquirer.prompt(this.serverOriginQuestion);
+                        answers = await inquirer.prompt(this.serverSecurityCodeQuestion);
                         setupConfig = {
                             serverName: answers.serverName,
                             uuid: uuid(),
                             mode: 'Load Balancer',
                             role: 'Edge',
-                            origin: answers.serverOrigin,
+                            origin: this.originAddress,
                             location: answers.serverLocation,
                             secret: answers.secret,
                             secretPhrase: answers.secretPhrase,
