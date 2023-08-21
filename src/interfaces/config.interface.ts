@@ -63,6 +63,9 @@ interface Config {
             timeout: number;
         };
     };
+    loadbalancer: {
+        maxRetries: number;
+    };
     cloudflareProxy: boolean;
     apiAuthMethod: 'key' | 'ip' | 'both';
     staticPage: boolean;

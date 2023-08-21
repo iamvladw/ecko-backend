@@ -5,6 +5,8 @@ import logger from './winston.helper';
 class helperBan {
     public static async banIP(ip: string) {
         try {
+            logger.warn(`Attempting to ban the ip address ${ip}...`);
+
             const ipInfo = await helperFunctions.getCountryInfo(ip);
 
             helperCache.get.server.banPool[ip] = ipInfo;

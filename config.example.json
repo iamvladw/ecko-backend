@@ -19,6 +19,9 @@
             "timeout": 60
         }
     },
+    "loadbalancer": {
+        "maxRetries": 3
+    },
     "cloudflareProxy": false,
     "apiAuthMethod": "key",
     "staticPage": true,
