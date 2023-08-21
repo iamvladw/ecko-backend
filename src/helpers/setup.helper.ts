@@ -8,6 +8,7 @@ import helperAES from './aes.helper';
 import helperFunctions from './functions.helper';
 import axios from 'axios';
 import { JSONData } from '../interfaces/cache.interface';
+import { config } from 'process';
 
 class helperSetup {
     public static serverUUID: string = uuid();
@@ -254,7 +255,8 @@ class helperSetup {
                             location: answers.serverLocation,
                             secret: this.originCache.server.secret,
                             secretPhrase: this.originCache.server.secretPhrase,
-                            apiKey: this.originCache.server.apiKey
+                            apiKey: this.originCache.server.apiKey,
+                            config: this.originConfig
                         };
                     }
                 }
