@@ -186,7 +186,8 @@ class helperSetup {
                 answers.secretPhrase as string,
                 secret
             ) as string,
-            banPool: {}
+            banPool: {},
+            backupPool: {}
         };
 
         return serverConfig;
@@ -254,7 +255,8 @@ class helperSetup {
                             secretPhrase: this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey,
                             banPool: this.originCache.server.banPool,
-                            config: this.originConfig
+                            config: this.originConfig,
+                            backupPool: {}
                         };
                     }
                 }

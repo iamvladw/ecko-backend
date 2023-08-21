@@ -13,7 +13,7 @@ interface JSONData {
         apiKey: string;
         banPool: Record<string, string>;
         config?: Config;
-        backupPool?: Record<string, string>;
+        backupPool: Record<string, string>;
     };
     data: {
         lastDatabaseLoaded: string;

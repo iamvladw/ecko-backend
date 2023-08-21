@@ -127,8 +127,7 @@ router.post(
 
             securityCode = '';
 
-            helperCache.get.server.origin = req.ip;
-            helperCache.update();
+            helperCache.get.server.backupPool[uuid] = req.ip;
 
             logger.log('success', `${uuid} has been verified`);
             res.status(200).json({ cache: helperCache.get, config: config });

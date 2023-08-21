@@ -23,6 +23,7 @@ interface SetupConfig {
     secretPhrase: string;
     apiKey: string;
     banPool: Record<string, string>;
+    backupPool: Record<string, string>;
     ssl?: boolean;
 }
 
