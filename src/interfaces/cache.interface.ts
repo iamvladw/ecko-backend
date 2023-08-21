@@ -1,3 +1,5 @@
+import { Config } from './config.interface';
+
 interface JSONData {
     server: {
         serverName: string;
@@ -9,6 +11,8 @@ interface JSONData {
         secret: string;
         secretPhrase: string;
         apiKey: string;
+        config?: Config;
+        backupPool?: Record<string, string>;
     };
     data: {
         lastDatabaseLoaded: string;

@@ -96,12 +96,20 @@ router.post(
 
             if (securityCodeFromClient !== securityCode) {
                 logger.error(
-                    `UUID: ${uuid}, IP: ${req.ip} tried to setup this server as origin`
+                    `The security code has been changed for ${uuid}`
                 );
+
+                securityCode = String(Math.floor(Math.random() * 1000000));
+
+                logger.log('success', `New security code has been deployed: ${securityCode}`);
+
                 return res.status(400).json({ error: 'Invalid security code' });
             }
 
             securityCode = '';
+
+            helperCache.get.server.origin = req.ip;
+            helperCache.update();
 
             logger.log('success', `${uuid} has been verified`);
             res.status(200).json({ cache: helperCache.get, config: config });
