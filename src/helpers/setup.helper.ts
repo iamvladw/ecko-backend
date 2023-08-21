@@ -253,7 +253,7 @@ class helperSetup {
                             secret: this.originCache.server.secret,
                             secretPhrase: this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey,
-                            banPool: {},
+                            banPool: this.originCache.server.banPool,
                             config: this.originConfig
                         };
                     }
