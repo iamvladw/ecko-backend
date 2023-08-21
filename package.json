@@ -1,6 +1,6 @@
 {
     "name": "ecko-backend",
-    "version": "1.4.3",
+    "version": "1.5.0",
     "description": "The Ecko Backend is a powerful, scalable, and open-source backend application for the Ecko social media platform, providing multi-database support, replication, AES encryption, JWT authentication, root privileges checker, HTTP/HTTPS modes, compression, request limiting, recommended extensions, and Docker dev container readiness for seamless development and deployment.",
     "main": "server.ts",
     "scripts": {
