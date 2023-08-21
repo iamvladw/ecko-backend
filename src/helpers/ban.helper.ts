@@ -13,19 +13,23 @@ class helperBan {
             helperCache.update();
 
             logger.log('success', `IP ${ip} has been banned from the server`);
-        } catch(err) {
-            logger.error(`Error while trying to ban IP ${ip}: ${err as string}`);
+        } catch (err) {
+            logger.error(
+                `Error while trying to ban IP ${ip}: ${err as string}`
+            );
         }
     }
-    
+
     public static unbanIP(ip: string) {
         try {
             delete helperCache.get.server.banPool[ip];
             helperCache.update();
 
             logger.log('success', `IP ${ip} has been unbanned from the server`);
-        } catch(err) {
-            logger.error(`Error while trying to unban IP ${ip}: ${err as string}`);
+        } catch (err) {
+            logger.error(
+                `Error while trying to unban IP ${ip}: ${err as string}`
+            );
         }
     }
 

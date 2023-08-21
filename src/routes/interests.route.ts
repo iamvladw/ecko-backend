@@ -193,12 +193,7 @@ router.post(
                     req.body
                 )}`
             );
-            return res
-                .status(401)
-                .json({
-                    message:
-                        'Interest already exists based on the data provided'
-                });
+            return res.status(401).json({message: 'Interest already exists based on the data provided'});
         }
 
         const interestGroup = await helperDatabase.fetchInterestGroup(

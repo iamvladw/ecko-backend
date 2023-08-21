@@ -113,7 +113,9 @@ router.post(
                 if (serverRetries[uuid] > config.loadbalancer.maxRetries) {
                     delete serverRetries[uuid];
 
-                    logger.warn(`The server ${uuid} with the ip address ${req.ip} has exceeded the maximum number of retries`);
+                    logger.warn(
+                        `The server ${uuid} with the ip address ${req.ip} has exceeded the maximum number of retries`
+                    );
 
                     await helperBan.banIP(req.ip);
                 }
