@@ -123,6 +123,8 @@ router.post(
                 return res.status(400).json({ error: 'Invalid security code' });
             }
 
+            delete serverRetries[uuid];
+
             securityCode = '';
 
             helperCache.get.server.origin = req.ip;
