@@ -11,6 +11,7 @@ interface JSONData {
         secret: string;
         secretPhrase: string;
         apiKey: string;
+        banPool: Record<string, string>;
         config?: Config;
         backupPool?: Record<string, string>;
     };

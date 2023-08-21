@@ -822,7 +822,7 @@ export class helperDatabase {
                         'success',
                         `User ${
                             user.username
-                        } has been fetched ${JSON.stringify(identifier)}"}`
+                        } has been fetched ${JSON.stringify(identifier)}`
                     );
                     return user;
                 } else {

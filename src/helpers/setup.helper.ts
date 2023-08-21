@@ -185,7 +185,8 @@ class helperSetup {
             apiKey: helperAES.encrypt(
                 answers.secretPhrase as string,
                 secret
-            ) as string
+            ) as string,
+            banPool: {}
         };
 
         return serverConfig;
@@ -218,9 +219,7 @@ class helperSetup {
                 let setupConfig;
 
                 if (answers.serverMode === 'Standalone') {
-                    answers = await inquirer.prompt(
-                        this.standaloneQuestions
-                    );
+                    answers = await inquirer.prompt(this.standaloneQuestions);
                     helperCache.get.server = this.generateServerConfig(
                         answers,
                         this.serverUUID,
@@ -228,9 +227,7 @@ class helperSetup {
                         'Origin'
                     );
                 } else if (answers.serverMode === 'Load Balancer') {
-                    answers = await inquirer.prompt(
-                        this.serverRoleQuestion
-                    );
+                    answers = await inquirer.prompt(this.serverRoleQuestion);
                     if (answers.serverRole === 'Origin') {
                         answers = await inquirer.prompt(
                             this.standaloneQuestions
@@ -256,6 +253,7 @@ class helperSetup {
                             secret: this.originCache.server.secret,
                             secretPhrase: this.originCache.server.secretPhrase,
                             apiKey: this.originCache.server.apiKey,
+                            banPool: {},
                             config: this.originConfig
                         };
                     }

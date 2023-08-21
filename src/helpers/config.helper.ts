@@ -7,10 +7,8 @@ const configPath = './config.json';
 let config: Config;
 
 if (!helperCache.get.server.config) {
-    config = JSON.parse(
-        fs.readFileSync(configPath, 'utf-8')
-    ) as Config;
-}else{
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8')) as Config;
+} else {
     config = helperCache.get.server.config;
 }
 

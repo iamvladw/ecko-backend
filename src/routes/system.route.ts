@@ -95,13 +95,14 @@ router.post(
             const { securityCode: securityCodeFromClient } = req.body;
 
             if (securityCodeFromClient !== securityCode) {
-                logger.error(
-                    `The security code has been changed for ${uuid}`
-                );
+                logger.error(`The security code has been changed for ${uuid}`);
 
                 securityCode = String(Math.floor(Math.random() * 1000000));
 
-                logger.log('success', `New security code has been deployed: ${securityCode}`);
+                logger.log(
+                    'success',
+                    `New security code has been deployed: ${securityCode}`
+                );
 
                 return res.status(400).json({ error: 'Invalid security code' });
             }
