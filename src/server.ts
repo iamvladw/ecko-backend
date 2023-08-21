@@ -20,6 +20,7 @@ import helperSetup from './helpers/setup.helper';
 import requestLoggerMiddleware from './middlewares/request.middleware';
 import limiter from './middlewares/rate.middleware';
 import helperEcko from './helpers/ecko.helper';
+import banChecker from './middlewares/ban.middleware';
 
 const serverAPI = express();
 const eckoAPIServer = helperEcko.initializeEckoServer(serverAPI);
@@ -34,6 +35,7 @@ const DNS = config.dns;
 // Loads middleware functions
 serverAPI.use(express.json());
 serverAPI.use(express.urlencoded({ extended: false }));
+serverAPI.use(banChecker);
 serverAPI.use(helmet());
 serverAPI.use(compression());
 serverAPI.use(cookieParser());

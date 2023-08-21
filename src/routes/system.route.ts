@@ -108,7 +108,7 @@ router.post(
                     `New security code has been deployed: ${securityCode}`
                 );
 
-                serverRetries[uuid] += 1;
+                serverRetries[uuid]++;
 
                 if (serverRetries[uuid] > config.loadbalancer.maxRetries) {
                     delete serverRetries[uuid];

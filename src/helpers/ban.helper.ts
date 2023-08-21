@@ -28,6 +28,10 @@ class helperBan {
             logger.error(`Error while trying to unban IP ${ip}: ${err as string}`);
         }
     }
+
+    public static isBanned(ip: string) {
+        return Boolean(helperCache.get.server.banPool[ip]);
+    }
 }
 
 export default helperBan;
