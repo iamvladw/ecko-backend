@@ -1,4 +1,3 @@
-cache
 coverage
 node_modules
 database.sqlite
@@ -7,3 +6,4 @@ config.json
 package-lock.json
 cache
 storage
+cache.json

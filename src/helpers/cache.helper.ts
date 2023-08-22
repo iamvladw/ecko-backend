@@ -3,31 +3,12 @@ import logger from './winston.helper';
 import fs from 'fs';
 import path from 'path';
 
-const cacheFilePath = path.join(__dirname, '../../cache/cache.json');
-const cachePath = path.join(__dirname, '../../cache/');
+const cacheFilePath = path.join(__dirname, '../../cache.json');
 
 class helperCache {
     // Read data from JSON file
     private static fetch() {
         try {
-            if (!fs.existsSync(cacheFilePath)) {
-                // File doesn't exist, create it
-                fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    fs.writeFileSync(
-                        cacheFilePath,
-                        '{"server":{},"data":{"fileRecords":{}}}',
-                        'utf8'
-                    );
-                    if (err) {
-                        logger.error(
-                            `Error while trying to create ${cacheFilePath}: ${String(
-                                err
-                            )}`
-                        );
-                    }
-                });
-            }
-
             const fileData = fs.readFileSync(cacheFilePath, 'utf8');
             const jsonData = JSON.parse(fileData) as JSONData;
             return jsonData;
@@ -35,6 +16,7 @@ class helperCache {
             logger.error(
                 `Error while trying to read ${cacheFilePath}: ${err as string}`
             );
+            this.create();
         }
     }
 
@@ -43,29 +25,30 @@ class helperCache {
     // Write data to JSON file
     public static update() {
         try {
-            if (!fs.existsSync(cacheFilePath)) {
-                // File doesn't exist, create it
-                fs.mkdir(cachePath, { recursive: true }, (err) => {
-                    fs.writeFileSync(
-                        cacheFilePath,
-                        '{"server":{},"data":{"fileRecords":{}}}',
-                        'utf8'
-                    );
-                    if (err) {
-                        logger.error(
-                            `Error while trying to create ${cacheFilePath}: ${String(
-                                err
-                            )}`
-                        );
-                    }
-                });
-            }
-
+            this.create();
             const jsonData = JSON.stringify(this.get);
             fs.writeFileSync(cacheFilePath, jsonData, 'utf8');
         } catch (err) {
             logger.error(
                 `Error while trying to write ${cacheFilePath}: ${err as string}`
+            );
+            this.create();
+        }
+    }
+
+    // Create cache folder
+    public static create() {
+        try {
+            if (!fs.existsSync(cacheFilePath)) {
+                fs.writeFileSync(
+                    cacheFilePath,
+                    '{"server":{},"data":{"fileRecords":{}}}',
+                    'utf8'
+                );
+            }
+        } catch (err) {
+            logger.error(
+                `Error while trying to create ${cacheFilePath}: ${err as string}`
             );
         }
     }
