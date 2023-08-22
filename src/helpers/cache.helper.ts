@@ -1,5 +1,4 @@
 import { JSONData } from '../interfaces/cache.interface';
-import logger from './winston.helper';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,18 +8,19 @@ class helperCache {
     // Read data from JSON file
     private static fetch() {
         try {
+            this.create();
             const fileData = fs.readFileSync(cacheFilePath, 'utf8');
             const jsonData = JSON.parse(fileData) as JSONData;
             return jsonData;
         } catch (err) {
-            logger.error(
+            this.create();
+            throw new Error(
                 `Error while trying to read ${cacheFilePath}: ${err as string}`
             );
-            this.create();
         }
     }
 
-    public static get: JSONData = this.fetch() as JSONData;
+    public static get: JSONData = this.fetch();
 
     // Write data to JSON file
     public static update() {
@@ -29,10 +29,10 @@ class helperCache {
             const jsonData = JSON.stringify(this.get);
             fs.writeFileSync(cacheFilePath, jsonData, 'utf8');
         } catch (err) {
-            logger.error(
+            this.create();
+            throw new Error(
                 `Error while trying to write ${cacheFilePath}: ${err as string}`
             );
-            this.create();
         }
     }
 
@@ -47,7 +47,7 @@ class helperCache {
                 );
             }
         } catch (err) {
-            logger.error(
+            throw new Error(
                 `Error while trying to create ${cacheFilePath}: ${err as string}`
             );
         }
