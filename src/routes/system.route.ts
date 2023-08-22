@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import logger from '../helpers/winston.helper';
 import helperCache from '../helpers/cache.helper';
-import helperFunctions from '../helpers/functions.helper';
 import config from '../helpers/config.helper';
 import helperBan from '../helpers/ban.helper';
 
